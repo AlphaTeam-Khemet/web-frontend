@@ -1,0 +1,591 @@
+/* ── Base reset ── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+.verification-page {
+  position: relative;
+  width: 100vw;
+  min-height: 100dvh;
+  overflow: hidden;
+  background: #050403;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #e6dccf;
+}
+
+/* ── Background layers ── */
+.verification-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  filter: brightness(0.58) contrast(1.14) saturate(0.86);
+}
+
+.verification-overlay {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(
+      circle at center,
+      rgba(201, 162, 77, 0.13),
+      rgba(0, 0, 0, 0.48) 48%,
+      rgba(0, 0, 0, 0.9) 100%
+    ),
+    linear-gradient(180deg, rgba(0, 0, 0, 0.48), rgba(0, 0, 0, 0.82));
+}
+
+.verification-pattern {
+  position: absolute;
+  inset: 0;
+  opacity: 0.15;
+  background-image: radial-gradient(
+    rgba(201, 162, 77, 0.35) 1px,
+    transparent 1px
+  );
+  background-size: 22px 22px;
+}
+
+/* ── Fixed chrome ── */
+.verification-back {
+  position: fixed;
+  top: 38px;
+  left: 58px;
+  z-index: 4;
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  color: #e6dccf;
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.verification-back span {
+  width: 46px;
+  height: 46px;
+  flex-shrink: 0;
+  border: 1px solid rgba(201, 162, 77, 0.75);
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  color: #f0c45c;
+  box-shadow: 0 0 22px rgba(201, 162, 77, 0.18);
+}
+
+.verification-brand {
+  position: fixed;
+  top: 36px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 4;
+  margin: 0;
+  color: #d9ad55;
+  font-family: "Cormorant Garamond", serif;
+  font-size: clamp(18px, 2.5vw, 26px);
+  font-weight: 800;
+  letter-spacing: clamp(6px, 1vw, 10px);
+  text-shadow: 0 0 18px rgba(201, 162, 77, 0.45);
+  white-space: nowrap;
+}
+
+.verification-brand::after {
+  content: "";
+  display: block;
+  width: 64px;
+  height: 1px;
+  margin: 8px auto 0;
+  background: linear-gradient(90deg, transparent, #c9a24d, transparent);
+}
+
+.verification-session {
+  position: fixed;
+  top: 42px;
+  right: 64px;
+  z-index: 4;
+  margin: 0;
+  color: rgba(230, 220, 207, 0.9);
+  font-size: 15px;
+  font-weight: 700;
+}
+
+/* ── Card ── */
+.verification-card {
+  position: relative;
+  z-index: 3;
+  width: min(90vw, 650px);
+  padding: 46px 58px 42px;
+  border-radius: 28px;
+  background: rgba(8, 6, 4, 0.82);
+  border: 1px solid rgba(201, 162, 77, 0.52);
+  text-align: center;
+  box-shadow:
+    0 40px 110px rgba(0, 0, 0, 0.82),
+    inset 0 0 55px rgba(201, 162, 77, 0.05),
+    0 0 42px rgba(201, 162, 77, 0.08);
+  backdrop-filter: blur(16px);
+  animation: verificationReveal 0.95s cubic-bezier(0.19, 1, 0.22, 1) both;
+}
+
+.verification-icon {
+  width: 76px;
+  height: 76px;
+  margin: 0 auto 26px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  color: #f0c45c;
+  border: 1px solid rgba(201, 162, 77, 0.65);
+  background: radial-gradient(
+    circle,
+    rgba(201, 162, 77, 0.16),
+    rgba(0, 0, 0, 0.25)
+  );
+  box-shadow: 0 0 34px rgba(201, 162, 77, 0.24);
+}
+
+.verification-card h1 {
+  margin: 0;
+  color: #f7f0e6;
+  font-family: "Cormorant Garamond", serif;
+  font-size: clamp(36px, 4vw, 62px);
+  font-weight: 800;
+  text-shadow: 0 8px 26px rgba(0, 0, 0, 0.85);
+}
+
+.verification-subtitle {
+  max-width: 470px;
+  margin: 18px auto 26px;
+  color: rgba(230, 220, 207, 0.92);
+  font-size: clamp(14px, 1.5vw, 17px);
+  line-height: 1.65;
+}
+
+.verification-email {
+  margin-bottom: 34px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  color: #f0c45c;
+  font-size: clamp(14px, 1.5vw, 17px);
+  font-weight: 800;
+  flex-wrap: wrap;
+}
+
+/* ── OTP group ── */
+.otp-group {
+  display: flex;
+  justify-content: center;
+  gap: clamp(8px, 2vw, 18px);
+  margin-bottom: 38px;
+}
+
+.otp-box {
+  width: clamp(42px, 10vw, 72px);
+  height: clamp(52px, 11vw, 72px);
+  border-radius: 12px;
+  border: 1px solid rgba(201, 162, 77, 0.58);
+  background: rgba(8, 6, 4, 0.58);
+  color: #f7f0e6;
+  text-align: center;
+  font-size: clamp(20px, 4vw, 30px);
+  font-weight: 800;
+  outline: none;
+  transition:
+    border-color 0.25s ease,
+    box-shadow 0.25s ease;
+  box-shadow: inset 0 0 18px rgba(201, 162, 77, 0.05);
+  /* Prevent zoom on iOS */
+  font-size: max(20px, clamp(20px, 4vw, 30px));
+}
+
+.otp-box::placeholder {
+  color: rgba(230, 220, 207, 0.8);
+}
+
+.otp-box:focus {
+  border-color: #f0c45c;
+  box-shadow:
+    0 0 0 4px rgba(201, 162, 77, 0.13),
+    0 0 26px rgba(201, 162, 77, 0.32);
+}
+
+/* ── Error ── */
+.verification-error {
+  margin: -18px 0 22px;
+  color: #ff9b9b;
+  font-size: 14px;
+}
+
+/* ── Submit ── */
+.verification-submit {
+  width: min(100%, 520px);
+  height: clamp(52px, 8vh, 68px);
+  border: none;
+  border-radius: 12px;
+  background: linear-gradient(180deg, #f5cf68, #c99a32);
+  color: #130c04;
+  font-family: "Cormorant Garamond", serif;
+  font-size: clamp(18px, 2.5vw, 24px);
+  font-weight: 900;
+  cursor: pointer;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  gap: 14px;
+  box-shadow:
+    0 20px 48px rgba(0, 0, 0, 0.55),
+    0 0 34px rgba(201, 162, 77, 0.34);
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.verification-submit:hover {
+  transform: translateY(-3px);
+  box-shadow:
+    0 24px 58px rgba(0, 0, 0, 0.65),
+    0 0 46px rgba(201, 162, 77, 0.5);
+}
+
+.verification-submit:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ── Resend ── */
+.verification-resend {
+  margin-top: 30px;
+  border: 0;
+  background: transparent;
+  color: #f0c45c;
+  font-size: clamp(14px, 1.5vw, 16px);
+  font-weight: 800;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.verification-resend span {
+  color: rgba(230, 220, 207, 0.85);
+  font-weight: 500;
+}
+
+.verification-resend:disabled {
+  cursor: not-allowed;
+  opacity: 0.85;
+}
+
+/* ── Footer ── */
+.verification-footer {
+  position: fixed;
+  z-index: 4;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 82px;
+  padding: 0 76px;
+  border-top: 1px solid rgba(230, 220, 207, 0.08);
+  background: rgba(5, 4, 3, 0.58);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.verification-footer p {
+  margin: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: rgba(230, 220, 207, 0.85);
+  font-size: 14px;
+}
+
+.verification-footer svg {
+  color: #f0c45c;
+}
+
+.verification-footer div {
+  display: flex;
+  gap: 42px;
+}
+
+.verification-footer a {
+  color: rgba(230, 220, 207, 0.88);
+  text-decoration: none;
+  font-size: 14px;
+}
+
+/* ── Animation ── */
+@keyframes verificationReveal {
+  from {
+    opacity: 0;
+    transform: translateY(34px) scale(0.96);
+    filter: blur(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+}
+
+/* ════════════════════════════════
+   RESPONSIVE BREAKPOINTS
+   ════════════════════════════════ */
+
+/* ── Large tablet (≤ 1024px) ── */
+@media (max-width: 1024px) {
+  .verification-back {
+    left: 32px;
+  }
+
+  .verification-session {
+    right: 32px;
+  }
+
+  .verification-card {
+    width: min(92vw, 560px);
+    padding: 40px 36px;
+  }
+
+  .verification-footer {
+    padding: 0 32px;
+  }
+
+  .verification-footer div {
+    gap: 28px;
+  }
+}
+
+/* ── Tablet / large phone (≤ 768px) ── */
+@media (max-width: 768px) {
+  .verification-page {
+    align-items: flex-start;
+    padding: 100px 16px 100px;
+  }
+
+  /* Collapse back-button label, keep icon */
+  .verification-back {
+    top: 20px;
+    left: 16px;
+    font-size: 0; /* hide label text */
+    gap: 0;
+  }
+
+  .verification-back span {
+    width: 42px;
+    height: 42px;
+  }
+
+  .verification-brand {
+    top: 22px;
+    font-size: 18px;
+    letter-spacing: 6px;
+  }
+
+  .verification-session {
+    display: none;
+  }
+
+  .verification-card {
+    width: 100%;
+    max-width: 460px;
+    margin: auto;
+    padding: 32px 24px 28px;
+    border-radius: 22px;
+  }
+
+  .verification-icon {
+    width: 62px;
+    height: 62px;
+    margin-bottom: 18px;
+  }
+
+  .verification-subtitle {
+    margin: 14px auto 20px;
+  }
+
+  .verification-email {
+    margin-bottom: 22px;
+  }
+
+  .otp-group {
+    gap: 10px;
+    margin-bottom: 28px;
+  }
+
+  .verification-submit {
+    height: 56px;
+  }
+
+  .verification-resend {
+    margin-top: 22px;
+  }
+
+  .verification-footer {
+    height: 68px;
+    padding: 0 20px;
+  }
+
+  .verification-footer div {
+    gap: 20px;
+  }
+}
+
+/* ── Phone (≤ 480px) ── */
+@media (max-width: 480px) {
+  .verification-page {
+    padding: 90px 12px 90px;
+  }
+
+  .verification-card {
+    padding: 28px 18px 24px;
+    border-radius: 18px;
+  }
+
+  .verification-icon {
+    width: 54px;
+    height: 54px;
+    margin-bottom: 14px;
+  }
+
+  .otp-group {
+    gap: 8px;
+    margin-bottom: 24px;
+  }
+
+  .verification-error {
+    margin-top: -14px;
+    margin-bottom: 16px;
+    font-size: 13px;
+  }
+
+  .verification-submit {
+    height: 52px;
+    border-radius: 10px;
+  }
+
+  .verification-footer {
+    display: none;
+  }
+}
+
+/* ── Small phone (≤ 375px) ── */
+@media (max-width: 375px) {
+  .verification-page {
+    padding: 80px 10px 80px;
+  }
+
+  .verification-card {
+    padding: 24px 14px 20px;
+  }
+
+  .verification-brand {
+    font-size: 16px;
+    letter-spacing: 4px;
+  }
+
+  .otp-group {
+    gap: 6px;
+  }
+
+  /* Stack submit full width */
+  .verification-submit {
+    width: 100%;
+    font-size: 16px;
+    height: 50px;
+  }
+}
+
+/* ── Short viewports (e.g. landscape phone) ── */
+@media (max-height: 700px) {
+  .verification-page {
+    align-items: flex-start;
+    padding-top: 80px;
+    padding-bottom: 20px;
+  }
+
+  .verification-card {
+    padding-top: 24px;
+    padding-bottom: 22px;
+  }
+
+  .verification-icon {
+    width: 52px;
+    height: 52px;
+    margin-bottom: 12px;
+  }
+
+  .verification-subtitle {
+    margin: 10px auto 14px;
+  }
+
+  .verification-email {
+    margin-bottom: 16px;
+  }
+
+  .otp-group {
+    margin-bottom: 18px;
+  }
+
+  .verification-footer {
+    display: none;
+  }
+}
+
+/* ── Very short (≤ 560px height, landscape phone) ── */
+@media (max-height: 560px) {
+  .verification-back {
+    top: 12px;
+  }
+
+  .verification-brand {
+    top: 14px;
+  }
+
+  .verification-page {
+    padding-top: 68px;
+  }
+
+  .verification-icon {
+    display: none; /* hide to save vertical space */
+  }
+
+  .verification-card h1 {
+    font-size: 28px;
+  }
+
+  .verification-subtitle {
+    font-size: 13px;
+    line-height: 1.4;
+    margin: 8px auto 12px;
+  }
+
+  .verification-email {
+    margin-bottom: 12px;
+    font-size: 13px;
+  }
+
+  .otp-box {
+    height: 46px;
+  }
+
+  .verification-submit {
+    height: 46px;
+    font-size: 16px;
+  }
+
+  .verification-resend {
+    margin-top: 14px;
+  }
+}

@@ -1,0 +1,91 @@
+{
+  "auth.signIn": "Sign In",
+  "auth.signUp": "Create Account",
+  "auth.email": "Email Address",
+  "auth.password": "Password",
+  "auth.confirmPassword": "Confirm Password",
+  "auth.firstName": "First Name",
+  "auth.lastName": "Last Name",
+  "auth.language": "Preferred Language",
+  "auth.verify": "Verify Account",
+  "auth.forgotPassword": "Forgot Password?",
+
+  "home.title": "Explore Ancient Egypt",
+
+  "home.nav.home": "Home",
+  "home.nav.collection": "Collection",
+  "home.nav.artifacts": "Artifacts",
+  "home.nav.gallery": "Gallery",
+  "home.nav.scan": "Scan & AI",
+  "home.nav.translate": "Translate AI",
+
+  "home.hero.title1": "Discover the",
+  "home.hero.title2": "Wonders of",
+  "home.hero.title3": "Ancient Egypt",
+
+  "home.hero.description": "Your digital companion to the world’s most fascinating artifacts and timeless heritage.",
+
+  "home.hero.explore": "Explore Collections",
+  "home.hero.translate": "Translate Hieroglyphs",
+
+  "home.stats.artifacts": "Artifacts",
+  "home.stats.languages": "Languages",
+  "home.stats.powered": "Powered",
+  "home.stats.experience": "Experience",
+
+  "home.features.title1": "Experience the Museum",
+  "home.features.title2": "Differently",
+
+  "home.features.description": "Immerse yourself in history with smart tools designed for the modern explorer.",
+
+  "home.features.card1.title": "Explore the museum freely",
+  "home.features.card1.description": "Navigate through the halls of history with interactive routes and smart digital guidance.",
+
+  "home.features.card2.title": "Scan and discover artifacts",
+  "home.features.card2.description": "Scan artifacts and unlock historical context, stories, and interactive museum details.",
+
+  "home.features.card3.title": "Translate ancient hieroglyphs",
+  "home.features.card3.description": "Use AI-powered translation to understand ancient symbols in a simple modern way.",
+
+  "home.features.learnMore": "Learn more",
+
+  "home.cta.title1": "Ready to start your",
+  "home.cta.title2": "journey?",
+
+  "home.cta.description": "Join thousands of explorers and history buffs discovering the eternal secrets of the Nile.",
+
+  "home.cta.button": "Get Started Now",
+
+  "home.footer.privacy": "Privacy Policy",
+  "home.footer.accessibility": "Accessibility",
+
+  "home.footer.copyright": "© 2026 KHEMET Digital Museum",
+"collections.title": "Explore the Collections",
+"collections.description": "Discover thousands of years of Egyptian history and the legacy of the Pharaohs.",
+"collections.searchPlaceholder": "Search artifacts",
+"collections.filters.all": "All",
+"collections.filters.statues": "Statues",
+"collections.filters.sarcophagi": "Sarcophagi",
+"collections.filters.papyrus": "Papyrus",
+"collections.empty": "No artifacts found. Try another search.",
+"collections.more": "Discover More Artifacts",
+"artifacts.tutankhamun.title": "Golden Mask of Tutankhamun",
+"artifacts.tutankhamun.period": "18th Dynasty, New Kingdom",
+"artifacts.tutankhamun.location": "Gallery 3, Level 2",
+"artifacts.tutankhamun.detailsTitle": "Treasures of the Boy King",
+"artifacts.tutankhamun.description": "The golden funerary mask of Tutankhamun is one of the most iconic masterpieces of ancient Egyptian civilization. Crafted from gold and precious stones, the mask was designed to protect the Pharaoh in the afterlife and symbolize divine power and immortality.",
+"artifacts.tutankhamun.history": "Discovered in 1925 by Howard Carter in the Valley of the Kings, the mask became one of the greatest archaeological discoveries in modern history.",
+
+"artifacts.ramesses.title": "Statue of Ramesses II",
+"artifacts.ramesses.period": "19th Dynasty, New Kingdom",
+"artifacts.ramesses.location": "The Grand Staircase",
+"artifacts.ramesses.detailsTitle": "The Great Warrior Pharaoh",
+"artifacts.ramesses.description": "This monumental statue of Ramesses II represents one of the most powerful rulers in Egyptian history.",
+"artifacts.ramesses.history": "Ramesses II ruled Egypt for more than sixty years and commissioned some of the most remarkable temples and monuments in ancient Egypt.",
+"artifact.back": "Back to Collections",
+"artifact.notFound": "Artifact not found",
+"artifact.overview": "Overview",
+"artifact.history": "History",
+"artifact.defaultHistory": "This artifact reflects the artistic and spiritual legacy of ancient Egypt.",
+"artifact.bottomNote": "Every artifact carries a story — explore its details, discover its history, and step deeper into the world of ancient Egypt."
+}

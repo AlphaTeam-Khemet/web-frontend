@@ -1,0 +1,291 @@
+.auth-page {
+  position: relative;
+  width: 100vw;
+  height: 100dvh;
+  overflow: hidden;
+  background: #0f0b08;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.auth-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  filter: brightness(0.72) contrast(1.05) saturate(0.85);
+}
+
+.auth-overlay {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(
+      circle at center,
+      rgba(0, 0, 0, 0.18),
+      rgba(0, 0, 0, 0.72) 70%
+    ),
+    linear-gradient(180deg, rgba(0, 0, 0, 0.38), rgba(0, 0, 0, 0.74));
+}
+
+.signin-card {
+  position: relative;
+  z-index: 2;
+  width: min(90vw, 450px);
+  min-height: 600px;
+  padding: 40px 38px 34px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.96);
+  color: #1c1712;
+  box-shadow:
+    0 32px 80px rgba(0, 0, 0, 0.48),
+    0 0 0 1px rgba(255, 255, 255, 0.25);
+  animation: authCardReveal 0.9s cubic-bezier(0.19, 1, 0.22, 1) both;
+}
+
+.signin-card h1 {
+  margin: 0;
+  text-align: center;
+  font-family: "Cormorant Garamond", serif;
+  font-size: 34px;
+  font-weight: 800;
+  color: #1b1611;
+}
+
+.signin-subtitle {
+  margin: 10px 0 30px;
+  text-align: center;
+  font-size: 14px;
+  color: #8b6f4e;
+}
+
+.signin-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.signin-field {
+  margin-bottom: 22px;
+}
+
+.signin-field label {
+  display: block;
+  margin-bottom: 9px;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.7px;
+  color: #1e1a15;
+}
+
+.signin-field input {
+  width: 100%;
+  height: 52px;
+  border: 1px solid rgba(139, 111, 78, 0.28);
+  border-radius: 14px;
+  padding: 0 16px;
+  background: #fff;
+  color: #1b1611;
+  outline: none;
+  font-size: 14px;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.signin-field input::placeholder {
+  color: rgba(111, 111, 111, 0.55);
+}
+
+.signin-field input:focus {
+  border-color: #c9a24d;
+  box-shadow: 0 0 0 4px rgba(201, 162, 77, 0.13);
+}
+
+.password-wrapper {
+  position: relative;
+}
+
+.password-wrapper input {
+  padding-right: 50px;
+}
+
+.password-toggle {
+  position: absolute;
+  top: 50%;
+  right: 14px;
+  transform: translateY(-50%);
+  border: 0;
+  background: transparent;
+  color: #8b6f4e;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.signin-options {
+  margin-top: -8px;
+  margin-bottom: 26px;
+  text-align: right;
+}
+
+.signin-options a {
+  color: #b88a24;
+  font-size: 12px;
+  text-decoration: none;
+}
+
+.signin-error {
+  margin: -10px 0 16px;
+  color: #9a1c1c;
+  font-size: 13px;
+  text-align: center;
+}
+
+.signin-submit,
+.signin-guest {
+  width: 100%;
+  height: 54px;
+  border-radius: 13px;
+  font-size: 15px;
+  font-weight: 800;
+  cursor: pointer;
+  transition:
+    transform 0.22s ease,
+    box-shadow 0.22s ease,
+    filter 0.22s ease;
+}
+
+.signin-submit {
+  border: none;
+  background: #cfa84b;
+  color: #111;
+  box-shadow: 0 12px 22px rgba(201, 162, 77, 0.28);
+}
+
+.signin-submit:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.04);
+  box-shadow: 0 15px 28px rgba(201, 162, 77, 0.35);
+}
+
+.signin-submit:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.signin-divider {
+  margin: 28px 0 22px;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.signin-divider span {
+  flex: 1;
+  height: 1px;
+  background: rgba(139, 111, 78, 0.22);
+}
+
+.signin-divider p {
+  margin: 0;
+  color: #8b6f4e;
+  font-size: 12px;
+  letter-spacing: 1.5px;
+}
+
+.signin-guest {
+  border: 1px solid rgba(139, 111, 78, 0.35);
+  background: #fff;
+  color: #1b1611;
+}
+
+.signin-guest:hover {
+  transform: translateY(-2px);
+  border-color: #c9a24d;
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08);
+}
+
+.signin-register {
+  margin: 28px 0 0;
+  text-align: center;
+  color: #8b6f4e;
+  font-size: 14px;
+}
+
+.signin-register a {
+  color: #b88a24;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.auth-footer {
+  position: fixed;
+  z-index: 2;
+  left: 50%;
+  bottom: 38px;
+  transform: translateX(-50%);
+  text-align: center;
+  color: rgba(230, 220, 207, 0.33);
+  font-size: 12px;
+}
+
+.auth-footer p {
+  margin: 0 0 10px;
+}
+
+.auth-footer div {
+  display: flex;
+  justify-content: center;
+  gap: 28px;
+}
+
+.auth-footer a {
+  color: rgba(230, 220, 207, 0.38);
+  text-decoration: none;
+}
+
+@keyframes authCardReveal {
+  from {
+    opacity: 0;
+    transform: translateY(24px) scale(0.97);
+    filter: blur(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+}
+
+@media (max-height: 760px) {
+  .signin-card {
+    min-height: auto;
+    padding: 28px 34px;
+  }
+
+  .signin-subtitle {
+    margin-bottom: 20px;
+  }
+
+  .signin-field {
+    margin-bottom: 16px;
+  }
+
+  .signin-divider {
+    margin: 20px 0 16px;
+  }
+
+  .signin-register {
+    margin-top: 18px;
+  }
+
+  .auth-footer {
+    display: none;
+  }
+}

@@ -1,0 +1,91 @@
+{
+  "auth.signIn": "Anmelden",
+  "auth.signUp": "Konto erstellen",
+  "auth.email": "E-Mail-Adresse",
+  "auth.password": "Passwort",
+  "auth.confirmPassword": "Passwort bestätigen",
+  "auth.firstName": "Vorname",
+  "auth.lastName": "Nachname",
+  "auth.language": "Bevorzugte Sprache",
+  "auth.verify": "Konto verifizieren",
+  "auth.forgotPassword": "Passwort vergessen?",
+
+  "home.title": "Entdecke das Alte Ägypten",
+
+  "home.nav.home": "Startseite",
+  "home.nav.collection": "Sammlung",
+  "home.nav.artifacts": "Artefakte",
+  "home.nav.gallery": "Galerie",
+  "home.nav.scan": "Scan & KI",
+  "home.nav.translate": "KI Übersetzung",
+
+  "home.hero.title1": "Entdecke die",
+  "home.hero.title2": "Wunder des",
+  "home.hero.title3": "Alten Ägyptens",
+
+  "home.hero.description": "Dein digitaler Begleiter zur Entdeckung faszinierender Artefakte und zeitlosen Kulturerbes.",
+
+  "home.hero.explore": "Sammlungen erkunden",
+  "home.hero.translate": "Hieroglyphen übersetzen",
+
+  "home.stats.artifacts": "Artefakte",
+  "home.stats.languages": "Sprachen",
+  "home.stats.powered": "Angetrieben",
+  "home.stats.experience": "Erlebnis",
+
+  "home.features.title1": "Erlebe das Museum",
+  "home.features.title2": "anders",
+
+  "home.features.description": "Tauche mit intelligenten Tools für moderne Entdecker in die Geschichte ein.",
+
+  "home.features.card1.title": "Erkunde das Museum frei",
+  "home.features.card1.description": "Entdecke die Hallen der Geschichte mit interaktiven Wegen und smarter digitaler Führung.",
+
+  "home.features.card2.title": "Scanne und entdecke Artefakte",
+  "home.features.card2.description": "Scanne Artefakte und entdecke historische Geschichten und interaktive Details.",
+
+  "home.features.card3.title": "Übersetze alte Hieroglyphen",
+  "home.features.card3.description": "Nutze KI, um alte ägyptische Symbole einfach zu verstehen.",
+
+  "home.features.learnMore": "Mehr erfahren",
+
+  "home.cta.title1": "Bereit deine",
+  "home.cta.title2": "Reise zu beginnen?",
+
+  "home.cta.description": "Schließe dich tausenden Entdeckern und Geschichtsliebhabern an, um die ewigen Geheimnisse des Nils zu entdecken.",
+
+  "home.cta.button": "Jetzt starten",
+
+  "home.footer.privacy": "Datenschutz",
+  "home.footer.accessibility": "Barrierefreiheit",
+
+  "home.footer.copyright": "© 2026 KHEMET Digitalmuseum",
+  "collections.title": "Entdecke die Sammlungen",
+"collections.description": "Entdecke tausende Jahre ägyptischer Geschichte und das Erbe der Pharaonen.",
+"collections.searchPlaceholder": "Artefakte suchen",
+"collections.filters.all": "Alle",
+"collections.filters.statues": "Statuen",
+"collections.filters.sarcophagi": "Sarkophage",
+"collections.filters.papyrus": "Papyrus",
+"collections.empty": "Keine Artefakte gefunden. Versuche eine andere Suche.",
+"collections.more": "Weitere Artefakte entdecken",
+"artifacts.tutankhamun.title": "Goldene Maske von Tutanchamun",
+"artifacts.tutankhamun.period": "18. Dynastie, Neues Reich",
+"artifacts.tutankhamun.location": "Galerie 3, Ebene 2",
+"artifacts.tutankhamun.detailsTitle": "Schätze des jungen Königs",
+"artifacts.tutankhamun.description": "Die goldene Totenmaske von Tutanchamun gehört zu den bekanntesten Meisterwerken des alten Ägyptens. Sie wurde aus Gold und Edelsteinen gefertigt und symbolisiert göttliche Macht und Unsterblichkeit.",
+"artifacts.tutankhamun.history": "Die Maske wurde 1925 von Howard Carter im Tal der Könige entdeckt und gilt als eine der größten archäologischen Entdeckungen der modernen Geschichte.",
+
+"artifacts.ramesses.title": "Statue von Ramses II.",
+"artifacts.ramesses.period": "19. Dynastie, Neues Reich",
+"artifacts.ramesses.location": "Die Große Treppe",
+"artifacts.ramesses.detailsTitle": "Der große Krieger-Pharao",
+"artifacts.ramesses.description": "Diese monumentale Statue von Ramses II. repräsentiert einen der mächtigsten Herrscher der ägyptischen Geschichte.",
+"artifacts.ramesses.history": "Ramses II. regierte Ägypten über sechzig Jahre lang und ließ einige der beeindruckendsten Tempel des alten Ägyptens errichten.",
+"artifact.back": "Zurück zu den Sammlungen",
+"artifact.notFound": "Artefakt nicht gefunden",
+"artifact.overview": "Überblick",
+"artifact.history": "Geschichte",
+"artifact.defaultHistory": "Dieses Artefakt spiegelt das künstlerische und spirituelle Erbe des alten Ägyptens wider.",
+"artifact.bottomNote": "Jedes Artefakt erzählt eine Geschichte – entdecke seine Details, seine Geschichte und tauche tiefer in die Welt des alten Ägyptens ein."
+}

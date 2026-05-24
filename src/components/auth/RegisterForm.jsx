@@ -1,0 +1,205 @@
+import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { ArrowRight, Eye, EyeOff, ShieldCheck } from 'lucide-react';
+import LanguageSelect from './LanguageSelect';
+import TermsCheckbox from './TermsCheckbox';
+import PasswordStrength from './PasswordStrength';
+import { ROUTES } from '../../constants/routes';
+
+export default function RegisterForm() {
+  const navigate = useNavigate();
+
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
+    preferredLanguage: '',
+  });
+
+  const [acceptedTerms, setAcceptedTerms] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+
+  const updateField = (name, value) => {
+    setFormData((prev) => ({ ...prev, [name]: value }));
+    setErrorMessage('');
+  };
+
+  const validatePassword = (password) => {
+    const hasCapital = /[A-Z]/.test(password);
+    const hasSmall = /[a-z]/.test(password);
+    const hasNumber = /\d/.test(password);
+    const hasUnderscore = /_/.test(password);
+    const hasLength = password.length >= 8;
+
+    return hasCapital && hasSmall && hasNumber && hasUnderscore && hasLength;
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    setErrorMessage('');
+
+    if (
+      !formData.firstName ||
+      !formData.lastName ||
+      !formData.email ||
+      !formData.password ||
+      !formData.confirmPassword ||
+      !formData.preferredLanguage
+    ) {
+      setErrorMessage('Please fill in all required fields.');
+      return;
+    }
+
+    if (!validatePassword(formData.password)) {
+      setErrorMessage(
+        'Password must contain capital letter, small letter, number, underscore, and at least 8 characters.'
+      );
+      return;
+    }
+
+    if (formData.password !== formData.confirmPassword) {
+      setErrorMessage('Passwords do not match.');
+      return;
+    }
+
+    if (!acceptedTerms) {
+      setErrorMessage('You must accept the Terms and Privacy Policy.');
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
+      // TODO later:
+      // const captchaToken = await getCaptchaToken();
+      // await authApi.register({ ...formData, captchaToken });
+
+      await new Promise((resolve) => setTimeout(resolve, 900));
+
+      const mockVerificationData = {
+        verificationId: 'mock-verification-id',
+        email: formData.email,
+        options: [24, 68, 91],
+      };
+
+      navigate(ROUTES.EMAIL_VERIFICATION_CHOICE, {
+        state: mockVerificationData,
+      });
+    } catch (error) {
+      setErrorMessage('This email may already be registered. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return (
+    <section className="register-card">
+      <h1>Create Account</h1>
+
+      <p className="register-subtitle">
+        Start your smart journey through ancient Egypt.
+      </p>
+
+      <form onSubmit={handleSubmit}>
+        <div className="register-grid">
+          <div className="register-field">
+            <label>First Name</label>
+            <input
+              type="text"
+              placeholder="First name"
+              value={formData.firstName}
+              onChange={(event) => updateField('firstName', event.target.value)}
+            />
+          </div>
+
+          <div className="register-field">
+            <label>Last Name</label>
+            <input
+              type="text"
+              placeholder="Last name"
+              value={formData.lastName}
+              onChange={(event) => updateField('lastName', event.target.value)}
+            />
+          </div>
+        </div>
+
+        <div className="register-field">
+          <label>Email</label>
+          <input
+            type="email"
+            placeholder="Enter your email address"
+            value={formData.email}
+            onChange={(event) => updateField('email', event.target.value)}
+          />
+        </div>
+
+        <div className="register-field">
+          <label>Password</label>
+          <div className="register-password">
+            <input
+              type={showPassword ? 'text' : 'password'}
+              placeholder="Create a strong password"
+              value={formData.password}
+              onChange={(event) => updateField('password', event.target.value)}
+            />
+
+            <button type="button" onClick={() => setShowPassword((prev) => !prev)}>
+              {showPassword ? <EyeOff size={17} /> : <Eye size={17} />}
+            </button>
+          </div>
+        </div>
+
+        <PasswordStrength password={formData.password} />
+
+        <div className="register-field">
+          <label>Confirm Password</label>
+          <div className="register-password">
+            <input
+              type={showConfirmPassword ? 'text' : 'password'}
+              placeholder="Confirm your password"
+              value={formData.confirmPassword}
+              onChange={(event) =>
+                updateField('confirmPassword', event.target.value)
+              }
+            />
+
+            <button
+              type="button"
+              onClick={() => setShowConfirmPassword((prev) => !prev)}
+            >
+              {showConfirmPassword ? <EyeOff size={17} /> : <Eye size={17} />}
+            </button>
+          </div>
+        </div>
+
+        <LanguageSelect
+          value={formData.preferredLanguage}
+          onChange={(value) => updateField('preferredLanguage', value)}
+        />
+
+        <TermsCheckbox checked={acceptedTerms} onChange={setAcceptedTerms} />
+
+        <div className="register-captcha">
+          <ShieldCheck size={16} />
+          Protected by Invisible CAPTCHA
+        </div>
+
+        {errorMessage && <p className="register-error">{errorMessage}</p>}
+
+        <button className="register-submit" type="submit" disabled={isLoading}>
+          {isLoading ? 'Creating Account...' : 'Create Account'}
+          <ArrowRight size={18} />
+        </button>
+      </form>
+
+      <p className="register-login">
+        Already have an account? <Link to={ROUTES.SIGN_IN}>Sign In</Link>
+      </p>
+    </section>
+  );
+}

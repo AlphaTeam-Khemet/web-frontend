@@ -1,0 +1,91 @@
+{
+  "auth.signIn": "Iniciar sesión",
+  "auth.signUp": "Crear cuenta",
+  "auth.email": "Correo electrónico",
+  "auth.password": "Contraseña",
+  "auth.confirmPassword": "Confirmar contraseña",
+  "auth.firstName": "Nombre",
+  "auth.lastName": "Apellido",
+  "auth.language": "Idioma preferido",
+  "auth.verify": "Verificar cuenta",
+  "auth.forgotPassword": "¿Olvidaste tu contraseña?",
+
+  "home.title": "Explora el Antiguo Egipto",
+
+  "home.nav.home": "Inicio",
+  "home.nav.collection": "Colección",
+  "home.nav.artifacts": "Artefactos",
+  "home.nav.gallery": "Galería",
+  "home.nav.scan": "Escaneo e IA",
+  "home.nav.translate": "Traducir IA",
+
+  "home.hero.title1": "Descubre las",
+  "home.hero.title2": "Maravillas del",
+  "home.hero.title3": "Antiguo Egipto",
+
+  "home.hero.description": "Tu compañero digital para descubrir los artefactos más fascinantes y el patrimonio eterno.",
+
+  "home.hero.explore": "Explorar colecciones",
+  "home.hero.translate": "Traducir jeroglíficos",
+
+  "home.stats.artifacts": "Artefactos",
+  "home.stats.languages": "Idiomas",
+  "home.stats.powered": "Impulsado",
+  "home.stats.experience": "Experiencia",
+
+  "home.features.title1": "Vive el museo",
+  "home.features.title2": "de forma diferente",
+
+  "home.features.description": "Sumérgete en la historia con herramientas inteligentes diseñadas para el explorador moderno.",
+
+  "home.features.card1.title": "Explora el museo libremente",
+  "home.features.card1.description": "Recorre los pasillos de la historia con rutas interactivas y guía digital inteligente.",
+
+  "home.features.card2.title": "Escanea y descubre artefactos",
+  "home.features.card2.description": "Escanea artefactos y desbloquea historias históricas y detalles interactivos.",
+
+  "home.features.card3.title": "Traduce jeroglíficos antiguos",
+  "home.features.card3.description": "Usa inteligencia artificial para comprender símbolos egipcios antiguos fácilmente.",
+
+  "home.features.learnMore": "Saber más",
+
+  "home.cta.title1": "¿Listo para comenzar tu",
+  "home.cta.title2": "viaje?",
+
+  "home.cta.description": "Únete a miles de exploradores y amantes de la historia para descubrir los secretos eternos del Nilo.",
+
+  "home.cta.button": "Comenzar ahora",
+
+  "home.footer.privacy": "Política de privacidad",
+  "home.footer.accessibility": "Accesibilidad",
+
+  "home.footer.copyright": "© 2026 Museo Digital KHEMET",
+  "collections.title": "Explora las colecciones",
+"collections.description": "Descubre miles de años de historia egipcia y el legado de los faraones.",
+"collections.searchPlaceholder": "Buscar artefactos",
+"collections.filters.all": "Todo",
+"collections.filters.statues": "Estatuas",
+"collections.filters.sarcophagi": "Sarcófagos",
+"collections.filters.papyrus": "Papiros",
+"collections.empty": "No se encontraron artefactos. Prueba otra búsqueda.",
+"collections.more": "Descubrir más artefactos",
+"artifacts.tutankhamun.title": "Máscara Dorada de Tutankamón",
+"artifacts.tutankhamun.period": "Dinastía XVIII, Reino Nuevo",
+"artifacts.tutankhamun.location": "Galería 3, Nivel 2",
+"artifacts.tutankhamun.detailsTitle": "Tesoros del Rey Niño",
+"artifacts.tutankhamun.description": "La máscara funeraria dorada de Tutankamón es una de las obras maestras más icónicas de la civilización egipcia antigua. Fue elaborada con oro y piedras preciosas para proteger al faraón en la otra vida y simbolizar el poder divino y la inmortalidad.",
+"artifacts.tutankhamun.history": "La máscara fue descubierta en 1925 por Howard Carter en el Valle de los Reyes y se convirtió en uno de los mayores descubrimientos arqueológicos de la historia moderna.",
+
+"artifacts.ramesses.title": "Estatua de Ramsés II",
+"artifacts.ramesses.period": "Dinastía XIX, Reino Nuevo",
+"artifacts.ramesses.location": "La Gran Escalinata",
+"artifacts.ramesses.detailsTitle": "El Gran Faraón Guerrero",
+"artifacts.ramesses.description": "Esta monumental estatua de Ramsés II representa a uno de los gobernantes más poderosos de la historia egipcia antigua.",
+"artifacts.ramesses.history": "Ramsés II gobernó Egipto durante más de sesenta años y construyó algunos de los templos y monumentos más impresionantes del antiguo Egipto.",
+"artifact.back": "Volver a las colecciones",
+"artifact.notFound": "Artefacto no encontrado",
+"artifact.overview": "Descripción general",
+"artifact.history": "Historia",
+"artifact.defaultHistory": "Este artefacto refleja el legado artístico y espiritual del antiguo Egipto.",
+"artifact.bottomNote": "Cada artefacto guarda una historia: explora sus detalles, descubre su historia y adéntrate más en el mundo del antiguo Egipto."
+}

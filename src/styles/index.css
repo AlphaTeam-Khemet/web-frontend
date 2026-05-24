@@ -1,0 +1,15 @@
+@import "tailwindcss";
+
+:root {
+  --khemet-gold: #c9a24d;
+  --khemet-gray: #6f6f6f;
+  --khemet-brown: #8b6f4e;
+  --khemet-beige: #e6dccf;
+  --khemet-dark: #0f0b08;
+  --khemet-paper: #f7f4ef;
+}
+
+body {
+  margin: 0;
+  font-family: Inter, system-ui, sans-serif;
+}

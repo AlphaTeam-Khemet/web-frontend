@@ -1,0 +1,91 @@
+{
+  "auth.signIn": "Se connecter",
+  "auth.signUp": "Créer un compte",
+  "auth.email": "Adresse e-mail",
+  "auth.password": "Mot de passe",
+  "auth.confirmPassword": "Confirmer le mot de passe",
+  "auth.firstName": "Prénom",
+  "auth.lastName": "Nom",
+  "auth.language": "Langue préférée",
+  "auth.verify": "Vérifier le compte",
+  "auth.forgotPassword": "Mot de passe oublié ?",
+
+  "home.title": "Explorez l’Égypte ancienne",
+
+  "home.nav.home": "Accueil",
+  "home.nav.collection": "Collection",
+  "home.nav.artifacts": "Artéfacts",
+  "home.nav.gallery": "Galerie",
+  "home.nav.scan": "Scan & IA",
+  "home.nav.translate": "Traduction IA",
+
+  "home.hero.title1": "Découvrez les",
+  "home.hero.title2": "Merveilles de",
+  "home.hero.title3": "l’Égypte ancienne",
+
+  "home.hero.description": "Votre compagnon numérique pour découvrir les artéfacts les plus fascinants et un patrimoine intemporel.",
+
+  "home.hero.explore": "Explorer les collections",
+  "home.hero.translate": "Traduire les hiéroglyphes",
+
+  "home.stats.artifacts": "Artéfacts",
+  "home.stats.languages": "Langues",
+  "home.stats.powered": "Propulsé",
+  "home.stats.experience": "Expérience",
+
+  "home.features.title1": "Vivez le musée",
+  "home.features.title2": "différemment",
+
+  "home.features.description": "Plongez dans l’histoire grâce à des outils intelligents conçus pour l’explorateur moderne.",
+
+  "home.features.card1.title": "Explorez le musée librement",
+  "home.features.card1.description": "Parcourez les couloirs de l’histoire avec des itinéraires interactifs et un guidage numérique intelligent.",
+
+  "home.features.card2.title": "Scannez et découvrez les artéfacts",
+  "home.features.card2.description": "Scannez les artéfacts pour débloquer des histoires historiques et des détails interactifs.",
+
+  "home.features.card3.title": "Traduisez les hiéroglyphes anciens",
+  "home.features.card3.description": "Utilisez l’intelligence artificielle pour comprendre facilement les anciens symboles égyptiens.",
+
+  "home.features.learnMore": "En savoir plus",
+
+  "home.cta.title1": "Prêt à commencer votre",
+  "home.cta.title2": "voyage ?",
+
+  "home.cta.description": "Rejoignez des milliers d’explorateurs et de passionnés d’histoire pour découvrir les secrets éternels du Nil.",
+
+  "home.cta.button": "Commencer maintenant",
+
+  "home.footer.privacy": "Politique de confidentialité",
+  "home.footer.accessibility": "Accessibilité",
+
+  "home.footer.copyright": "© 2026 Musée Numérique KHEMET",
+  "collections.title": "Explorez les collections",
+"collections.description": "Découvrez des milliers d’années d’histoire égyptienne et l’héritage des pharaons.",
+"collections.searchPlaceholder": "Rechercher des artéfacts",
+"collections.filters.all": "Tous",
+"collections.filters.statues": "Statues",
+"collections.filters.sarcophagi": "Sarcophages",
+"collections.filters.papyrus": "Papyrus",
+"collections.empty": "Aucun artéfact trouvé. Essayez une autre recherche.",
+"collections.more": "Découvrir plus d’artéfacts",
+"artifacts.tutankhamun.title": "Masque d'Or de Toutânkhamon",
+"artifacts.tutankhamun.period": "XVIIIe dynastie, Nouvel Empire",
+"artifacts.tutankhamun.location": "Galerie 3, Niveau 2",
+"artifacts.tutankhamun.detailsTitle": "Les Trésors du Jeune Roi",
+"artifacts.tutankhamun.description": "Le masque funéraire en or de Toutânkhamon est l’un des chefs-d’œuvre les plus emblématiques de l’Égypte antique. Fabriqué en or et pierres précieuses, il symbolise le pouvoir divin et l’immortalité.",
+"artifacts.tutankhamun.history": "Le masque a été découvert en 1925 par Howard Carter dans la Vallée des Rois et est devenu l’une des plus grandes découvertes archéologiques de l’histoire moderne.",
+
+"artifacts.ramesses.title": "Statue de Ramsès II",
+"artifacts.ramesses.period": "XIXe dynastie, Nouvel Empire",
+"artifacts.ramesses.location": "Le Grand Escalier",
+"artifacts.ramesses.detailsTitle": "Le Grand Pharaon Guerrier",
+"artifacts.ramesses.description": "Cette statue monumentale de Ramsès II représente l’un des dirigeants les plus puissants de l’histoire égyptienne.",
+"artifacts.ramesses.history": "Ramsès II régna sur l’Égypte pendant plus de soixante ans et fit construire certains des plus grands temples de l’Égypte antique.",
+"artifact.back": "Retour aux collections",
+"artifact.notFound": "Artéfact introuvable",
+"artifact.overview": "Aperçu",
+"artifact.history": "Histoire",
+"artifact.defaultHistory": "Cet artéfact reflète l’héritage artistique et spirituel de l’Égypte ancienne.",
+"artifact.bottomNote": "Chaque artéfact porte une histoire : explorez ses détails, découvrez son passé et plongez plus profondément dans le monde de l’Égypte ancienne."
+}
