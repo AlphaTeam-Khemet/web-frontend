@@ -18,7 +18,6 @@ export default function CTASection() {
 
         <p>{t('home.cta.description')}</p>
 
-        <button type="button">{t('home.cta.button')} →</button>
       </div>
     </section>
   );

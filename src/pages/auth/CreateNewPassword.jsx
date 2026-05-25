@@ -57,12 +57,7 @@ export default function CreateNewPassword() {
       <div className="cnp-overlay" />
       <div className="cnp-pattern" />
 
-      <Link to={ROUTES.SIGN_IN} className="cnp-top-link">
-        <span>
-          <ArrowLeft size={18} />
-        </span>
-        Sign In
-      </Link>
+      
 
       <p className="cnp-brand">KHEMET</p>
 

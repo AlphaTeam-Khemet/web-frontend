@@ -1,2 +1,91 @@
-import PageLayout from '../components/layout/PageLayout';
-export default function Settings() { return <PageLayout><section className="mx-auto max-w-7xl px-6 py-16"><h1 className="font-display text-5xl font-bold text-khemet-dark">Settings</h1><p className="mt-4 text-khemet-gray">User preferences and application settings.</p></section></PageLayout>; }
+import { useNavigate } from 'react-router-dom';
+
+import Footer from '../components/home/Footer';
+
+import ProfileCard from '../components/settings/ProfileCard';
+import ActivityStats from '../components/settings/ActivityStats';
+import SettingsContent from '../components/settings/SettingsContent';
+
+import { useFavorites } from '../context/FavoritesContext';
+import { useUserProfile } from '../context/UserProfileContext';
+import { useLanguage } from '../context/LanguageContext';
+
+import '../styles/settings.css';
+
+const languageLabels = {
+  en: 'English',
+  ar: 'العربية',
+  fr: 'Français',
+  de: 'Deutsch',
+  es: 'Español',
+  zh: '中文',
+};
+
+export default function Settings() {
+  const navigate = useNavigate();
+
+  const { favoritesCount } = useFavorites();
+  const { user, updateAvatar, updateProfile } = useUserProfile();
+  const { language } = useLanguage();
+
+  const handleLogout = () => {
+    /*
+      Backend later:
+      POST /auth/logout
+      clear token
+    */
+
+    navigate('/');
+  };
+
+  const handleDeleteAccount = async () => {
+  const confirmed = window.confirm(
+    'Are you sure you want to delete your account? This action cannot be undone.'
+  );
+
+  if (!confirmed) return;
+
+  try {
+    /*
+      Backend later:
+      await api.delete('/users/me');
+    */
+
+    alert('Your account has been deleted successfully.');
+
+    navigate('/');
+  } catch {
+    alert('Failed to delete account. Please try again.');
+  }
+};
+
+  return (
+    <main className="settings-page">
+      <section className="settings-container">
+        <div className="settings-left-column">
+          <ProfileCard
+            user={user}
+            currentLanguage={languageLabels[language] || 'English'}
+            onLogout={handleLogout}
+            onAvatarChange={updateAvatar}
+          />
+
+          <ActivityStats
+            favoritesCount={favoritesCount}
+            chatsCount={0}
+            scansCount={0}
+          />
+        </div>
+
+        <SettingsContent
+  user={user}
+  onUpdateProfile={updateProfile}
+  onDeleteAccount={handleDeleteAccount}
+/>
+      </section>
+     
+
+      <Footer />
+    </main>
+  );
+}

@@ -1,17 +1,25 @@
 import { useState } from 'react';
-import { NavLink } from 'react-router-dom';
-import { Globe2, UserCircle2, ChevronDown } from 'lucide-react';
+import { NavLink, useLocation, useNavigate } from 'react-router-dom';
+import {
+  Globe2,
+  UserCircle2,
+  ChevronDown,
+  LogOut,
+  Settings,
+} from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+
 import { useLanguage } from '../../context/LanguageContext';
+import { useUserProfile } from '../../context/UserProfileContext';
+
 import logo from '../../assets/images/home/khemet-logo.png';
 
 const navLinks = [
   { labelKey: 'home.nav.home', path: '/home' },
   { labelKey: 'home.nav.collection', path: '/collections' },
   { labelKey: 'home.nav.scan', path: '/scan' },
-  { labelKey: 'home.nav.translate', path: '/translate' },
-  { labelKey: 'home.nav.gallery', path: '/media-gallery' },
-
+  { labelKey: 'home.nav.chat', path: '/chat-ai' },
+  { labelKey: 'home.nav.Setting', path: '/settings' },
 ];
 
 const languages = [
@@ -26,7 +34,15 @@ const languages = [
 export default function Navbar() {
   const { t } = useTranslation();
   const { language, setLanguage } = useLanguage();
+  const { user } = useUserProfile();
+
+  const location = useLocation();
+  const navigate = useNavigate();
+
   const [isLanguageOpen, setIsLanguageOpen] = useState(false);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
+
+  const isSettingsPage = location.pathname.toLowerCase() === '/settings';
 
   const currentLanguage =
     languages.find((item) => item.code === language) || languages[0];
@@ -35,6 +51,34 @@ export default function Navbar() {
     setLanguage(code);
     setIsLanguageOpen(false);
   };
+
+  const handleProfileClick = () => {
+    setIsLanguageOpen(false);
+
+    if (isSettingsPage) {
+      return;
+    }
+
+    setIsProfileOpen((prev) => !prev);
+  };
+
+  const handleOpenSettings = () => {
+    setIsProfileOpen(false);
+    navigate('/settings');
+  };
+
+  const handleLogout = () => {
+  setIsProfileOpen(false);
+
+  /*
+    Backend later:
+    POST /auth/logout
+    remove access token
+    remove refresh token
+  */
+
+  navigate('/welcome');
+};
 
   return (
     <header className="home-navbar">
@@ -56,7 +100,10 @@ export default function Navbar() {
             <button
               className="home-lang-btn"
               type="button"
-              onClick={() => setIsLanguageOpen((prev) => !prev)}
+              onClick={() => {
+                setIsProfileOpen(false);
+                setIsLanguageOpen((prev) => !prev);
+              }}
             >
               <Globe2 size={18} />
               {currentLanguage.short}
@@ -80,9 +127,49 @@ export default function Navbar() {
             )}
           </div>
 
-          <button className="home-profile-btn" type="button">
-            <UserCircle2 size={25} />
-          </button>
+          <div className="home-profile-menu">
+            <button
+              className="home-profile-btn"
+              type="button"
+              onClick={handleProfileClick}
+              aria-label="Profile menu"
+            >
+              {user?.avatar ? (
+                <img src={user.avatar} alt={user.name} />
+              ) : (
+                <UserCircle2 size={25} />
+              )}
+            </button>
+
+            {isProfileOpen && !isSettingsPage && (
+              <div className="home-profile-dropdown">
+                <div className="home-profile-dropdown-head">
+                  <div className="home-profile-dropdown-avatar">
+                    {user?.avatar ? (
+                      <img src={user.avatar} alt={user.name} />
+                    ) : (
+                      <UserCircle2 size={24} />
+                    )}
+                  </div>
+
+                  <div>
+                    <strong>{user?.name}</strong>
+                    <span>{user?.email}</span>
+                  </div>
+                </div>
+
+                <button type="button" onClick={handleOpenSettings}>
+                  <Settings size={16} />
+                  Profile
+                </button>
+
+                <button type="button" onClick={handleLogout}>
+                  <LogOut size={16} />
+                  Logout
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </header>

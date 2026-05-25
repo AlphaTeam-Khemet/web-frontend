@@ -15,9 +15,9 @@
   "home.nav.home": "Home",
   "home.nav.collection": "Collection",
   "home.nav.artifacts": "Artifacts",
-  "home.nav.gallery": "Gallery",
-  "home.nav.scan": "Scan & AI",
-  "home.nav.translate": "Translate AI",
+  "home.nav.Setting": "Settings",
+  "home.nav.scan": "ScanH&A",
+  "home.nav.chat": "Khemet AI  ",
 
   "home.hero.title1": "Discover the",
   "home.hero.title2": "Wonders of",
@@ -31,7 +31,7 @@
   "home.stats.artifacts": "Artifacts",
   "home.stats.languages": "Languages",
   "home.stats.powered": "Powered",
-  "home.stats.experience": "Experience",
+  "home.stats.experience": "Khemet Ai",
 
   "home.features.title1": "Experience the Museum",
   "home.features.title2": "Differently",

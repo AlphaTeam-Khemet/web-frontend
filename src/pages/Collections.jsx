@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import CollectionCard from '../components/collections/CollectionCard';
 import Footer from '../components/home/Footer';
 import { collectionsMockData } from '../data/collectionsMockData';
+import { useFavorites } from '../context/FavoritesContext';
 
 import '../styles/collections.css';
 
@@ -20,11 +21,11 @@ const LOAD_MORE_COUNT = 4;
 
 export default function Collections() {
   const { t } = useTranslation();
+  const { toggleFavorite, isFavorite } = useFavorites();
 
   const [searchTerm, setSearchTerm] = useState('');
   const [activeFilter, setActiveFilter] = useState('All');
   const [visibleCount, setVisibleCount] = useState(INITIAL_VISIBLE_COUNT);
-  const [favoriteIds, setFavoriteIds] = useState([]);
 
   const filteredCollections = useMemo(() => {
     const searchValue = searchTerm.trim().toLowerCase();
@@ -34,9 +35,9 @@ export default function Collections() {
         activeFilter === 'All' || item.category === activeFilter;
 
       const searchableText = `
-        ${item.title}
-        ${item.period}
-        ${item.location}
+        ${t(item.titleKey)}
+        ${t(item.periodKey)}
+        ${t(item.locationKey)}
         ${item.category}
       `.toLowerCase();
 
@@ -45,7 +46,7 @@ export default function Collections() {
 
       return matchesFilter && matchesSearch;
     });
-  }, [searchTerm, activeFilter]);
+  }, [searchTerm, activeFilter, t]);
 
   const visibleCollections = filteredCollections.slice(0, visibleCount);
   const hasMore = visibleCount < filteredCollections.length;
@@ -69,18 +70,6 @@ export default function Collections() {
         behavior: 'smooth',
       });
     }, 120);
-  };
-
-  const handleToggleFavorite = (item) => {
-    setFavoriteIds((prev) => {
-      const isAlreadyFavorite = prev.includes(item.id);
-
-      if (isAlreadyFavorite) {
-        return prev.filter((id) => id !== item.id);
-      }
-
-      return [...prev, item.id];
-    });
   };
 
   return (
@@ -120,8 +109,8 @@ export default function Collections() {
               key={item.id}
               item={item}
               index={index}
-              isFavorite={favoriteIds.includes(item.id)}
-              onToggleFavorite={handleToggleFavorite}
+              isFavorite={isFavorite(item.id)}
+              onToggleFavorite={toggleFavorite}
             />
           ))}
         </div>

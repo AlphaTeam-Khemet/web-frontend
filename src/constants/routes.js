@@ -6,7 +6,6 @@ export const ROUTES = {
   HOME: "/home",
   COLLECTIONS: "/collections",
   ARTIFACT_DETAILS: '/artifact-details/:id',
-  MEDIA_GALLERY: "/media-gallery",
   TRANSLATE: "/translate",
   FAVORITES: "/favorites",
   PROFILE: "/profile",
@@ -14,6 +13,8 @@ export const ROUTES = {
   WELCOME: "/welcome",
   CREATE_NEW_PASSWORD: '/create-new-password',
   EMAIL_VERIFICATION_CHOICE: '/email-verification-choice',
+  SCAN_AI: '/scan',
+  CHAT_AI: '/chat-ai',
 };
 
 export const getArtifactDetailsRoute = (id) => `/artifact-details/${id}`;

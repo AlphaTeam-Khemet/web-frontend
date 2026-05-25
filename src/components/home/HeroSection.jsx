@@ -24,9 +24,7 @@ export default function HeroSection() {
             {t('home.hero.explore')}
           </button>
 
-          <button className="home-secondary-btn" type="button">
-            {t('home.hero.translate')}
-          </button>
+          
         </div>
       </div>
     </section>

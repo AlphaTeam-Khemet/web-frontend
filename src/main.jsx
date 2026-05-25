@@ -7,12 +7,16 @@ import App from './App';
 import './styles/index.css';
 import './i18n';
 import { LanguageProvider } from './context/LanguageContext';
+import { FavoritesProvider } from './context/FavoritesContext';
+import { UserProfileProvider } from './context/UserProfileContext';
 
 const queryClient = new QueryClient();
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   
   <LanguageProvider>
+    <UserProfileProvider>
+    <FavoritesProvider>
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
@@ -22,5 +26,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
       </BrowserRouter>
     </QueryClientProvider>
   </React.StrictMode>
+  </FavoritesProvider>
+  </UserProfileProvider>
   </LanguageProvider>
 );

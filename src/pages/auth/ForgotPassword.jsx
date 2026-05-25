@@ -45,10 +45,7 @@ export default function ForgotPassword() {
       <img src={forgotBg} alt="" className="forgot-bg" />
       <div className="forgot-overlay" />
 
-      <Link to={ROUTES.SIGN_IN} className="forgot-back">
-        <ArrowLeft size={18} />
-        Back to Sign In
-      </Link>
+      
 
       <section className="forgot-card">
         <div className="forgot-icon">

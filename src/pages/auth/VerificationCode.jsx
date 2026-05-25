@@ -77,12 +77,7 @@ export default function VerificationCode() {
       <div className="verification-overlay" />
       <div className="verification-pattern" />
 
-      <Link to={ROUTES.SIGN_IN} className="verification-back">
-        <span>
-          <ArrowLeft size={20} />
-        </span>
-        Back to Login
-      </Link>
+     
 
       <p className="verification-brand">KHEMET</p>
 
@@ -95,7 +90,7 @@ export default function VerificationCode() {
           <ShieldCheck size={34} />
         </div>
 
-        <h1>Verify Identity</h1>
+        <h1>verification code</h1>
 
         <p className="verification-subtitle">
           We have sent a verification code (OTP) to your registered email.

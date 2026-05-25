@@ -12,12 +12,7 @@ export default function SignUp() {
       <div className="register-overlay" />
       <div className="register-pattern" />
 
-      <Link to={ROUTES.SIGN_IN} className="register-top-link">
-        <span>
-          <ArrowLeft size={18} />
-        </span>
-        Sign In
-      </Link>
+      
 
       
       <RegisterForm />
