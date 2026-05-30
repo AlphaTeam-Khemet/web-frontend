@@ -1,0 +1,91 @@
+{
+  "auth.signIn": "登录",
+  "auth.signUp": "创建账户",
+  "auth.email": "电子邮箱",
+  "auth.password": "密码",
+  "auth.confirmPassword": "确认密码",
+  "auth.firstName": "名字",
+  "auth.lastName": "姓氏",
+  "auth.language": "首选语言",
+  "auth.verify": "验证账户",
+  "auth.forgotPassword": "忘记密码？",
+
+  "home.title": "探索古埃及",
+
+  "home.nav.home": "主页",
+  "home.nav.collection": "收藏",
+  "home.nav.artifacts": "文物",
+  "home.nav.gallery": "画廊",
+  "home.nav.scan": "扫描与人工智能",
+  "home.nav.translate": "AI 翻译",
+
+  "home.hero.title1": "探索",
+  "home.hero.title2": "古埃及的",
+  "home.hero.title3": "奇迹",
+
+  "home.hero.description": "您的数字伙伴，带您探索最迷人的文物与永恒的历史遗产。",
+
+  "home.hero.explore": "探索收藏",
+  "home.hero.translate": "翻译象形文字",
+
+  "home.stats.artifacts": "文物",
+  "home.stats.languages": "语言",
+  "home.stats.powered": "驱动",
+  "home.stats.experience": "体验",
+
+  "home.features.title1": "以不同方式",
+  "home.features.title2": "体验博物馆",
+
+  "home.features.description": "通过专为现代探索者打造的智能工具沉浸于历史之中。",
+
+  "home.features.card1.title": "自由探索博物馆",
+  "home.features.card1.description": "通过互动路线与智能数字引导探索历史长廊。",
+
+  "home.features.card2.title": "扫描并发现文物",
+  "home.features.card2.description": "扫描文物以解锁历史故事与互动信息。",
+
+  "home.features.card3.title": "翻译古代象形文字",
+  "home.features.card3.description": "使用人工智能轻松理解古埃及符号。",
+
+  "home.features.learnMore": "了解更多",
+
+  "home.cta.title1": "准备开始您的",
+  "home.cta.title2": "旅程了吗？",
+
+  "home.cta.description": "加入成千上万的探索者与历史爱好者，一起发现尼罗河永恒的秘密。",
+
+  "home.cta.button": "立即开始",
+
+  "home.footer.privacy": "隐私政策",
+  "home.footer.accessibility": "无障碍访问",
+
+  "home.footer.copyright": "© 2026 KHEMET 数字博物馆",
+  "collections.title": "探索收藏",
+"collections.description": "发现数千年的埃及历史与法老的伟大遗产。",
+"collections.searchPlaceholder": "搜索文物",
+"collections.filters.all": "全部",
+"collections.filters.statues": "雕像",
+"collections.filters.sarcophagi": "石棺",
+"collections.filters.papyrus": "纸草",
+"collections.empty": "未找到文物。请尝试其他搜索。",
+"collections.more": "发现更多文物",
+"artifacts.tutankhamun.title": "图坦卡蒙黄金面具",
+"artifacts.tutankhamun.period": "第十八王朝，新王国时期",
+"artifacts.tutankhamun.location": "第三展厅，二层",
+"artifacts.tutankhamun.detailsTitle": "少年法老的珍宝",
+"artifacts.tutankhamun.description": "图坦卡蒙的黄金面具是古埃及文明最具代表性的杰作之一。它由黄金与宝石制成，象征神圣力量与永恒。",
+"artifacts.tutankhamun.history": "该面具于1925年由霍华德·卡特在帝王谷发现，并成为现代历史上最伟大的考古发现之一。",
+
+"artifacts.ramesses.title": "拉美西斯二世雕像",
+"artifacts.ramesses.period": "第十九王朝，新王国时期",
+"artifacts.ramesses.location": "大楼梯大厅",
+"artifacts.ramesses.detailsTitle": "伟大的战士法老",
+"artifacts.ramesses.description": "这座巨大的拉美西斯二世雕像展现了古埃及最强大的统治者之一。",
+"artifacts.ramesses.history": "拉美西斯二世统治埃及六十多年，建造了许多古埃及最宏伟的神庙和纪念建筑。",
+"artifact.back": "返回收藏",
+"artifact.notFound": "未找到文物",
+"artifact.overview": "概览",
+"artifact.history": "历史",
+"artifact.defaultHistory": "这件文物体现了古埃及的艺术与精神遗产。",
+"artifact.bottomNote": "每件文物都承载着一个故事——探索它的细节，了解它的历史，深入走进古埃及的世界。"
+}

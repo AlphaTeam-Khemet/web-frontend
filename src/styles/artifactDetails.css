@@ -1,0 +1,256 @@
+.artifact-details-page {
+  min-height: 100vh;
+  background: #efe3d0;
+  color: #24180f;
+  padding: 128px 0 46px;
+}
+
+.artifact-details-container {
+  width: min(1240px, calc(100% - 36px));
+  margin: 0 auto;
+}
+
+.artifact-back-link {
+  width: fit-content;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #7a5a22;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 800;
+  transition: 0.25s ease;
+}
+
+.artifact-back-link:hover {
+  color: #24180f;
+  transform: translateX(-4px);
+}
+
+.artifact-main-layout {
+  margin-top: 34px;
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 54px;
+  align-items: center;
+}
+
+.artifact-image-frame {
+  height: 620px;
+  border-radius: 28px;
+  overflow: hidden;
+  background: #21160e;
+  box-shadow: 0 26px 70px rgba(55, 34, 15, 0.2);
+  animation: artifactImageReveal 0.8s ease both;
+}
+
+.artifact-image-frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition:
+    transform 0.55s ease,
+    filter 0.55s ease;
+}
+
+.artifact-image-frame:hover img {
+  transform: scale(1.035);
+  filter: brightness(1.04);
+}
+
+.artifact-text-panel {
+  max-width: 520px;
+  animation: artifactTextReveal 0.7s ease both;
+}
+
+.artifact-category {
+  display: inline-block;
+  margin-bottom: 14px;
+  color: #a97d35;
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.artifact-text-panel h1 {
+  margin: 0;
+  font-family: "Cormorant Garamond", serif;
+  font-size: clamp(46px, 5vw, 76px);
+  line-height: 0.95;
+  color: #24180f;
+}
+
+.artifact-meta {
+  margin: 14px 0 0;
+  color: #7a6a55;
+  font-size: 14px;
+  font-style: italic;
+}
+
+.artifact-tabs {
+  margin-top: 32px;
+  display: flex;
+  gap: 26px;
+  border-bottom: 1px solid rgba(169, 125, 53, 0.18);
+}
+
+.artifact-tabs button {
+  position: relative;
+  padding: 0 0 13px;
+  border: 0;
+  background: transparent;
+  color: #24180f;
+  font-size: 12px;
+  font-weight: 900;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.artifact-tabs button::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -1px;
+  width: 0;
+  height: 2px;
+  background: #a97d35;
+  transition: 0.25s ease;
+}
+
+.artifact-tabs button.active::after,
+.artifact-tabs button:hover::after {
+  width: 100%;
+}
+
+.artifact-description {
+  margin: 28px 0 0;
+  color: #6a5a47;
+  font-size: 16px;
+  line-height: 1.9;
+}
+
+.artifact-info-list {
+  margin-top: 28px;
+  display: grid;
+  gap: 12px;
+}
+
+.artifact-info-list div {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #5f4f3d;
+  font-size: 14px;
+}
+
+.artifact-info-list svg {
+  color: #a97d35;
+  flex-shrink: 0;
+}
+
+.artifact-bottom-note {
+  margin-top: 54px;
+  padding: 30px 36px;
+  border-radius: 26px;
+  background: #fff8ee;
+  border: 1px solid rgba(169, 125, 53, 0.12);
+  box-shadow: 0 18px 45px rgba(65, 39, 15, 0.08);
+  text-align: center;
+}
+
+.artifact-bottom-note p {
+  max-width: 760px;
+  margin: 0 auto;
+  color: #6d5b47;
+  font-size: 16px;
+  line-height: 1.8;
+}
+
+.artifact-not-found {
+  min-height: 70vh;
+  display: grid;
+  place-items: center;
+  text-align: center;
+}
+
+.artifact-not-found h1 {
+  font-family: "Cormorant Garamond", serif;
+  font-size: 56px;
+}
+
+.artifact-not-found a {
+  color: #a97d35;
+  font-weight: 800;
+}
+
+@keyframes artifactImageReveal {
+  from {
+    opacity: 0;
+    transform: translateY(22px) scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes artifactTextReveal {
+  from {
+    opacity: 0;
+    transform: translateX(24px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+html[dir="rtl"] .artifact-main-layout {
+  direction: rtl;
+}
+
+html[dir="rtl"] .artifact-text-panel {
+  text-align: right;
+}
+
+html[dir="rtl"] .artifact-tabs button::after {
+  left: auto;
+  right: 0;
+}
+
+html[dir="rtl"] .artifact-back-link:hover {
+  transform: translateX(4px);
+}
+
+@media (max-width: 980px) {
+  .artifact-main-layout {
+    grid-template-columns: 1fr;
+    gap: 34px;
+  }
+
+  .artifact-image-frame {
+    height: 520px;
+  }
+
+  .artifact-text-panel {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 560px) {
+  .artifact-details-page {
+    padding-top: 112px;
+  }
+
+  .artifact-image-frame {
+    height: 420px;
+    border-radius: 24px;
+  }
+
+  .artifact-bottom-note {
+    padding: 24px;
+  }
+}

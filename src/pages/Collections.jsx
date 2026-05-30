@@ -1,0 +1,173 @@
+import { useEffect, useMemo, useState } from 'react';
+import { Search } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
+
+import CollectionCard from '../components/collections/CollectionCard';
+import Footer from '../components/home/Footer';
+import { collectionsMockData } from '../data/collectionsMockData';
+import { useFavorites } from '../context/FavoritesContext';
+import { artifactsApi } from '../api/artifactsApi';
+import { getApiErrorMessage, normalizeMonument } from '../utils/apiData';
+
+import '../styles/collections.css';
+
+const filters = [
+  { value: 'All', labelKey: 'collections.filters.all' },
+  { value: 'Statues', labelKey: 'collections.filters.statues' },
+  { value: 'Sarcophagi', labelKey: 'collections.filters.sarcophagi' },
+  { value: 'Papyrus', labelKey: 'collections.filters.papyrus' },
+];
+
+const INITIAL_VISIBLE_COUNT = 4;
+const LOAD_MORE_COUNT = 4;
+
+export default function Collections() {
+  const { t } = useTranslation();
+  const { toggleFavorite, isFavorite } = useFavorites();
+
+  const [searchTerm, setSearchTerm] = useState('');
+  const [activeFilter, setActiveFilter] = useState('All');
+  const [visibleCount, setVisibleCount] = useState(INITIAL_VISIBLE_COUNT);
+  const [collections, setCollections] = useState(collectionsMockData);
+  const [isLoading, setIsLoading] = useState(true);
+  const [errorMessage, setErrorMessage] = useState('');
+
+  useEffect(() => {
+    let active = true;
+
+    async function loadMonuments() {
+      setIsLoading(true);
+      setErrorMessage('');
+
+      try {
+        const { data } = await artifactsApi.getAll();
+        if (active) setCollections(data.map(normalizeMonument));
+      } catch (error) {
+        if (active) {
+          setErrorMessage(getApiErrorMessage(error, 'Unable to load monuments from the backend.'));
+        }
+      } finally {
+        if (active) setIsLoading(false);
+      }
+    }
+
+    loadMonuments();
+
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  const filteredCollections = useMemo(() => {
+    const searchValue = searchTerm.trim().toLowerCase();
+
+    return collections.filter((item) => {
+      const matchesFilter =
+        activeFilter === 'All' || item.category === activeFilter;
+
+      const searchableText = `
+        ${item.displayName || t(item.titleKey)}
+        ${item.period || t(item.periodKey)}
+        ${item.location || t(item.locationKey)}
+        ${item.category}
+      `.toLowerCase();
+
+      const matchesSearch =
+        searchValue === '' || searchableText.includes(searchValue);
+
+      return matchesFilter && matchesSearch;
+    });
+  }, [searchTerm, activeFilter, t, collections]);
+
+  const visibleCollections = filteredCollections.slice(0, visibleCount);
+  const hasMore = visibleCount < filteredCollections.length;
+
+  const handleFilterChange = (filter) => {
+    setActiveFilter(filter);
+    setVisibleCount(INITIAL_VISIBLE_COUNT);
+  };
+
+  const handleSearchChange = (event) => {
+    setSearchTerm(event.target.value);
+    setVisibleCount(INITIAL_VISIBLE_COUNT);
+  };
+
+  const handleShowMore = () => {
+    setVisibleCount((prev) => prev + LOAD_MORE_COUNT);
+
+    setTimeout(() => {
+      window.scrollBy({
+        top: 320,
+        behavior: 'smooth',
+      });
+    }, 120);
+  };
+
+  return (
+    <main className="collections-page">
+      <section className="collections-container">
+        <div className="collections-heading">
+          <h1>{t('collections.title')}</h1>
+          <p>{t('collections.description')}</p>
+        </div>
+
+        <div className="collections-search">
+          <Search size={18} />
+          <input
+            type="text"
+            value={searchTerm}
+            onChange={handleSearchChange}
+            placeholder={t('collections.searchPlaceholder')}
+          />
+        </div>
+
+        <div className="collections-filters">
+          {filters.map((filter) => (
+            <button
+              key={filter.value}
+              type="button"
+              className={filter.value === activeFilter ? 'active' : ''}
+              onClick={() => handleFilterChange(filter.value)}
+            >
+              {t(filter.labelKey)}
+            </button>
+          ))}
+        </div>
+
+        <div className="collections-grid">
+          {visibleCollections.map((item, index) => (
+            <CollectionCard
+              key={item.id}
+              item={item}
+              index={index}
+              isFavorite={isFavorite(item.id)}
+              onToggleFavorite={toggleFavorite}
+            />
+          ))}
+        </div>
+
+        {isLoading && (
+          <div className="collections-empty">Loading monuments...</div>
+        )}
+
+        {errorMessage && (
+          <div className="collections-empty">{errorMessage}</div>
+        )}
+
+        {visibleCollections.length === 0 && (
+          <div className="collections-empty">{t('collections.empty')}</div>
+        )}
+
+        {hasMore && (
+          <div className="collections-more">
+            <button type="button" onClick={handleShowMore}>
+              <span>{t('collections.more')}</span>
+            </button>
+          </div>
+        )}
+      </section>
+
+      <Footer />
+    </main>
+  );
+}
