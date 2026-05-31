@@ -152,4 +152,13 @@
 "artifacts.ramesses.detailsTitle": "Le grand pharaon guerrier",
 "artifacts.ramesses.description": "Cette statue monumentale de Ramsès II représente l’un des souverains les plus puissants de l’histoire égyptienne.",
 "artifacts.ramesses.history": "Ramsès II régna sur l’Égypte pendant plus de soixante ans et fit construire certains des temples et monuments les plus remarquables de l’Égypte ancienne."
+,
+  "home.nav.favorites": "Favoris",
+  "favorites.title": "Favoris",
+  "favorites.subtitle": "Ma collection",
+  "favorites.searchPlaceholder": "Rechercher dans les favoris",
+  "favorites.empty": "Aucun favori enregistré.",
+  "favorites.noResults": "Aucun favori ne correspond à votre recherche.",
+  "favorites.loadError": "Impossible de charger les favoris.",
+  "favorites.signInRequired": "Veuillez vous connecter pour ajouter des artefacts aux favoris."
 }

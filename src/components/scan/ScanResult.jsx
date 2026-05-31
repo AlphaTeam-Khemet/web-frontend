@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Bookmark, RefreshCcw, Share2 } from 'lucide-react';
+import { Bookmark, RefreshCcw, Share2, Sparkle } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 export default function ScanResult({
@@ -7,6 +7,7 @@ export default function ScanResult({
   isLoading,
   onRetry,
   onSave,
+  onAskAi,
 }) {
   const { t } = useTranslation();
   const [isExpanded, setIsExpanded] = useState(false);
@@ -94,6 +95,11 @@ export default function ScanResult({
         <button type="button" className="primary" onClick={onSave}>
           <Bookmark size={15} />
           {t('scan.saveToCollection')}
+        </button>
+
+        <button type="button" className="scan-ai-action" onClick={onAskAi}>
+          <Sparkle size={17} fill="currentColor" />
+          Khemet AI
         </button>
       </div>
     </section>

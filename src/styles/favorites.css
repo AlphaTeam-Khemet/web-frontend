@@ -1,0 +1,43 @@
+.favorites-page {
+  background: #e8ddcc;
+}
+
+.favorites-container {
+  min-height: calc(100vh - 260px);
+}
+
+.favorites-search {
+  margin-top: 30px;
+}
+
+.favorites-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  max-width: 930px;
+}
+
+.favorites-grid .collection-card-image {
+  height: 250px;
+  border-radius: 20px;
+}
+
+.favorites-grid .collection-card-content h3 {
+  font-size: 22px;
+}
+
+@media (max-width: 1100px) {
+  .favorites-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 820px) {
+  .favorites-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 520px) {
+  .favorites-grid {
+    grid-template-columns: 1fr;
+  }
+}

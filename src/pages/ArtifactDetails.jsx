@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
-import { ArrowLeft, Clock, MapPin, Tag } from 'lucide-react';
+import { Link, useNavigate, useParams } from 'react-router-dom';
+import { ArrowLeft, Clock, MapPin, Sparkle, Tag } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 import Footer from '../components/home/Footer';
@@ -13,9 +13,9 @@ import '../styles/artifactDetails.css';
 
 export default function ArtifactDetails() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const { t } = useTranslation();
 
-  const [activeTab, setActiveTab] = useState('overview');
   const [artifact, setArtifact] = useState(() =>
     collectionsMockData.find((item) => String(item.id) === String(id))
   );
@@ -69,7 +69,12 @@ export default function ArtifactDetails() {
   const period = artifact.period || t(artifact.periodKey || '');
   const location = artifact.location || t(artifact.locationKey || '');
   const overviewText = artifact.description || t(artifact.descriptionKey || '');
-  const historyText = artifact.historyKey || t('artifact.defaultHistory');
+
+  const handleAskAi = () => {
+    navigate(
+      `${ROUTES.CHAT_AI}?artifact=${encodeURIComponent(title)}`
+    );
+  };
 
   return (
     <main className="artifact-details-page">
@@ -93,27 +98,18 @@ export default function ArtifactDetails() {
               {period} - {location}
             </p>
 
-            <div className="artifact-tabs">
-              <button
-                type="button"
-                className={activeTab === 'overview' ? 'active' : ''}
-                onClick={() => setActiveTab('overview')}
-              >
-                {t('artifact.overview')}
-              </button>
-
-              <button
-                type="button"
-                className={activeTab === 'history' ? 'active' : ''}
-                onClick={() => setActiveTab('history')}
-              >
-                {t('artifact.history')}
-              </button>
-            </div>
-
             <p className="artifact-description">
-              {activeTab === 'overview' ? overviewText : historyText}
+              {overviewText}
             </p>
+
+            <button
+              type="button"
+              className="artifact-ai-btn"
+              onClick={handleAskAi}
+            >
+              <Sparkle size={20} fill="currentColor" />
+              Ask Khemet AI about {title}
+            </button>
 
             <div className="artifact-info-list">
               <div>

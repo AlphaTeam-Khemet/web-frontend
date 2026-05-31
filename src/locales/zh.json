@@ -151,4 +151,13 @@
 "artifacts.ramesses.detailsTitle": "伟大的战士法老",
 "artifacts.ramesses.description": "这座拉美西斯二世的巨型雕像代表了古埃及历史上最强大的统治者之一。",
 "artifacts.ramesses.history": "拉美西斯二世统治埃及超过六十年，并建造了古埃及最宏伟的神庙和纪念碑之一。"
+,
+  "home.nav.favorites": "收藏",
+  "favorites.title": "收藏",
+  "favorites.subtitle": "我的收藏",
+  "favorites.searchPlaceholder": "搜索收藏",
+  "favorites.empty": "还没有收藏的文物。",
+  "favorites.noResults": "没有匹配的收藏。",
+  "favorites.loadError": "无法加载收藏。",
+  "favorites.signInRequired": "请先登录，然后再将文物加入收藏。"
 }

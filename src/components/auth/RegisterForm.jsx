@@ -1,31 +1,33 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ArrowRight, Eye, EyeOff, ShieldCheck } from 'lucide-react';
-import LanguageSelect from './LanguageSelect';
 import TermsCheckbox from './TermsCheckbox';
 import PasswordStrength from './PasswordStrength';
 import { ROUTES } from '../../constants/routes';
 import { authApi } from '../../api/authApi';
 import { getApiErrorMessage } from '../../utils/apiData';
 import useAuth from '../../hooks/useAuth';
+import { useLanguage } from '../../context/LanguageContext';
 
 const backendLanguageIds = {
   en: 1,
   ar: 2,
+  es: 1,
+  fr: 1,
   de: 4,
+  zh: 1,
 };
 
 export default function RegisterForm() {
   const navigate = useNavigate();
   const { login } = useAuth();
+  const { language } = useLanguage();
 
   const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
+    fullName: '',
     email: '',
     password: '',
     confirmPassword: '',
-    preferredLanguage: '',
   });
 
   const [acceptedTerms, setAcceptedTerms] = useState(false);
@@ -54,12 +56,10 @@ export default function RegisterForm() {
     setErrorMessage('');
 
     if (
-      !formData.firstName ||
-      !formData.lastName ||
+      !formData.fullName ||
       !formData.email ||
       !formData.password ||
-      !formData.confirmPassword ||
-      !formData.preferredLanguage
+      !formData.confirmPassword
     ) {
       setErrorMessage('Please fill in all required fields.');
       return;
@@ -86,10 +86,10 @@ export default function RegisterForm() {
 
     try {
       const { data } = await authApi.register({
-        full_name: `${formData.firstName.trim()} ${formData.lastName.trim()}`.trim(),
+        full_name: formData.fullName.trim(),
         email: formData.email,
         password: formData.password,
-        preferred_language: backendLanguageIds[formData.preferredLanguage] || backendLanguageIds.en,
+        preferred_language: backendLanguageIds[language] || backendLanguageIds.en,
       });
       login(data);
       navigate(ROUTES.HOME);
@@ -109,26 +109,14 @@ export default function RegisterForm() {
       </p>
 
       <form onSubmit={handleSubmit}>
-        <div className="register-grid">
-          <div className="register-field">
-            <label>First Name</label>
-            <input
-              type="text"
-              placeholder="First name"
-              value={formData.firstName}
-              onChange={(event) => updateField('firstName', event.target.value)}
-            />
-          </div>
-
-          <div className="register-field">
-            <label>Last Name</label>
-            <input
-              type="text"
-              placeholder="Last name"
-              value={formData.lastName}
-              onChange={(event) => updateField('lastName', event.target.value)}
-            />
-          </div>
+        <div className="register-field">
+          <label>Full Name</label>
+          <input
+            type="text"
+            placeholder="Enter your full name"
+            value={formData.fullName}
+            onChange={(event) => updateField('fullName', event.target.value)}
+          />
         </div>
 
         <div className="register-field">
@@ -179,11 +167,6 @@ export default function RegisterForm() {
             </button>
           </div>
         </div>
-
-        <LanguageSelect
-          value={formData.preferredLanguage}
-          onChange={(value) => updateField('preferredLanguage', value)}
-        />
 
         <TermsCheckbox checked={acceptedTerms} onChange={setAcceptedTerms} />
 

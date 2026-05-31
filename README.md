@@ -1,40 +1,41 @@
-# Khemet Web Frontend
+# KHEMET Web Frontend
 
-Khemet Web is the React frontend for the KHEMET Smart Guide experience. The app presents an ancient-Egypt themed museum interface with onboarding, authentication screens, collections, artifact details, AI scan and chat experiences, settings, language switching, and local user/favorites state.
+KHEMET Web Frontend is the React/Vite client for the KHEMET Smart Guide experience, a museum-style web app focused on ancient Egyptian artifacts, AI-assisted exploration, artifact scanning, multilingual navigation, and saved user collections.
 
-The project is built with Vite, React, React Router, React Query, i18next, Tailwind CSS, custom CSS modules by feature, and Axios API wrappers for future backend integration.
+The interface is built around an immersive Egyptian visual identity with authentication, onboarding, collections, artifact details, protected AI scan/chat tools, favorites, profile/settings, and a guided tour page.
 
 ## Table of Contents
 
-- [Current Status](#current-status)
+- [Features](#features)
 - [Tech Stack](#tech-stack)
 - [Requirements](#requirements)
 - [Getting Started](#getting-started)
-- [Available Scripts](#available-scripts)
 - [Environment Variables](#environment-variables)
-- [Application Routes](#application-routes)
+- [Available Scripts](#available-scripts)
+- [Routes](#routes)
 - [Project Structure](#project-structure)
-- [Architecture Overview](#architecture-overview)
-- [Feature Overview](#feature-overview)
-- [API Layer](#api-layer)
+- [Backend Integration](#backend-integration)
 - [State and Storage](#state-and-storage)
 - [Internationalization](#internationalization)
-- [Styling and Assets](#styling-and-assets)
-- [Mock Data and Backend Integration Notes](#mock-data-and-backend-integration-notes)
+- [Assets](#assets)
 - [Build and Deployment](#build-and-deployment)
+- [Development Notes](#development-notes)
 - [Troubleshooting](#troubleshooting)
 
-## Current Status
+## Features
 
-The app currently runs successfully with Vite at:
-
-```bash
-http://127.0.0.1:5173/
-```
-
-The production build also completes successfully with `npm run build`.
-
-The main app flows are connected to the Node.js backend at `http://localhost:3000/api`: authentication, monuments, artifact details, AI chat, scan upload, gallery save, favorites, reviews, and profile updates.
+- Splash and welcome experience with guest and authenticated flows.
+- Authentication screens for sign in, sign up, forgot password, OTP verification, reset password, and new password creation.
+- Language selector on the welcome screen and global language switching.
+- Home page with hero gallery, stats, feature cards, CTA, and footer links.
+- Guided tour page at `/tour` using the local splash video asset.
+- Collections page with search, category filters, pagination-style "show more", and artifact cards.
+- Artifact details page with overview content and direct "Ask Khemet AI" handoff.
+- Protected Scan AI page for image upload/camera capture and backend artifact recognition.
+- Protected Chat AI page with session-based chat history, recent conversations, AI responses, and artifact prompt handoff.
+- Favorites page for authenticated users, with search/filter support and artifact-detail navigation.
+- Profile/settings pages with language, profile, logout, and activity-related UI.
+- Multilingual UI support for English, Arabic, Spanish, French, German, and Chinese.
 
 ## Tech Stack
 
@@ -44,18 +45,18 @@ The main app flows are connected to the Node.js backend at `http://localhost:300
 - TanStack React Query
 - Axios
 - i18next and react-i18next
-- Tailwind CSS
-- Feature-scoped CSS files
-- Framer Motion
-- Lucide React icons
+- Tailwind CSS/PostCSS
+- Feature-scoped CSS
+- Lucide React
 - React Icons
+- Framer Motion
 
 ## Requirements
 
 - Node.js
 - npm
 
-This project includes a `package-lock.json`, so use `npm install` for dependency installation.
+The repository includes `package-lock.json`, so install dependencies with npm.
 
 ## Getting Started
 
@@ -65,13 +66,13 @@ Install dependencies:
 npm install
 ```
 
-Create a local environment file:
+Create your local environment file:
 
 ```bash
 cp .env.example .env
 ```
 
-On Windows PowerShell, if `cp` is unavailable:
+On Windows PowerShell:
 
 ```powershell
 Copy-Item .env.example .env
@@ -83,17 +84,33 @@ Start the development server:
 npm run dev
 ```
 
-Open the local URL printed by Vite. By default it is usually:
+Open the URL printed by Vite, usually:
 
-```bash
+```text
 http://localhost:5173/
 ```
 
-To bind the server explicitly to localhost:
+To bind explicitly to localhost:
 
 ```bash
 npm run dev -- --host 127.0.0.1
 ```
+
+## Environment Variables
+
+The frontend reads the backend URL from:
+
+```env
+VITE_API_BASE_URL=http://localhost:3000/api
+```
+
+If this variable is missing, the Axios client falls back to:
+
+```text
+http://localhost:3000/api
+```
+
+Vite only exposes variables prefixed with `VITE_`.
 
 ## Available Scripts
 
@@ -101,7 +118,7 @@ npm run dev -- --host 127.0.0.1
 npm run dev
 ```
 
-Starts the Vite development server with hot module replacement.
+Starts the Vite development server.
 
 ```bash
 npm run build
@@ -113,52 +130,38 @@ Creates a production build in `dist/`.
 npm run preview
 ```
 
-Serves the production build locally for preview.
+Serves the production build locally.
 
 There are currently no configured lint, format, or test scripts in `package.json`.
 
-## Environment Variables
-
-The app reads the API base URL from:
-
-```env
-VITE_API_BASE_URL=http://localhost:3000/api
-```
-
-If the variable is not set, the Axios instance falls back to:
-
-```text
-http://localhost:3000/api
-```
-
-Environment variables used by Vite must start with `VITE_`.
-
-## Application Routes
+## Routes
 
 Routes are defined in `src/constants/routes.js` and wired in `src/routes/AppRoutes.jsx`.
 
 | Route | Component | Access | Purpose |
 | --- | --- | --- | --- |
 | `/` | `Splash` | Public | Initial splash screen |
-| `/welcome` | `Welcome` | Public | Welcome/onboarding page |
-| `/sign-in` | `SignIn` | Guest only | Sign-in form and guest entry |
-| `/sign-up` | `SignUp` | Guest only | Account registration flow |
-| `/forgot-password` | `ForgotPassword` | Guest only | Password recovery entry |
-| `/verification-code` | `VerificationCode` | Guest only | Verification code entry |
-| `/reset-password` | `ResetPassword` | Guest only | Password reset flow |
-| `/create-new-password` | `CreateNewPassword` | Guest only | New password creation |
-| `/email-verification-choice` | `EmailVerificationChoice` | Guest only | Email verification option selection |
-| `/home` | `Home` | Public layout | Main marketing and feature page |
-| `/collections` | `Collections` | Public layout | Artifact collection browsing |
-| `/artifact-details/:id` | `ArtifactDetails` | Public layout | Individual artifact details |
-| `/scan` | `ScanAI` | Public layout | Backend artifact scan upload |
-| `/chat-ai` | `ChatAI` | Public layout | Backend AI guide chat |
-| `/settings` | `Settings` | Public layout | Profile/settings screen |
-| `/translate` | `Translate` | Public layout | Placeholder hieroglyph translation page |
-| `/favorites` | `Favorites` | Protected | Backend saved artifacts |
-| `/profile` | `Profile` | Protected | User profile screen |
+| `/welcome` | `Welcome` | Public | Onboarding and language selection |
+| `/tour` | `Tour` | Public | Video-based guided tour page |
+| `/sign-in` | `SignIn` | Guest only | Login form |
+| `/sign-up` | `SignUp` | Guest only | Register form with full name |
+| `/forgot-password` | `ForgotPassword` | Guest only | Password recovery |
+| `/verification-code` | `VerificationCode` | Guest only | OTP verification |
+| `/reset-password` | `ResetPassword` | Guest only | Password reset |
+| `/create-new-password` | `CreateNewPassword` | Guest only | New password form |
+| `/email-verification-choice` | `EmailVerificationChoice` | Guest only | Email verification choice |
+| `/home` | `Home` | Main layout | Home page |
+| `/collections` | `Collections` | Main layout | Artifact collection browsing |
+| `/artifact-details/:id` | `ArtifactDetails` | Main layout | Artifact detail page |
+| `/translate` | `Translate` | Main layout | Translation placeholder |
+| `/scan` | `ScanAI` | Protected | AI artifact scan |
+| `/chat-ai` | `ChatAI` | Protected | AI guide chat |
+| `/settings` | `Settings` | Protected | Account/settings page |
+| `/favorites` | `Favorites` | Protected | Saved artifacts |
+| `/profile` | `Profile` | Protected | Profile page |
 
-`GuestRoute` redirects authenticated users to `/home`. `ProtectedRoute` redirects unauthenticated users to `/sign-in`.
+`GuestRoute` redirects authenticated users to `/home`.  
+`ProtectedRoute` redirects unauthenticated users to `/sign-in`.
 
 ## Project Structure
 
@@ -166,17 +169,17 @@ Routes are defined in `src/constants/routes.js` and wired in `src/routes/AppRout
 .
 |-- public/
 |-- src/
-|   |-- api/                 # Axios instance and API resource wrappers
-|   |-- assets/              # Images, logos, and videos
-|   |-- components/          # Reusable UI grouped by feature/domain
-|   |-- constants/           # Routes, colors, endpoint constants
-|   |-- context/             # Auth, favorites, language, and profile providers
-|   |-- data/                # Mock collections, chat, scan, and home content
-|   |-- hooks/               # Shared hooks and API mutations/queries
+|   |-- api/                 # Axios instance and backend resource wrappers
+|   |-- assets/              # Images, logos, and videos bundled by Vite
+|   |-- components/          # Reusable UI grouped by feature
+|   |-- constants/           # Routes, endpoint constants, color constants
+|   |-- context/             # Auth, favorites, language, and user profile state
+|   |-- data/                # Mock/fallback data
+|   |-- hooks/               # Shared hooks
 |   |-- i18n/                # i18next setup
 |   |-- locales/             # Translation JSON files
-|   |-- pages/               # Route-level pages
-|   |-- routes/              # Route guards and route tree
+|   |-- pages/               # Route-level screens
+|   |-- routes/              # Route tree and route guards
 |   |-- styles/              # Global and feature-scoped CSS
 |   |-- App.jsx
 |   `-- main.jsx
@@ -188,296 +191,118 @@ Routes are defined in `src/constants/routes.js` and wired in `src/routes/AppRout
 `-- vite.config.js
 ```
 
-## Architecture Overview
+## Backend Integration
 
-The app starts in `src/main.jsx`, where global providers are composed:
+The shared Axios client lives in:
+
+```text
+src/api/axiosInstance.js
+```
+
+It:
+
+- Uses `VITE_API_BASE_URL`.
+- Adds `Authorization: Bearer <token>` when `khemet_token` exists in `localStorage`.
+- Uses endpoint constants from `src/constants/apiEndpoints.js`.
+
+Main API wrappers:
+
+| File | Purpose |
+| --- | --- |
+| `src/api/authApi.js` | Login, register, refresh, logout, forgot/reset password |
+| `src/api/artifactsApi.js` | Monuments, artifact details, favorites |
+| `src/api/scanApi.js` | Artifact scan and scan history |
+| `src/api/aiGuideApi.js` | AI guide ask/describe/identify endpoints |
+| `src/api/galleryApi.js` | User gallery save/list/remove |
+| `src/api/reviewsApi.js` | Monument reviews |
+| `src/api/userApi.js` | User profile |
+| `src/api/translationApi.js` | Translation upload/result endpoints |
+
+Important backend endpoint groups:
+
+- `/auth/*`
+- `/monuments`
+- `/favorites`
+- `/scan/*`
+- `/ai-guide/*`
+- `/gallery`
+- `/reviews`
+- `/users/profile`
+
+## State and Storage
+
+Local browser storage is used for client state and persistence.
+
+| Key | Storage | Purpose |
+| --- | --- | --- |
+| `khemet_token` | localStorage | Access token |
+| `khemet_refresh_token` | localStorage | Refresh token |
+| `khemet_user` | localStorage | Authenticated user payload |
+| `khemet_guest` | localStorage | Guest mode flag |
+| `khemet-user-profile` | localStorage | Local profile/avatar state |
+| `khemet-favorites` | localStorage | Favorite artifacts cache |
+| `language` | localStorage | Selected language |
+| `khemet-recent-chats` | localStorage | Chat session list and messages |
+| `khemet-active-chat-id` | localStorage | Active chat session |
+| `khemet-chat-messages` | sessionStorage | Compatibility/current chat cache |
+
+Providers are composed in `src/main.jsx`:
 
 - `LanguageProvider`
 - `UserProfileProvider`
 - `FavoritesProvider`
-- `React.StrictMode`
 - `QueryClientProvider`
 - `BrowserRouter`
 - `AuthProvider`
 
-`src/App.jsx` renders the application route tree through `AppRoutes`.
-
-The codebase separates concerns by directory:
-
-- Route-level screens live in `src/pages`.
-- Reusable visual and interaction pieces live in `src/components`.
-- Shared client state lives in `src/context`.
-- Server communication wrappers live in `src/api`.
-- Route strings and endpoint strings live in `src/constants`.
-- Mock domain content lives in `src/data`.
-- Translation dictionaries live in `src/locales`.
-
-## Feature Overview
-
-### Splash and Welcome
-
-The splash and welcome screens introduce the Khemet experience using themed imagery and video assets.
-
-### Authentication
-
-The auth flow includes:
-
-- Sign in
-- Sign up
-- Forgot password
-- Verification code
-- Email verification choice
-- Reset password
-- Create new password
-- Continue as guest
-
-Sign-in, registration, forgot-password OTP verification, and reset-password submit to the backend auth APIs.
-
-### Home
-
-The home page includes:
-
-- Hero image gallery
-- Museum-themed feature messaging
-- Stats
-- Feature cards
-- Call-to-action section
-- Footer
-
-Home content is driven partly by `src/data/homeData.js` and translations.
-
-### Collections and Artifact Details
-
-Collections provide:
-
-- Search
-- Category filters
-- Incremental "show more" display
-- Backend favorite toggling for authenticated users
-- Links to artifact details
-
-Artifact details provide:
-
-- Artifact image
-- Category, period, and location metadata
-- Overview/history tabs
-- Not-found fallback
-
-Collection and artifact-detail data comes from `/api/monuments`. Local collection data is only a brief fallback while the backend request is loading.
-
-### Scan AI
-
-The scan page supports:
-
-- Image selection
-- Preview generation
-- Image removal
-- Backend analysis loading state
-- AI result display from `/api/scan/artifact`
-- Retry and save-to-gallery actions
-
-Scan results come from `/api/scan/artifact` using multipart field `image`.
-
-### Chat AI
-
-The chat page includes:
-
-- Initial AI welcome message
-- User messages
-- Backend AI responses
-- Typing indicator
-- Suggestion chips
-- Session persistence through `sessionStorage`
-
-Responses come from `/api/ai-guide/ask`.
-
-### Settings and Profile
-
-The settings screen includes:
-
-- Local user profile display
-- Avatar update from a selected file
-- Profile name editing
-- Activity stats
-- Current language label
-- Logout navigation
-- Delete-account confirmation placeholder
-
-User profile state is currently stored in `localStorage`.
-
-### Favorites
-
-Favorites are stored locally through `FavoritesContext`. The protected `/favorites` page currently contains a placeholder view.
-
-### Translation
-
-The `/translate` route currently renders a placeholder page for future hieroglyph upload/capture and translation functionality.
-
-## API Layer
-
-The shared Axios instance is in `src/api/axiosInstance.js`.
-
-Behavior:
-
-- Uses `VITE_API_BASE_URL` when available.
-- Falls back to `http://localhost:3000/api`.
-- Sends `Content-Type: application/json` by default.
-- Adds `Authorization: Bearer <token>` when `khemet_token` is present in `localStorage`.
-
-API wrappers:
-
-| File | Purpose |
-| --- | --- |
-| `src/api/authApi.js` | Login, register, current user, forgot password, reset password |
-| `src/api/artifactsApi.js` | List artifacts, get artifact by ID, favorites |
-| `src/api/translationApi.js` | Upload image, fetch translation result |
-| `src/api/userApi.js` | Get/update profile and settings |
-
-Endpoint constants are centralized in `src/constants/apiEndpoints.js`.
-
-## State and Storage
-
-### Auth
-
-`AuthContext` stores:
-
-- `user`
-- `token`
-- `isGuest`
-- `isAuthenticated`
-
-Auth persistence keys:
-
-```text
-khemet_token
-khemet_user
-```
-
-### Favorites
-
-`FavoritesContext` persists favorited artifacts under:
-
-```text
-khemet-favorites
-```
-
-### User Profile
-
-`UserProfileContext` persists profile data under:
-
-```text
-khemet-user-profile
-```
-
-The default local profile is:
-
-```text
-Hossam Hassan
-hossam@khemet.ai
-```
-
-### Language
-
-`LanguageContext` stores the selected language under:
-
-```text
-language
-```
-
-It also updates:
-
-- `document.documentElement.lang`
-- `document.documentElement.dir`
-
-Arabic switches the document direction to `rtl`; other languages use `ltr`.
-
-### Chat
-
-Chat messages persist for the browser session under:
-
-```text
-khemet-chat-messages
-```
-
 ## Internationalization
 
-i18n is configured in `src/i18n/index.js`.
+i18n is configured in:
+
+```text
+src/i18n/index.js
+```
 
 Supported locale files:
 
-- Arabic: `src/locales/ar.json`
-- English: `src/locales/en.json`
-- Spanish: `src/locales/es.json`
-- German: `src/locales/de.json`
-- French: `src/locales/fr.json`
-- Chinese: `src/locales/zh.json`
+- `src/locales/en.json`
+- `src/locales/ar.json`
+- `src/locales/es.json`
+- `src/locales/fr.json`
+- `src/locales/de.json`
+- `src/locales/zh.json`
 
-Default language behavior:
+Language behavior:
 
-- Uses `localStorage.getItem('language')` when present.
-- Falls back to English.
+- Reads the selected language from `localStorage`.
+- Defaults to English.
+- Updates `document.documentElement.lang`.
+- Sets `dir="rtl"` for Arabic and `dir="ltr"` for other languages.
 
-When adding a language:
+When adding text, update all locale files so the UI stays complete across languages.
 
-1. Add the new locale JSON file in `src/locales`.
-2. Import it in `src/i18n/index.js`.
-3. Add it to the `resources` object.
-4. Update language selectors and labels where needed.
+## Assets
 
-## Styling and Assets
+Bundled assets live under:
 
-Styling is split between Tailwind and feature CSS files.
+```text
+src/assets/
+```
 
-Global styling:
+Examples:
 
-- `src/styles/index.css`
-- CSS variables for Khemet colors
-- Tailwind import
+- `src/assets/images/`
+- `src/assets/images/home/`
+- `src/assets/logo/`
+- `src/assets/videos/splash-bg.mp4`
 
-Tailwind theme extensions are defined in `tailwind.config.js`:
+The redesigned Chat AI page supports a runtime background image from:
 
-- Khemet color palette
-- Display, ancient, and body font families
+```text
+public/chat-ai-bg.png
+```
 
-Feature styles live in files such as:
-
-- `src/styles/home.css`
-- `src/styles/auth.css`
-- `src/styles/register.css`
-- `src/styles/collections.css`
-- `src/styles/artifactDetails.css`
-- `src/styles/scan-ai.css`
-- `src/styles/chat-ai.css`
-- `src/styles/settings.css`
-
-Assets are stored in:
-
-- `src/assets/images`
-- `src/assets/logo`
-- `src/assets/videos`
-
-## Mock Data and Backend Integration Notes
-
-The following areas still contain placeholder or local-only behavior:
-
-- Avatar image changes are previewed locally.
-- Account deletion is still a placeholder.
-- `/translate` is a placeholder page, although `translationApi.uploadImage` points to `/api/scan/translate`.
-- Local mock data files remain in `src/data/` only as fallback/development fixtures.
-
-Connected API files:
-
-- `src/api/authApi.js`
-- `src/api/artifactsApi.js`
-- `src/api/translationApi.js`
-- `src/api/userApi.js`
-- `src/constants/apiEndpoints.js`
-- `src/hooks/useArtifacts.js`
-- `src/api/scanApi.js`
-- `src/api/aiGuideApi.js`
-- `src/api/galleryApi.js`
-- `src/api/reviewsApi.js`
-- `src/hooks/useTranslation.js`
+If this file is missing, the page still works and falls back to the CSS background color.
 
 ## Build and Deployment
 
@@ -487,13 +312,13 @@ Create a production build:
 npm run build
 ```
 
-Preview the build locally:
+Preview it locally:
 
 ```bash
 npm run preview
 ```
 
-Deploy the generated `dist/` folder to any static hosting provider that supports client-side routing. Configure the host to return `index.html` for unknown routes so direct navigation to paths like `/collections` or `/artifact-details/1` works.
+Deploy the generated `dist/` folder to a static hosting provider that supports SPA routing. Configure unknown route rewrites to `index.html`, otherwise direct refreshes like `/collections` or `/chat-ai` may return 404.
 
 For production, set:
 
@@ -501,37 +326,58 @@ For production, set:
 VITE_API_BASE_URL=https://your-api-domain.example/api
 ```
 
+## Development Notes
+
+- `/scan`, `/chat-ai`, `/favorites`, `/settings`, and `/profile` are protected routes.
+- Home feature cards link to Collections, Scan, and Chat AI.
+- Artifact details can hand off an artifact name to Chat AI through the `artifact` query parameter.
+- Scan results can also hand off the detected artifact name to Chat AI.
+- Favorites require authentication. Guest users are redirected to sign in before saving artifacts.
+- Chat sessions are stored locally and keep a stable order. New chats appear at the top; selecting older chats does not reorder them.
+- Chat session titles are automatically shortened to the first three words.
+- `/translate`, `/media-gallery`, and some profile-related pages remain lightweight placeholders or future expansion points.
+
 ## Troubleshooting
 
-### The app cannot reach the backend
+### Backend requests fail
 
-Check `VITE_API_BASE_URL=http://localhost:3000/api` in `.env`. Restart the Vite dev server after changing environment variables.
+Check `.env`:
 
-### Direct page refresh returns 404 in production
+```env
+VITE_API_BASE_URL=http://localhost:3000/api
+```
 
-Configure the static host to rewrite unknown paths to `index.html`.
+Restart the Vite server after changing environment variables.
 
-### Authentication appears reset
+### Protected pages redirect to Sign In
 
-Auth state is stored in `localStorage`. Clearing browser storage removes:
+Protected routes require a stored auth token. Sign in again or inspect localStorage for:
 
-- `khemet_token`
-- `khemet_user`
-- `khemet-user-profile`
-- `khemet-favorites`
-- `language`
+```text
+khemet_token
+```
 
-### Chat history disappears
+### Direct refresh returns 404 after deployment
 
-Chat history uses `sessionStorage`, so it resets when the browser session ends.
+Configure the host to rewrite unknown routes to `index.html`.
 
-### Styles are missing
+### Chat background does not appear
 
-Confirm `src/styles/index.css` is imported by `src/main.jsx` and that Vite is running with dependencies installed.
+Make sure the image exists at:
+
+```text
+public/chat-ai-bg.png
+```
+
+### UI language looks wrong
+
+Clear or update the `language` key in localStorage, then reload the page.
+
+### Build output changes in Git
+
+`npm run build` regenerates files in `dist/`. Commit build output only if your deployment workflow requires tracking `dist/`.
 
 ## Repository
-
-Original repository reference:
 
 ```text
 https://github.com/AlphaTeam-Khemet/web-frontend

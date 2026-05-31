@@ -4,6 +4,7 @@ export const ROUTES = {
   FORGOT_PASSWORD: "/forgot-password",
   VERIFICATION_CODE: '/verification-code',
   HOME: "/home",
+  TOUR: "/tour",
   COLLECTIONS: "/collections",
   ARTIFACT_DETAILS: '/artifact-details/:id',
   TRANSLATE: "/translate",

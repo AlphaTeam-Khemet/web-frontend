@@ -18,6 +18,7 @@ import logo from '../../assets/images/home/khemet-logo.png';
 const navLinks = [
   { labelKey: 'home.nav.home', path: '/home' },
   { labelKey: 'home.nav.collection', path: '/collections' },
+  { labelKey: 'home.nav.favorites', path: '/favorites' },
   { labelKey: 'home.nav.scan', path: '/scan' },
   { labelKey: 'home.nav.chat', path: '/chat-ai' },
   { labelKey: 'home.nav.Setting', path: '/settings' },
@@ -35,8 +36,8 @@ const languages = [
 export default function Navbar() {
   const { t } = useTranslation();
   const { language, setLanguage } = useLanguage();
-  const { user, clearUser } = useUserProfile();
-  const { logout, isAuthenticated, isGuest } = useAuth();
+  const { user: profileUser, clearUser } = useUserProfile();
+  const { user: authUser, logout, isAuthenticated, isGuest } = useAuth();
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -48,6 +49,11 @@ export default function Navbar() {
 
   const currentLanguage =
     languages.find((item) => item.code === language) || languages[0];
+
+  const displayUser =
+    isAuthenticated && authUser
+      ? { ...profileUser, ...authUser }
+      : profileUser;
 
   const handleLanguageChange = (code) => {
     setLanguage(code);
@@ -133,8 +139,8 @@ export default function Navbar() {
                 onClick={handleProfileClick}
                 aria-label="Profile menu"
               >
-                {user?.avatar ? (
-                  <img src={user.avatar} alt={user.name} />
+                {displayUser?.avatar ? (
+                  <img src={displayUser.avatar} alt={displayUser.name} />
                 ) : (
                   <UserCircle2 size={25} />
                 )}
@@ -154,16 +160,19 @@ export default function Navbar() {
               <div className="home-profile-dropdown">
                 <div className="home-profile-dropdown-head">
                   <div className="home-profile-dropdown-avatar">
-                    {user?.avatar ? (
-                      <img src={user.avatar} alt={user.name} />
+                    {displayUser?.avatar ? (
+                      <img
+                        src={displayUser.avatar}
+                        alt={displayUser.name}
+                      />
                     ) : (
                       <UserCircle2 size={24} />
                     )}
                   </div>
 
                   <div>
-                    <strong>{user?.name}</strong>
-                    <span>{user?.email}</span>
+                    <strong>{displayUser?.name}</strong>
+                    <span>{displayUser?.email}</span>
                   </div>
                 </div>
 

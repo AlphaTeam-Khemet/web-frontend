@@ -1,8 +1,11 @@
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 import FadeGallery from './FadeGallery';
+import { ROUTES } from '../../constants/routes';
 
 export default function HeroSection() {
   const { t } = useTranslation();
+  const navigate = useNavigate();
 
   return (
     <section className="home-hero">
@@ -20,8 +23,12 @@ export default function HeroSection() {
         <p>{t('home.hero.description')}</p>
 
         <div className="home-hero-actions">
-          <button className="home-primary-btn" type="button">
-            {t('home.hero.explore')}
+          <button
+            className="home-primary-btn"
+            type="button"
+            onClick={() => navigate(ROUTES.TOUR)}
+          >
+            Start Tour-&gt;
           </button>
 
           

@@ -303,6 +303,17 @@
   color: #17110b;
 }
 
+.scan-result-actions button.scan-ai-action {
+  background: #fff8ee;
+  color: #17110b;
+  border: 1px solid rgba(169, 125, 53, 0.32);
+}
+
+.scan-result-actions button.scan-ai-action svg {
+  color: #c1973d;
+  filter: drop-shadow(0 2px 5px rgba(120, 76, 18, 0.22));
+}
+
 .scan-loading-text {
   margin-top: 40px;
   color: #a97d35;

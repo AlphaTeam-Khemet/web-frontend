@@ -88,46 +88,40 @@
   font-style: italic;
 }
 
-.artifact-tabs {
-  margin-top: 32px;
-  display: flex;
-  gap: 26px;
-  border-bottom: 1px solid rgba(169, 125, 53, 0.18);
-}
-
-.artifact-tabs button {
-  position: relative;
-  padding: 0 0 13px;
-  border: 0;
-  background: transparent;
-  color: #24180f;
-  font-size: 12px;
-  font-weight: 900;
-  text-transform: uppercase;
-  cursor: pointer;
-}
-
-.artifact-tabs button::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  bottom: -1px;
-  width: 0;
-  height: 2px;
-  background: #a97d35;
-  transition: 0.25s ease;
-}
-
-.artifact-tabs button.active::after,
-.artifact-tabs button:hover::after {
-  width: 100%;
-}
-
 .artifact-description {
-  margin: 28px 0 0;
+  margin: 32px 0 0;
   color: #6a5a47;
   font-size: 16px;
   line-height: 1.9;
+}
+
+.artifact-ai-btn {
+  margin-top: 24px;
+  min-height: 52px;
+  padding: 0 22px;
+  border: 0;
+  border-radius: 14px;
+  background: linear-gradient(180deg, #e7c570, #b98d3d);
+  color: #17110b;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  font-weight: 900;
+  cursor: pointer;
+  box-shadow: 0 14px 28px rgba(169, 125, 53, 0.18);
+  transition: 0.25s ease;
+}
+
+.artifact-ai-btn svg {
+  color: #c1973d;
+  filter: drop-shadow(0 2px 5px rgba(120, 76, 18, 0.22));
+}
+
+.artifact-ai-btn:hover {
+  transform: translateY(-3px);
+  filter: brightness(1.04);
+  box-shadow: 0 18px 36px rgba(169, 125, 53, 0.26);
 }
 
 .artifact-info-list {
@@ -214,11 +208,6 @@ html[dir="rtl"] .artifact-main-layout {
 
 html[dir="rtl"] .artifact-text-panel {
   text-align: right;
-}
-
-html[dir="rtl"] .artifact-tabs button::after {
-  left: auto;
-  right: 0;
 }
 
 html[dir="rtl"] .artifact-back-link:hover {

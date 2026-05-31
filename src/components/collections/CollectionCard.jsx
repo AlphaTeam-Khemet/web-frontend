@@ -1,7 +1,8 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Heart } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { getArtifactDetailsRoute } from '../../constants/routes';
+import useAuth from '../../hooks/useAuth';
 
 export default function CollectionCard({
   item,
@@ -10,9 +11,25 @@ export default function CollectionCard({
   index,
 }) {
   const { t } = useTranslation();
+  const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
   const title = item.displayName || t(item.titleKey || item.name || '');
   const period = item.period || t(item.periodKey || '');
   const location = item.location || t(item.locationKey || '');
+
+  const handleToggleFavorite = async () => {
+    if (!isAuthenticated) {
+      alert(t('favorites.signInRequired'));
+      navigate('/sign-in');
+      return;
+    }
+
+    try {
+      await onToggleFavorite(item);
+    } catch (error) {
+      alert(error.message || t('favorites.signInRequired'));
+    }
+  };
 
   return (
     <article
@@ -29,7 +46,7 @@ export default function CollectionCard({
       <button
         type="button"
         className={isFavorite ? 'favorite-btn active' : 'favorite-btn'}
-        onClick={() => onToggleFavorite(item)}
+        onClick={handleToggleFavorite}
         aria-label="Add to favorites"
       >
         <Heart size={18} />

@@ -156,5 +156,13 @@
   "settings.security.deleteAccount": "Delete Account",
   "settings.security.deleteConfirm": "Are you sure you want to delete your account? This action cannot be undone.",
   "settings.security.deleteSuccess": "Your account has been deleted successfully.",
-  "settings.security.deleteError": "Failed to delete account. Please try again."
+  "settings.security.deleteError": "Failed to delete account. Please try again.",
+  "home.nav.favorites": "Favorites",
+  "favorites.title": "Favorites",
+  "favorites.subtitle": "My Collection",
+  "favorites.searchPlaceholder": "Search in Favorites",
+  "favorites.empty": "No favorites saved yet.",
+  "favorites.noResults": "No favorites match your search.",
+  "favorites.loadError": "Unable to load favorites.",
+  "favorites.signInRequired": "Please sign in to add artifacts to favorites."
 }

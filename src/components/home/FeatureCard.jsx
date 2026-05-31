@@ -1,9 +1,11 @@
 import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
 
 export default function FeatureCard({
   icon: Icon,
   titleKey,
   descriptionKey,
+  path,
 }) {
   const { t } = useTranslation();
 
@@ -17,7 +19,7 @@ export default function FeatureCard({
 
       <p>{t(descriptionKey)}</p>
 
-      <a href="#">{t('home.features.learnMore')} →</a>
+      <Link to={path}>{t('home.features.learnMore')} →</Link>
     </article>
   );
 }

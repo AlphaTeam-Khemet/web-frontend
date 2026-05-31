@@ -157,4 +157,13 @@
   "settings.security.deleteConfirm": "هل أنت متأكد أنك تريد حذف حسابك؟ لا يمكن التراجع عن هذا الإجراء.",
   "settings.security.deleteSuccess": "تم حذف حسابك بنجاح.",
   "settings.security.deleteError": "فشل حذف الحساب. يرجى المحاولة مرة أخرى."
+,
+  "home.nav.favorites": "المفضلة",
+  "favorites.title": "المفضلة",
+  "favorites.subtitle": "مجموعتي",
+  "favorites.searchPlaceholder": "ابحث في المفضلة",
+  "favorites.empty": "لا توجد آثار مفضلة بعد.",
+  "favorites.noResults": "لا توجد نتائج مطابقة في المفضلة.",
+  "favorites.loadError": "تعذر تحميل المفضلة.",
+  "favorites.signInRequired": "يجب تسجيل الدخول لإضافة الآثار إلى المفضلة."
 }

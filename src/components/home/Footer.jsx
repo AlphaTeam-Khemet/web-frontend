@@ -1,4 +1,4 @@
-import { FaFacebook, FaInstagram, FaGithub } from "react-icons/fa";
+import { FaFacebook, FaInstagram, FaYoutube } from "react-icons/fa";
 import { useTranslation } from 'react-i18next';
 import logo from '../../assets/images/home/khemet-logo.png';
 
@@ -13,21 +13,25 @@ export default function Footer() {
 
       <div className="home-footer-center">
         <div>
-          <a href="#">{t('home.footer.privacy')}</a>
+          <a href="https://example.com/privacy">{t('home.footer.privacy')}</a>
           <span>|</span>
-          <a href="#">{t('home.footer.accessibility')}</a>
+          <a href="https://example.com/accessibility">{t('home.footer.accessibility')}</a>
         </div>
 
         <p>{t('home.footer.copyright')}</p>
       </div>
 
       <div className="home-social">
-        <a href="#" aria-label="Instagram">
+        <a href="https://example.com/instagram" aria-label="Instagram">
           <FaInstagram size={20} />
         </a>
 
-        <a href="#" aria-label="Facebook">
+        <a href="https://example.com/facebook" aria-label="Facebook">
           <FaFacebook size={20} />
+        </a>
+
+        <a href="https://example.com/youtube" aria-label="YouTube">
+          <FaYoutube size={22} />
         </a>
       </div>
     </footer>

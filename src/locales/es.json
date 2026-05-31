@@ -151,4 +151,13 @@
 "artifacts.ramesses.detailsTitle": "El gran faraón guerrero",
 "artifacts.ramesses.description": "Esta monumental estatua de Ramsés II representa a uno de los gobernantes más poderosos de la historia egipcia.",
 "artifacts.ramesses.history": "Ramsés II gobernó Egipto durante más de sesenta años y ordenó construir algunos de los templos y monumentos más impresionantes del antiguo Egipto."
+,
+  "home.nav.favorites": "Favoritos",
+  "favorites.title": "Favoritos",
+  "favorites.subtitle": "Mi colección",
+  "favorites.searchPlaceholder": "Buscar en favoritos",
+  "favorites.empty": "Aún no hay favoritos guardados.",
+  "favorites.noResults": "No hay favoritos que coincidan con tu búsqueda.",
+  "favorites.loadError": "No se pudieron cargar los favoritos.",
+  "favorites.signInRequired": "Inicia sesión para agregar artefactos a favoritos."
 }

@@ -35,6 +35,10 @@ export function FavoritesProvider({ children }) {
   };
 
   const toggleFavorite = async (artifact) => {
+    if (!storage.getToken()) {
+      throw new Error('Please sign in to add artifacts to favorites.');
+    }
+
     const existing = favorites.find((item) => item.id === artifact.id);
 
     setFavorites((prev) => {
@@ -44,8 +48,6 @@ export function FavoritesProvider({ children }) {
 
       return [...prev, artifact];
     });
-
-    if (!storage.getToken()) return;
 
     try {
       if (existing) {

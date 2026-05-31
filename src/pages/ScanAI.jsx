@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 
 import Footer from '../components/home/Footer';
 import UploadBox from '../components/scan/UploadBox';
@@ -7,13 +8,12 @@ import ScanResult from '../components/scan/ScanResult';
 import { scanApi } from '../api/scanApi';
 import { galleryApi } from '../api/galleryApi';
 import { getApiErrorMessage, normalizeScanResult } from '../utils/apiData';
-import useAuth from '../hooks/useAuth';
 
 import '../styles/scan-ai.css';
 
 export default function ScanAI() {
   const { t } = useTranslation();
-  const { isAuthenticated } = useAuth();
+  const navigate = useNavigate();
   const [selectedFile, setSelectedFile] = useState(null);
   const [preview, setPreview] = useState('');
   const [result, setResult] = useState(null);
@@ -45,11 +45,6 @@ export default function ScanAI() {
 
   const handleAnalyze = async () => {
     if (!selectedFile) return;
-
-    if (!isAuthenticated) {
-      setErrorMessage('Please sign in before scanning artifacts.');
-      return;
-    }
 
     setIsLoading(true);
     setResult(null);
@@ -95,6 +90,12 @@ export default function ScanAI() {
     }
   };
 
+  const handleAskAi = () => {
+    if (!result?.name) return;
+
+    navigate(`/chat-ai?artifact=${encodeURIComponent(result.name)}`);
+  };
+
   return (
     <main className="scan-page">
       <section className="scan-container">
@@ -112,6 +113,7 @@ export default function ScanAI() {
             isLoading={isLoading}
             onRetry={handleRetry}
             onSave={handleSave}
+            onAskAi={handleAskAi}
           />
 
           {errorMessage && (

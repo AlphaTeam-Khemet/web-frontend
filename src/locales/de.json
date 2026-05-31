@@ -151,4 +151,13 @@
 "artifacts.ramesses.detailsTitle": "Der große Krieger-Pharao",
 "artifacts.ramesses.description": "Diese monumentale Statue von Ramses II. stellt einen der mächtigsten Herrscher der ägyptischen Geschichte dar.",
 "artifacts.ramesses.history": "Ramses II. regierte Ägypten mehr als sechzig Jahre lang und ließ einige der beeindruckendsten Tempel und Monumente des alten Ägyptens errichten."
+,
+  "home.nav.favorites": "Favoriten",
+  "favorites.title": "Favoriten",
+  "favorites.subtitle": "Meine Sammlung",
+  "favorites.searchPlaceholder": "In Favoriten suchen",
+  "favorites.empty": "Noch keine Favoriten gespeichert.",
+  "favorites.noResults": "Keine passenden Favoriten gefunden.",
+  "favorites.loadError": "Favoriten konnten nicht geladen werden.",
+  "favorites.signInRequired": "Bitte melden Sie sich an, um Artefakte zu Favoriten hinzuzufügen."
 }

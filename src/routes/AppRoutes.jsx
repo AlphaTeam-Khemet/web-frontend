@@ -24,11 +24,13 @@ import Splash from '../pages/Splash';
 import Welcome from '../pages/Welcome';
 import ScanAI from '../pages/ScanAI';
 import ChatAI from '../pages/ChatAI';
+import Tour from '../pages/Tour';
 export default function AppRoutes() {
   return (
     <Routes>
       <Route path="/" element={<Splash />} />
       <Route path={ROUTES.WELCOME} element={<Welcome />} />
+      <Route path={ROUTES.TOUR} element={<Tour />} />
 
       <Route element={<GuestRoute />}>
         <Route path={ROUTES.SIGN_IN} element={<SignIn />} />
