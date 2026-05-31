@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import Footer from '../components/home/Footer';
 import UploadBox from '../components/scan/UploadBox';
@@ -8,6 +9,8 @@ import { mockScanResult } from '../data/mockScanResult';
 import '../styles/scan-ai.css';
 
 export default function ScanAI() {
+  const { t } = useTranslation();
+
   const [selectedFile, setSelectedFile] = useState(null);
   const [preview, setPreview] = useState('');
   const [result, setResult] = useState(null);
@@ -41,6 +44,14 @@ export default function ScanAI() {
     setResult(null);
     setSaveMessage('');
 
+    /*
+      Backend later:
+      const formData = new FormData();
+      formData.append('image', selectedFile);
+      const response = await api.post('/scan/analyze', formData);
+      setResult(response.data);
+    */
+
     setTimeout(() => {
       setResult(mockScanResult);
       setIsLoading(false);
@@ -53,9 +64,15 @@ export default function ScanAI() {
   };
 
   const handleSave = () => {
-    setSaveMessage(
-      'Artifact suggestion saved successfully and will be reviewed before publishing.'
-    );
+    /*
+      Backend later:
+      await api.post('/collections/suggest', {
+        ...result,
+        image: selectedFile
+      });
+    */
+
+    setSaveMessage(t('scan.savedMessage'));
   };
 
   return (

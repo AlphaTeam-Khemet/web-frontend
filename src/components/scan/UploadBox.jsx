@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { Camera, ImageUp, X, Check, RotateCcw } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 export default function UploadBox({
   preview,
@@ -8,6 +9,8 @@ export default function UploadBox({
   onAnalyze,
   isLoading,
 }) {
+  const { t } = useTranslation();
+
   const fileInputRef = useRef(null);
   const videoRef = useRef(null);
   const streamRef = useRef(null);
@@ -17,10 +20,12 @@ export default function UploadBox({
 
   const handleFileChange = (event) => {
     const file = event.target.files?.[0];
+
     if (!file) return;
 
     stopCamera();
     onFileSelect(file);
+
     event.target.value = '';
   };
 
@@ -36,6 +41,7 @@ export default function UploadBox({
       });
 
       streamRef.current = stream;
+
       setIsCameraOpen(true);
 
       setTimeout(() => {
@@ -44,13 +50,15 @@ export default function UploadBox({
         }
       }, 0);
     } catch {
-      setCameraError('Camera access denied or not available.');
+      setCameraError(t('scan.cameraError'));
     }
   };
 
   const stopCamera = () => {
     streamRef.current?.getTracks().forEach((track) => track.stop());
+
     streamRef.current = null;
+
     setIsCameraOpen(false);
   };
 
@@ -58,12 +66,14 @@ export default function UploadBox({
     if (!videoRef.current) return;
 
     const video = videoRef.current;
+
     const canvas = document.createElement('canvas');
 
     canvas.width = video.videoWidth;
     canvas.height = video.videoHeight;
 
     const context = canvas.getContext('2d');
+
     context.drawImage(video, 0, 0, canvas.width, canvas.height);
 
     canvas.toBlob((blob) => {
@@ -74,6 +84,7 @@ export default function UploadBox({
       });
 
       onFileSelect(file);
+
       stopCamera();
     }, 'image/png');
   };
@@ -87,12 +98,11 @@ export default function UploadBox({
   return (
     <section className="scan-upload-card">
       <div className="scan-upload-heading">
-        <span>AI Artifact Scanner</span>
-        <h1>Scan Artifacts &  AI Translator</h1>
-        <p>
-          Upload an artifact image or open your camera to let AI identify it and
-          generate historical details.
-        </p>
+        <span>{t('scan.badge')}</span>
+
+        <h1>{t('scan.title')}</h1>
+
+        <p>{t('scan.description')}</p>
       </div>
 
       <div
@@ -111,12 +121,12 @@ export default function UploadBox({
             <div className="scan-camera-actions">
               <button type="button" onClick={captureImage}>
                 <Check size={17} />
-                Capture
+                {t('scan.capture')}
               </button>
 
               <button type="button" onClick={stopCamera}>
                 <X size={17} />
-                Close
+                {t('scan.close')}
               </button>
             </div>
           </div>
@@ -135,23 +145,32 @@ export default function UploadBox({
         ) : (
           <div className="scan-empty-preview">
             <ImageUp size={42} />
-            <h3>Upload or capture image</h3>
-            <p>Supported formats: JPG, PNG, WEBP</p>
+
+            <h3>{t('scan.emptyTitle')}</h3>
+
+            <p>{t('scan.emptyDescription')}</p>
           </div>
         )}
       </div>
 
-      {cameraError && <p className="scan-camera-error">{cameraError}</p>}
+      {cameraError && (
+        <p className="scan-camera-error">
+          {cameraError}
+        </p>
+      )}
 
       <div className="scan-upload-actions">
-        <button type="button" onClick={() => fileInputRef.current?.click()}>
+        <button
+          type="button"
+          onClick={() => fileInputRef.current?.click()}
+        >
           <ImageUp size={17} />
-          Upload Image
+          {t('scan.uploadImage')}
         </button>
 
         <button type="button" onClick={openCamera}>
           <Camera size={17} />
-          Open Camera
+          {t('scan.openCamera')}
         </button>
       </div>
 
@@ -164,10 +183,10 @@ export default function UploadBox({
         {isLoading ? (
           <>
             <RotateCcw size={17} className="scan-spin" />
-            Analyzing...
+            {t('scan.analyzing')}
           </>
         ) : (
-          'Analyze Artifact'
+          t('scan.analyze')
         )}
       </button>
 

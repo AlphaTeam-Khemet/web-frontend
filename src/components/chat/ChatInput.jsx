@@ -1,10 +1,13 @@
 import { SendHorizonal } from 'lucide-react';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 export default function ChatInput({
   onSend,
   disabled,
 }) {
+  const { t } = useTranslation();
+
   const [message, setMessage] = useState('');
 
   const handleSubmit = (event) => {
@@ -15,6 +18,7 @@ export default function ChatInput({
     if (!trimmed || disabled) return;
 
     onSend(trimmed);
+
     setMessage('');
   };
 
@@ -22,7 +26,7 @@ export default function ChatInput({
     <form className="chat-input-form" onSubmit={handleSubmit}>
       <input
         type="text"
-        placeholder="Ask your museum guide..."
+        placeholder={t('chat.placeholder')}
         value={message}
         onChange={(event) => setMessage(event.target.value)}
       />

@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { Sparkles } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 import Footer from '../components/home/Footer';
 
@@ -12,30 +13,31 @@ import { getMockChatResponse } from '../data/mockChatResponses';
 
 import '../styles/chat-ai.css';
 
-const INITIAL_MESSAGES = [
-  {
-    id: 1,
-    role: 'ai',
-    content:
-      'Welcome to the Khemet AI Guide. Ask me anything about ancient Egypt, artifacts, hieroglyphs, or your museum journey.',
-  },
-];
-
 export default function ChatAI() {
+  const { t } = useTranslation();
+
   const messagesEndRef = useRef(null);
   const isFirstRender = useRef(true);
+
+  const initialMessages = [
+    {
+      id: 1,
+      role: 'ai',
+      content: t('chat.welcome'),
+    },
+  ];
 
   const [messages, setMessages] = useState(() => {
     const savedMessages = sessionStorage.getItem('khemet-chat-messages');
 
     if (!savedMessages) {
-      return INITIAL_MESSAGES;
+      return initialMessages;
     }
 
     try {
       return JSON.parse(savedMessages);
     } catch {
-      return INITIAL_MESSAGES;
+      return initialMessages;
     }
   });
 
@@ -55,7 +57,7 @@ export default function ChatAI() {
       const aiResponse = {
         id: Date.now() + 1,
         role: 'ai',
-        content: getMockChatResponse(text),
+        content: getMockChatResponse(text, t),
       };
 
       setMessages((prev) => [...prev, aiResponse]);
@@ -64,39 +66,36 @@ export default function ChatAI() {
   };
 
   useEffect(() => {
-    sessionStorage.setItem('khemet-chat-messages', JSON.stringify(messages));
+    sessionStorage.setItem(
+      'khemet-chat-messages',
+      JSON.stringify(messages)
+    );
   }, [messages]);
 
-useEffect(() => {
-  if (isFirstRender.current) {
-    isFirstRender.current = false;
-    return;
-  }
+  useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
 
-  const container = document.querySelector(
-    '.chat-messages-container'
-  );
+    const container = document.querySelector('.chat-messages-container');
 
-  if (container) {
-    container.scrollTo({
-      top: container.scrollHeight,
-      behavior: 'smooth',
-    });
-  }
-}, [messages, isTyping]);
-
+    if (container) {
+      container.scrollTo({
+        top: container.scrollHeight,
+        behavior: 'smooth',
+      });
+    }
+  }, [messages, isTyping]);
 
   return (
     <main className="chat-ai-page">
       <section className="chat-ai-container">
         <div className="chat-main-panel">
           <div className="chat-header">
-            <h1>Khemet AI</h1>
+            <h1>{t('chat.title')}</h1>
 
-            <p>
-              Ask about artifacts, history, hieroglyphs, or your museum
-              journey.
-            </p>
+            <p>{t('chat.description')}</p>
           </div>
 
           <div className="chat-messages-container">
@@ -127,30 +126,22 @@ useEffect(() => {
           <div className="chat-side-content">
             <span>
               <Sparkles size={15} />
-              Explore with AI
+              {t('chat.side.badge')}
             </span>
 
-            <h3>Your Intelligent Museum Guide</h3>
+            <h3>{t('chat.side.title')}</h3>
 
-            <p>
-              Discover artifacts, translate hieroglyphs, explore dynasties, and
-              learn ancient Egyptian history through AI-powered conversations.
-            </p>
+            <p>{t('chat.side.description')}</p>
 
             <div className="chat-side-features">
               <div>
-                <strong>Artifact Knowledge</strong>
-                <p>
-                  Learn about ancient Egyptian treasures and museum collections.
-                </p>
+                <strong>{t('chat.side.feature1.title')}</strong>
+                <p>{t('chat.side.feature1.description')}</p>
               </div>
 
               <div>
-                <strong>Smart AI Responses</strong>
-                <p>
-                  Ask questions naturally and receive detailed explanations
-                  instantly.
-                </p>
+                <strong>{t('chat.side.feature2.title')}</strong>
+                <p>{t('chat.side.feature2.description')}</p>
               </div>
             </div>
           </div>

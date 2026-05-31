@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 import Footer from '../components/home/Footer';
 
@@ -23,6 +24,7 @@ const languageLabels = {
 
 export default function Settings() {
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const { favoritesCount } = useFavorites();
   const { user, updateAvatar, updateProfile } = useUserProfile();
@@ -39,25 +41,25 @@ export default function Settings() {
   };
 
   const handleDeleteAccount = async () => {
-  const confirmed = window.confirm(
-    'Are you sure you want to delete your account? This action cannot be undone.'
-  );
+    const confirmed = window.confirm(
+      t('settings.security.deleteConfirm')
+    );
 
-  if (!confirmed) return;
+    if (!confirmed) return;
 
-  try {
-    /*
-      Backend later:
-      await api.delete('/users/me');
-    */
+    try {
+      /*
+        Backend later:
+        await api.delete('/users/me');
+      */
 
-    alert('Your account has been deleted successfully.');
+      alert(t('settings.security.deleteSuccess'));
 
-    navigate('/');
-  } catch {
-    alert('Failed to delete account. Please try again.');
-  }
-};
+      navigate('/');
+    } catch {
+      alert(t('settings.security.deleteError'));
+    }
+  };
 
   return (
     <main className="settings-page">
@@ -78,12 +80,11 @@ export default function Settings() {
         </div>
 
         <SettingsContent
-  user={user}
-  onUpdateProfile={updateProfile}
-  onDeleteAccount={handleDeleteAccount}
-/>
+          user={user}
+          onUpdateProfile={updateProfile}
+          onDeleteAccount={handleDeleteAccount}
+        />
       </section>
-     
 
       <Footer />
     </main>

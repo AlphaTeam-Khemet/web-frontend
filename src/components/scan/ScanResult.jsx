@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Bookmark, RefreshCcw, Share2 } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 export default function ScanResult({
   result,
@@ -7,14 +8,18 @@ export default function ScanResult({
   onRetry,
   onSave,
 }) {
+  const { t } = useTranslation();
   const [isExpanded, setIsExpanded] = useState(false);
 
   if (isLoading) {
     return (
       <section className="scan-result-card">
-        <h3>AI Result</h3>
+        <h3>{t('scan.resultTitle')}</h3>
+
         <div className="scan-result-body">
-          <p className="scan-loading-text">Analyzing artifact...</p>
+          <p className="scan-loading-text">
+            {t('scan.loadingText')}
+          </p>
         </div>
       </section>
     );
@@ -23,9 +28,10 @@ export default function ScanResult({
   if (!result) {
     return (
       <section className="scan-result-card">
-        <h3>AI Result</h3>
+        <h3>{t('scan.resultTitle')}</h3>
+
         <div className="scan-empty-result">
-          Upload or capture an artifact image to begin AI analysis.
+          {t('scan.emptyResult')}
         </div>
       </section>
     );
@@ -35,13 +41,15 @@ export default function ScanResult({
 
   return (
     <section className="scan-result-card">
-      <h3>AI Result</h3>
+      <h3>{t('scan.resultTitle')}</h3>
 
       <div className="scan-result-body">
         <div className="scan-result-heading">
           <span>{result.category}</span>
           <h2>{result.name}</h2>
-          <p>{result.confidence}% confidence</p>
+          <p>
+            {result.confidence}% {t('scan.confidence')}
+          </p>
         </div>
 
         <p
@@ -60,12 +68,14 @@ export default function ScanResult({
             className="scan-read-more"
             onClick={() => setIsExpanded((prev) => !prev)}
           >
-            {isExpanded ? 'Show Less' : 'Read More'}
+            {isExpanded
+              ? t('scan.showLess')
+              : t('scan.readMore')}
           </button>
         )}
 
         <div className="scan-result-meta">
-          <span>Period</span>
+          <span>{t('scan.period')}</span>
           <strong>{result.period}</strong>
         </div>
       </div>
@@ -73,17 +83,17 @@ export default function ScanResult({
       <div className="scan-result-actions">
         <button type="button" onClick={onRetry}>
           <RefreshCcw size={15} />
-          Retry
+          {t('scan.retry')}
         </button>
 
         <button type="button">
           <Share2 size={15} />
-          Share
+          {t('scan.share')}
         </button>
 
         <button type="button" className="primary" onClick={onSave}>
           <Bookmark size={15} />
-          Save to Collection
+          {t('scan.saveToCollection')}
         </button>
       </div>
     </section>
