@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { ArrowLeft, Clock, MapPin, Tag } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
@@ -6,6 +6,8 @@ import { useTranslation } from 'react-i18next';
 import Footer from '../components/home/Footer';
 import { collectionsMockData } from '../data/collectionsMockData';
 import { ROUTES } from '../constants/routes';
+import { artifactsApi } from '../api/artifactsApi';
+import { getApiErrorMessage, normalizeMonument } from '../utils/apiData';
 
 import '../styles/artifactDetails.css';
 
@@ -14,16 +16,45 @@ export default function ArtifactDetails() {
   const { t } = useTranslation();
 
   const [activeTab, setActiveTab] = useState('overview');
-
-  const artifact = collectionsMockData.find(
-    (item) => String(item.id) === String(id)
+  const [artifact, setArtifact] = useState(() =>
+    collectionsMockData.find((item) => String(item.id) === String(id))
   );
+  const [isLoading, setIsLoading] = useState(true);
+  const [errorMessage, setErrorMessage] = useState('');
+
+  useEffect(() => {
+    let active = true;
+
+    async function loadArtifact() {
+      setIsLoading(true);
+      setErrorMessage('');
+
+      try {
+        const { data } = await artifactsApi.getById(id);
+        if (active) setArtifact(normalizeMonument(data));
+      } catch (error) {
+        if (active) {
+          setErrorMessage(getApiErrorMessage(error, 'Unable to load artifact details.'));
+          setArtifact(null);
+        }
+      } finally {
+        if (active) setIsLoading(false);
+      }
+    }
+
+    loadArtifact();
+
+    return () => {
+      active = false;
+    };
+  }, [id]);
 
   if (!artifact) {
     return (
       <main className="artifact-details-page">
         <section className="artifact-not-found">
-          <h1>{t('artifact.notFound')}</h1>
+          <h1>{isLoading ? 'Loading artifact...' : t('artifact.notFound')}</h1>
+          {errorMessage && <p>{errorMessage}</p>}
 
           <Link to={ROUTES.COLLECTIONS}>
             {t('artifact.back')}
@@ -33,11 +64,12 @@ export default function ArtifactDetails() {
     );
   }
 
-  const overviewText = t(artifact.descriptionKey);
-
-  const historyText = artifact.historyKey
-    ? t(artifact.historyKey)
-    : t('artifact.defaultHistory');
+  const title = artifact.displayName || t(artifact.titleKey || artifact.name || '');
+  const category = artifact.category || t(artifact.categoryKey || '');
+  const period = artifact.period || t(artifact.periodKey || '');
+  const location = artifact.location || t(artifact.locationKey || '');
+  const overviewText = artifact.description || t(artifact.descriptionKey || '');
+  const historyText = artifact.historyKey || t('artifact.defaultHistory');
 
   return (
     <main className="artifact-details-page">
@@ -49,22 +81,16 @@ export default function ArtifactDetails() {
 
         <div className="artifact-main-layout">
           <div className="artifact-image-frame">
-            <img
-              src={artifact.image}
-              alt={t(artifact.titleKey)}
-            />
+            <img src={artifact.image} alt={title} />
           </div>
 
           <div className="artifact-text-panel">
-            <span className="artifact-category">
-              {t(artifact.categoryKey)}
-            </span>
+            <span className="artifact-category">{category}</span>
 
-            <h1>{t(artifact.titleKey)}</h1>
+            <h1>{title}</h1>
 
             <p className="artifact-meta">
-              {t(artifact.periodKey)} ·{' '}
-              {t(artifact.locationKey)}
+              {period} - {location}
             </p>
 
             <div className="artifact-tabs">
@@ -86,25 +112,23 @@ export default function ArtifactDetails() {
             </div>
 
             <p className="artifact-description">
-              {activeTab === 'overview'
-                ? overviewText
-                : historyText}
+              {activeTab === 'overview' ? overviewText : historyText}
             </p>
 
             <div className="artifact-info-list">
               <div>
                 <Clock size={17} />
-                <span>{t(artifact.periodKey)}</span>
+                <span>{period}</span>
               </div>
 
               <div>
                 <MapPin size={17} />
-                <span>{t(artifact.locationKey)}</span>
+                <span>{location}</span>
               </div>
 
               <div>
                 <Tag size={17} />
-                <span>{t(artifact.categoryKey)}</span>
+                <span>{category}</span>
               </div>
             </div>
           </div>

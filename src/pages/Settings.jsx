@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
@@ -10,6 +11,10 @@ import SettingsContent from '../components/settings/SettingsContent';
 import { useFavorites } from '../context/FavoritesContext';
 import { useUserProfile } from '../context/UserProfileContext';
 import { useLanguage } from '../context/LanguageContext';
+import useAuth from '../hooks/useAuth';
+import { userApi } from '../api/userApi';
+import { scanApi } from '../api/scanApi';
+import { getApiErrorMessage, normalizeUser } from '../utils/apiData';
 
 import '../styles/settings.css';
 
@@ -27,17 +32,57 @@ export default function Settings() {
   const { t } = useTranslation();
 
   const { favoritesCount } = useFavorites();
-  const { user, updateAvatar, updateProfile } = useUserProfile();
+  const { user, updateAvatar, updateProfile, clearUser } = useUserProfile();
+  const { user: authUser, isAuthenticated, logout } = useAuth();
   const { language } = useLanguage();
+  const [scansCount, setScansCount] = useState(0);
+  const [statusMessage, setStatusMessage] = useState('');
 
-  const handleLogout = () => {
-    /*
-      Backend later:
-      POST /auth/logout
-      clear token
-    */
+  useEffect(() => {
+    let active = true;
 
-    navigate('/');
+    async function loadBackendProfile() {
+      if (!isAuthenticated) return;
+
+      try {
+        const [{ data: profile }, { data: scans }] = await Promise.all([
+          userApi.getProfile(),
+          scanApi.getHistory(),
+        ]);
+
+        if (!active) return;
+
+        updateProfile({ name: normalizeUser(profile).name });
+        setScansCount(Array.isArray(scans) ? scans.length : 0);
+      } catch {
+        if (active) {
+          setStatusMessage(
+            'Signed in, but profile activity could not be refreshed.'
+          );
+        }
+      }
+    }
+
+    loadBackendProfile();
+
+    return () => {
+      active = false;
+    };
+  }, [isAuthenticated, updateProfile]);
+
+  const profileUser =
+    isAuthenticated && authUser
+      ? {
+          ...user,
+          name: authUser.name || user.name,
+          email: authUser.email || user.email,
+        }
+      : user;
+
+  const handleLogout = async () => {
+    await logout();
+    clearUser();
+    navigate('/welcome');
   };
 
   const handleDeleteAccount = async () => {
@@ -48,16 +93,30 @@ export default function Settings() {
     if (!confirmed) return;
 
     try {
-      /*
-        Backend later:
-        await api.delete('/users/me');
-      */
-
       alert(t('settings.security.deleteSuccess'));
-
       navigate('/');
     } catch {
       alert(t('settings.security.deleteError'));
+    }
+  };
+
+  const handleUpdateProfile = async (nextProfile) => {
+    try {
+      if (isAuthenticated) {
+        const { data } = await userApi.updateProfile({
+          full_name: nextProfile.name,
+        });
+
+        updateProfile({ name: normalizeUser(data).name });
+      } else {
+        updateProfile(nextProfile);
+      }
+
+      setStatusMessage(t('common.saveChanges'));
+    } catch (error) {
+      setStatusMessage(
+        getApiErrorMessage(error, 'Unable to update profile.')
+      );
     }
   };
 
@@ -66,7 +125,7 @@ export default function Settings() {
       <section className="settings-container">
         <div className="settings-left-column">
           <ProfileCard
-            user={user}
+            user={profileUser}
             currentLanguage={languageLabels[language] || 'English'}
             onLogout={handleLogout}
             onAvatarChange={updateAvatar}
@@ -75,15 +134,21 @@ export default function Settings() {
           <ActivityStats
             favoritesCount={favoritesCount}
             chatsCount={0}
-            scansCount={0}
+            scansCount={scansCount}
           />
         </div>
 
         <SettingsContent
-          user={user}
-          onUpdateProfile={updateProfile}
+          user={profileUser}
+          onUpdateProfile={handleUpdateProfile}
           onDeleteAccount={handleDeleteAccount}
         />
+
+        {statusMessage && (
+          <div className="scan-save-message">
+            {statusMessage}
+          </div>
+        )}
       </section>
 
       <Footer />

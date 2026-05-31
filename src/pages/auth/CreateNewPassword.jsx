@@ -5,6 +5,8 @@ import PasswordInput from '../../components/auth/PasswordInput';
 import PasswordStrength from '../../components/auth/PasswordStrength';
 import createPasswordBg from '../../assets/images/create-new-password-bg.png';
 import { ROUTES } from '../../constants/routes';
+import { authApi } from '../../api/authApi';
+import { getApiErrorMessage } from '../../utils/apiData';
 import '../../styles/create-new-password.css';
 
 export default function CreateNewPassword() {
@@ -38,14 +40,15 @@ export default function CreateNewPassword() {
     setIsLoading(true);
 
     try {
-      // TODO: Replace mock with:
-      // await authApi.resetPassword({ email, code, newPassword })
-
-      await new Promise((resolve) => setTimeout(resolve, 900));
+      await authApi.resetPassword({
+        email,
+        otp: code,
+        new_password: newPassword,
+      });
 
       navigate(ROUTES.SIGN_IN);
     } catch (error) {
-      setErrorMessage('Something went wrong. Please try again.');
+      setErrorMessage(getApiErrorMessage(error, 'Something went wrong. Please try again.'));
     } finally {
       setIsLoading(false);
     }

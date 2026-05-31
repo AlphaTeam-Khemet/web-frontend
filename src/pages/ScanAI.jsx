@@ -4,23 +4,28 @@ import { useTranslation } from 'react-i18next';
 import Footer from '../components/home/Footer';
 import UploadBox from '../components/scan/UploadBox';
 import ScanResult from '../components/scan/ScanResult';
-import { mockScanResult } from '../data/mockScanResult';
+import { scanApi } from '../api/scanApi';
+import { galleryApi } from '../api/galleryApi';
+import { getApiErrorMessage, normalizeScanResult } from '../utils/apiData';
+import useAuth from '../hooks/useAuth';
 
 import '../styles/scan-ai.css';
 
 export default function ScanAI() {
   const { t } = useTranslation();
-
+  const { isAuthenticated } = useAuth();
   const [selectedFile, setSelectedFile] = useState(null);
   const [preview, setPreview] = useState('');
   const [result, setResult] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [saveMessage, setSaveMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
 
   const handleFileSelect = (file) => {
     setSelectedFile(file);
     setResult(null);
     setSaveMessage('');
+    setErrorMessage('');
 
     const previewUrl = URL.createObjectURL(file);
     setPreview(previewUrl);
@@ -35,44 +40,59 @@ export default function ScanAI() {
     setPreview('');
     setResult(null);
     setSaveMessage('');
+    setErrorMessage('');
   };
 
-  const handleAnalyze = () => {
+  const handleAnalyze = async () => {
     if (!selectedFile) return;
+
+    if (!isAuthenticated) {
+      setErrorMessage('Please sign in before scanning artifacts.');
+      return;
+    }
 
     setIsLoading(true);
     setResult(null);
     setSaveMessage('');
+    setErrorMessage('');
 
-    /*
-      Backend later:
-      const formData = new FormData();
-      formData.append('image', selectedFile);
-      const response = await api.post('/scan/analyze', formData);
-      setResult(response.data);
-    */
-
-    setTimeout(() => {
-      setResult(mockScanResult);
+    try {
+      const { data } = await scanApi.scanArtifact(selectedFile);
+      setResult(normalizeScanResult(data));
+    } catch (error) {
+      setErrorMessage(
+        getApiErrorMessage(error, 'Artifact scan failed. Please try again.')
+      );
+    } finally {
       setIsLoading(false);
-    }, 1600);
+    }
   };
 
   const handleRetry = () => {
     setResult(null);
     setSaveMessage('');
+    setErrorMessage('');
   };
 
-  const handleSave = () => {
-    /*
-      Backend later:
-      await api.post('/collections/suggest', {
-        ...result,
-        image: selectedFile
-      });
-    */
+  const handleSave = async () => {
+    if (!result?.raw?.session?.id) {
+      setSaveMessage(t('scan.savedMessage'));
+      return;
+    }
 
-    setSaveMessage(t('scan.savedMessage'));
+    try {
+      await galleryApi.add({
+        monument_id: result.raw.monument?.id || null,
+        session_id: result.raw.session.id,
+        image_url: result.raw.session.scanned_image,
+      });
+
+      setSaveMessage(t('scan.savedMessage'));
+    } catch (error) {
+      setSaveMessage(
+        getApiErrorMessage(error, 'Unable to save this artifact.')
+      );
+    }
   };
 
   return (
@@ -93,6 +113,12 @@ export default function ScanAI() {
             onRetry={handleRetry}
             onSave={handleSave}
           />
+
+          {errorMessage && (
+            <div className="scan-save-message">
+              {errorMessage}
+            </div>
+          )}
 
           {saveMessage && (
             <div className="scan-save-message">

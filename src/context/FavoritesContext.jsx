@@ -1,4 +1,7 @@
 import { createContext, useContext, useEffect, useMemo, useState } from 'react';
+import { artifactsApi } from '../api/artifactsApi';
+import { normalizeMonument } from '../utils/apiData';
+import { storage } from '../utils/storage';
 
 const FavoritesContext = createContext(null);
 
@@ -21,22 +24,48 @@ export function FavoritesProvider({ children }) {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(favorites));
   }, [favorites]);
 
-  const toggleFavorite = (artifact) => {
-    setFavorites((prev) => {
-      const exists = prev.some((item) => item.id === artifact.id);
+  const refreshFavorites = async () => {
+    if (!storage.getToken()) return;
 
-      if (exists) {
+    const { data } = await artifactsApi.getFavorites();
+    setFavorites(data.map((item) => ({
+      ...normalizeMonument(item.Monument || item.monument || {}),
+      favoriteId: item.id,
+    })));
+  };
+
+  const toggleFavorite = async (artifact) => {
+    const existing = favorites.find((item) => item.id === artifact.id);
+
+    setFavorites((prev) => {
+      if (existing) {
         return prev.filter((item) => item.id !== artifact.id);
       }
 
       return [...prev, artifact];
     });
 
-    /*
-      Backend later:
-      if exists => DELETE /favorites/:artifactId
-      else => POST /favorites
-    */
+    if (!storage.getToken()) return;
+
+    try {
+      if (existing) {
+        if (existing.favoriteId) {
+          await artifactsApi.removeFavorite(existing.favoriteId);
+        } else {
+          await refreshFavorites();
+        }
+        return;
+      }
+
+      const { data } = await artifactsApi.addFavorite(artifact.id);
+      setFavorites((prev) =>
+        prev.map((item) =>
+          item.id === artifact.id ? { ...item, favoriteId: data.id } : item
+        )
+      );
+    } catch {
+      await refreshFavorites();
+    }
   };
 
   const isFavorite = (artifactId) => {
@@ -49,6 +78,7 @@ export function FavoritesProvider({ children }) {
       favoritesCount: favorites.length,
       toggleFavorite,
       isFavorite,
+      refreshFavorites,
     }),
     [favorites]
   );

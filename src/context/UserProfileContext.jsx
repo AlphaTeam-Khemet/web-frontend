@@ -11,16 +11,10 @@ const UserProfileContext = createContext(null);
 const STORAGE_KEY = 'khemet-user-profile';
 
 const defaultUser = {
-  /*
-    Backend later:
-    name: response.user.name
-    email: response.user.email
-    avatar: response.user.avatar
-  */
-
-  name: 'Hossam Hassan',
-  email: 'hossam@khemet.ai',
+  name: 'KHEMET Guest',
+  email: '',
   avatar: '',
+  isDefault: true,
 };
 
 export function UserProfileProvider({ children }) {
@@ -39,6 +33,11 @@ export function UserProfileProvider({ children }) {
   });
 
   useEffect(() => {
+    if (user?.isDefault) {
+      localStorage.removeItem(STORAGE_KEY);
+      return;
+    }
+
     localStorage.setItem(STORAGE_KEY, JSON.stringify(user));
   }, [user]);
 
@@ -73,6 +72,7 @@ export function UserProfileProvider({ children }) {
       */
 
       name: nextProfile.name ?? prev.name,
+      isDefault: false,
 
       /*
         الإيميل ممنوع يتعدل من الفرونت
@@ -98,6 +98,7 @@ export function UserProfileProvider({ children }) {
       name: backendUser.name,
       email: backendUser.email,
       avatar: backendUser.avatar || '',
+      isDefault: false,
     });
 
     /*
@@ -107,14 +108,7 @@ export function UserProfileProvider({ children }) {
 
   const clearUser = () => {
     setUser(defaultUser);
-
     localStorage.removeItem(STORAGE_KEY);
-
-    /*
-      Backend later:
-      clear access token
-      clear refresh token
-    */
   };
 
   const value = useMemo(

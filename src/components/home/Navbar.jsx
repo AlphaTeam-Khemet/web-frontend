@@ -11,6 +11,7 @@ import { useTranslation } from 'react-i18next';
 
 import { useLanguage } from '../../context/LanguageContext';
 import { useUserProfile } from '../../context/UserProfileContext';
+import useAuth from '../../hooks/useAuth';
 
 import logo from '../../assets/images/home/khemet-logo.png';
 
@@ -34,7 +35,8 @@ const languages = [
 export default function Navbar() {
   const { t } = useTranslation();
   const { language, setLanguage } = useLanguage();
-  const { user } = useUserProfile();
+  const { user, clearUser } = useUserProfile();
+  const { logout, isAuthenticated, isGuest } = useAuth();
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -67,15 +69,11 @@ export default function Navbar() {
     navigate('/settings');
   };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
   setIsProfileOpen(false);
 
-  /*
-    Backend later:
-    POST /auth/logout
-    remove access token
-    remove refresh token
-  */
+  await logout();
+  clearUser();
 
   navigate('/welcome');
 };
@@ -128,18 +126,29 @@ export default function Navbar() {
           </div>
 
           <div className="home-profile-menu">
-            <button
-              className="home-profile-btn"
-              type="button"
-              onClick={handleProfileClick}
-              aria-label="Profile menu"
-            >
-              {user?.avatar ? (
-                <img src={user.avatar} alt={user.name} />
-              ) : (
+            {isAuthenticated || isGuest ? (
+              <button
+                className="home-profile-btn"
+                type="button"
+                onClick={handleProfileClick}
+                aria-label="Profile menu"
+              >
+                {user?.avatar ? (
+                  <img src={user.avatar} alt={user.name} />
+                ) : (
+                  <UserCircle2 size={25} />
+                )}
+              </button>
+            ) : (
+              <button
+                className="home-profile-btn"
+                type="button"
+                onClick={() => navigate('/sign-in')}
+                aria-label="Sign in"
+              >
                 <UserCircle2 size={25} />
-              )}
-            </button>
+              </button>
+            )}
 
             {isProfileOpen && !isSettingsPage && (
               <div className="home-profile-dropdown">

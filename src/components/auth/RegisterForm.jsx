@@ -5,9 +5,19 @@ import LanguageSelect from './LanguageSelect';
 import TermsCheckbox from './TermsCheckbox';
 import PasswordStrength from './PasswordStrength';
 import { ROUTES } from '../../constants/routes';
+import { authApi } from '../../api/authApi';
+import { getApiErrorMessage } from '../../utils/apiData';
+import useAuth from '../../hooks/useAuth';
+
+const backendLanguageIds = {
+  en: 1,
+  ar: 2,
+  de: 4,
+};
 
 export default function RegisterForm() {
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const [formData, setFormData] = useState({
     firstName: '',
@@ -75,23 +85,16 @@ export default function RegisterForm() {
     setIsLoading(true);
 
     try {
-      // TODO later:
-      // const captchaToken = await getCaptchaToken();
-      // await authApi.register({ ...formData, captchaToken });
-
-      await new Promise((resolve) => setTimeout(resolve, 900));
-
-      const mockVerificationData = {
-        verificationId: 'mock-verification-id',
+      const { data } = await authApi.register({
+        full_name: `${formData.firstName.trim()} ${formData.lastName.trim()}`.trim(),
         email: formData.email,
-        options: [24, 68, 91],
-      };
-
-      navigate(ROUTES.EMAIL_VERIFICATION_CHOICE, {
-        state: mockVerificationData,
+        password: formData.password,
+        preferred_language: backendLanguageIds[formData.preferredLanguage] || backendLanguageIds.en,
       });
+      login(data);
+      navigate(ROUTES.HOME);
     } catch (error) {
-      setErrorMessage('This email may already be registered. Please try again.');
+      setErrorMessage(getApiErrorMessage(error, 'This email may already be registered. Please try again.'));
     } finally {
       setIsLoading(false);
     }

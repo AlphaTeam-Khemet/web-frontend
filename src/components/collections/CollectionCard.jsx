@@ -10,6 +10,9 @@ export default function CollectionCard({
   index,
 }) {
   const { t } = useTranslation();
+  const title = item.displayName || t(item.titleKey || item.name || '');
+  const period = item.period || t(item.periodKey || '');
+  const location = item.location || t(item.locationKey || '');
 
   return (
     <article
@@ -20,7 +23,7 @@ export default function CollectionCard({
         to={getArtifactDetailsRoute(item.id)}
         className="collection-card-image"
       >
-        <img src={item.image} alt={t(item.titleKey)} />
+        <img src={item.image} alt={title} />
       </Link>
 
       <button
@@ -33,9 +36,9 @@ export default function CollectionCard({
       </button>
 
       <div className="collection-card-content">
-        <h3>{t(item.titleKey)}</h3>
-        <p>{t(item.periodKey)}</p>
-        <span>{t(item.locationKey)}</span>
+        <h3>{title}</h3>
+        <p>{period}</p>
+        <span>{location}</span>
       </div>
     </article>
   );

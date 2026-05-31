@@ -2,9 +2,16 @@ import { Link, useNavigate } from 'react-router-dom';
 import khemetLogo from '../../assets/logo/khemet-logo.png';
 import welcomeBg from '../../assets/images/welcome-bg.png';
 import WelcomeActions from './WelcomeActions';
+import useAuth from '../../hooks/useAuth';
 
 export default function WelcomeHero() {
   const navigate = useNavigate();
+  const { continueAsGuest } = useAuth();
+
+  const handleGuest = () => {
+    continueAsGuest();
+    navigate('/home');
+  };
 
   return (
     <main className="welcome-page">
@@ -27,7 +34,7 @@ export default function WelcomeHero() {
 
         <WelcomeActions
           onSignIn={() => navigate('/sign-in')}
-          onGuest={() => navigate('/home')}
+          onGuest={handleGuest}
         />
 
         <p className="welcome-register">

@@ -9,13 +9,15 @@ import ChatMessage from '../components/chat/ChatMessage';
 import SuggestionChips from '../components/chat/SuggestionChips';
 import TypingIndicator from '../components/chat/TypingIndicator';
 
-import { getMockChatResponse } from '../data/mockChatResponses';
+import { aiGuideApi } from '../api/aiGuideApi';
+import { getApiErrorMessage } from '../utils/apiData';
+import useAuth from '../hooks/useAuth';
 
 import '../styles/chat-ai.css';
 
 export default function ChatAI() {
   const { t } = useTranslation();
-
+  const { isAuthenticated } = useAuth();
   const messagesEndRef = useRef(null);
   const isFirstRender = useRef(true);
 
@@ -43,7 +45,7 @@ export default function ChatAI() {
 
   const [isTyping, setIsTyping] = useState(false);
 
-  const handleSendMessage = (text) => {
+  const handleSendMessage = async (text) => {
     const userMessage = {
       id: Date.now(),
       role: 'user',
@@ -53,16 +55,40 @@ export default function ChatAI() {
     setMessages((prev) => [...prev, userMessage]);
     setIsTyping(true);
 
-    setTimeout(() => {
+    try {
+      if (!isAuthenticated) {
+        throw new Error('Please sign in to use the AI Guide.');
+      }
+
+      const { data } = await aiGuideApi.ask({
+        question: text,
+        topic: 'museum',
+      });
+
       const aiResponse = {
         id: Date.now() + 1,
         role: 'ai',
-        content: getMockChatResponse(text, t),
+        content:
+          data.answer ||
+          data.response ||
+          t('chat.mock.default'),
       };
 
       setMessages((prev) => [...prev, aiResponse]);
+    } catch (error) {
+      const errorResponse = {
+        id: Date.now() + 1,
+        role: 'ai',
+        content: getApiErrorMessage(
+          error,
+          'The AI Guide is unavailable right now. Please try again.'
+        ),
+      };
+
+      setMessages((prev) => [...prev, errorResponse]);
+    } finally {
       setIsTyping(false);
-    }, 1400);
+    }
   };
 
   useEffect(() => {

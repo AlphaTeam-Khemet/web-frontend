@@ -4,6 +4,8 @@ import { Eye, EyeOff } from 'lucide-react';
 import authBg from '../../assets/images/auth-bg.png';
 import useAuth from '../../hooks/useAuth';
 import { ROUTES } from '../../constants/routes';
+import { authApi } from '../../api/authApi';
+import { getApiErrorMessage } from '../../utils/apiData';
 import '../../styles/auth.css';
 
 export default function SignIn() {
@@ -36,32 +38,11 @@ export default function SignIn() {
     setErrorMessage('');
 
     try {
-      // TODO: Replace this mock logic with authApi.login(formData)
-      // Expected API response:
-      // {
-      //   token: string,
-      //   user: {
-      //     id,
-      //     name,
-      //     email,
-      //     preferredLanguage
-      //   }
-      // }
-
-      const mockResponse = {
-        token: 'mock-token',
-        user: {
-          id: 1,
-          name: 'KHEMET User',
-          email: formData.email,
-          preferredLanguage: 'en',
-        },
-      };
-
-      login(mockResponse);
+      const { data } = await authApi.login(formData);
+      login(data);
       navigate(ROUTES.HOME);
     } catch (error) {
-      setErrorMessage('Invalid email or password. Please try again.');
+      setErrorMessage(getApiErrorMessage(error, 'Invalid email or password. Please try again.'));
     } finally {
       setIsLoading(false);
     }

@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Search } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
@@ -6,6 +6,8 @@ import CollectionCard from '../components/collections/CollectionCard';
 import Footer from '../components/home/Footer';
 import { collectionsMockData } from '../data/collectionsMockData';
 import { useFavorites } from '../context/FavoritesContext';
+import { artifactsApi } from '../api/artifactsApi';
+import { getApiErrorMessage, normalizeMonument } from '../utils/apiData';
 
 import '../styles/collections.css';
 
@@ -26,18 +28,47 @@ export default function Collections() {
   const [searchTerm, setSearchTerm] = useState('');
   const [activeFilter, setActiveFilter] = useState('All');
   const [visibleCount, setVisibleCount] = useState(INITIAL_VISIBLE_COUNT);
+  const [collections, setCollections] = useState(collectionsMockData);
+  const [isLoading, setIsLoading] = useState(true);
+  const [errorMessage, setErrorMessage] = useState('');
+
+  useEffect(() => {
+    let active = true;
+
+    async function loadMonuments() {
+      setIsLoading(true);
+      setErrorMessage('');
+
+      try {
+        const { data } = await artifactsApi.getAll();
+        if (active) setCollections(data.map(normalizeMonument));
+      } catch (error) {
+        if (active) {
+          setErrorMessage(getApiErrorMessage(error, 'Unable to load monuments from the backend.'));
+        }
+      } finally {
+        if (active) setIsLoading(false);
+      }
+    }
+
+    loadMonuments();
+
+    return () => {
+      active = false;
+    };
+  }, []);
 
   const filteredCollections = useMemo(() => {
     const searchValue = searchTerm.trim().toLowerCase();
 
-    return collectionsMockData.filter((item) => {
+    return collections.filter((item) => {
       const matchesFilter =
         activeFilter === 'All' || item.category === activeFilter;
 
       const searchableText = `
-        ${t(item.titleKey)}
-        ${t(item.periodKey)}
-        ${t(item.locationKey)}
+        ${item.displayName || t(item.titleKey)}
+        ${item.period || t(item.periodKey)}
+        ${item.location || t(item.locationKey)}
         ${item.category}
       `.toLowerCase();
 
@@ -46,7 +77,7 @@ export default function Collections() {
 
       return matchesFilter && matchesSearch;
     });
-  }, [searchTerm, activeFilter, t]);
+  }, [searchTerm, activeFilter, t, collections]);
 
   const visibleCollections = filteredCollections.slice(0, visibleCount);
   const hasMore = visibleCount < filteredCollections.length;
@@ -114,6 +145,14 @@ export default function Collections() {
             />
           ))}
         </div>
+
+        {isLoading && (
+          <div className="collections-empty">Loading monuments...</div>
+        )}
+
+        {errorMessage && (
+          <div className="collections-empty">{errorMessage}</div>
+        )}
 
         {visibleCollections.length === 0 && (
           <div className="collections-empty">{t('collections.empty')}</div>

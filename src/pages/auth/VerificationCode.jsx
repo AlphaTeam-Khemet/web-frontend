@@ -4,6 +4,8 @@ import { ArrowLeft, LockKeyhole, Mail, RotateCcw, ShieldCheck } from 'lucide-rea
 import OTPInput from '../../components/auth/OTPInput';
 import verificationBg from '../../assets/images/verification-bg.png';
 import { ROUTES } from '../../constants/routes';
+import { authApi } from '../../api/authApi';
+import { getApiErrorMessage } from '../../utils/apiData';
 import '../../styles/verification-code.css';
 
 export default function VerificationCode() {
@@ -47,15 +49,13 @@ export default function VerificationCode() {
     setIsLoading(true);
 
     try {
-      // TODO: Replace mock with:
-      // await authApi.verifyResetCode({ email, code })
-      await new Promise((resolve) => setTimeout(resolve, 900));
+      await authApi.verifyResetOtp({ email, otp: code });
 
      navigate(ROUTES.CREATE_NEW_PASSWORD, {
   state: { email, code },
 });
     } catch (error) {
-      setErrorMessage('Invalid verification code. Please try again.');
+      setErrorMessage(getApiErrorMessage(error, 'Invalid verification code. Please try again.'));
     } finally {
       setIsLoading(false);
     }
@@ -67,8 +67,11 @@ export default function VerificationCode() {
     setTimer(45);
     setErrorMessage('');
 
-    // TODO: Replace mock with:
-    // await authApi.forgotPassword({ email })
+    try {
+      await authApi.forgotPassword({ email });
+    } catch {
+      setErrorMessage('Unable to resend code. Please try again.');
+    }
   };
 
   return (

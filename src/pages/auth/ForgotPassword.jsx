@@ -3,6 +3,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Mail, ArrowLeft } from 'lucide-react';
 import forgotBg from '../../assets/images/forgot-bg.png';
 import { ROUTES } from '../../constants/routes';
+import { authApi } from '../../api/authApi';
+import { getApiErrorMessage } from '../../utils/apiData';
 import '../../styles/forgot-password.css';
 export default function ForgotPassword() {
   const navigate = useNavigate();
@@ -19,14 +21,8 @@ export default function ForgotPassword() {
     setErrorMessage('');
 
     try {
-      // TODO: Replace with authApi.forgotPassword({ email })
-      // Expected API:
-      // POST /auth/forgot-password
-      // body: { email }
-
-      await new Promise((resolve) => setTimeout(resolve, 900));
-
-      setMessage('A reset code has been sent to your email.');
+      const { data } = await authApi.forgotPassword({ email });
+      setMessage(data.message || 'If this email exists, a password reset code has been sent.');
 
       setTimeout(() => {
         navigate(ROUTES.VERIFICATION_CODE, {
@@ -34,7 +30,7 @@ export default function ForgotPassword() {
         });
       }, 900);
     } catch (error) {
-      setErrorMessage('Something went wrong. Please try again.');
+      setErrorMessage(getApiErrorMessage(error, 'Something went wrong. Please try again.'));
     } finally {
       setIsLoading(false);
     }
