@@ -8,11 +8,13 @@ function createImageForm(file) {
 }
 
 export const scanApi = {
-  scanArtifact: (file) => api.post(API_ENDPOINTS.scan.artifact, createImageForm(file), {
+  scanArtifact: (file, lang = localStorage.getItem('language') || 'en') => api.post(API_ENDPOINTS.scan.artifact, createImageForm(file), {
+    params: { lang },
     headers: { 'Content-Type': 'multipart/form-data' },
   }),
-  translateImage: (file) => api.post(API_ENDPOINTS.scan.translate, createImageForm(file), {
+  translateImage: (file, lang = localStorage.getItem('language') || 'en') => api.post(API_ENDPOINTS.scan.translate, createImageForm(file), {
+    params: { lang },
     headers: { 'Content-Type': 'multipart/form-data' },
   }),
-  getHistory: () => api.get(API_ENDPOINTS.scan.history),
+  getHistory: (lang = localStorage.getItem('language') || 'en') => api.get(API_ENDPOINTS.scan.history, { params: { lang } }),
 };

@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import Footer from '../components/home/Footer';
 import { collectionsMockData } from '../data/collectionsMockData';
 import { ROUTES } from '../constants/routes';
+import { useLanguage } from '../context/LanguageContext';
 import { artifactsApi } from '../api/artifactsApi';
 import { getApiErrorMessage, normalizeMonument } from '../utils/apiData';
 
@@ -15,6 +16,7 @@ export default function ArtifactDetails() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { t } = useTranslation();
+  const { language } = useLanguage();
 
   const [artifact, setArtifact] = useState(() =>
     collectionsMockData.find((item) => String(item.id) === String(id))
@@ -30,7 +32,7 @@ export default function ArtifactDetails() {
       setErrorMessage('');
 
       try {
-        const { data } = await artifactsApi.getById(id);
+        const { data } = await artifactsApi.getById(id, { lang: language });
         if (active) setArtifact(normalizeMonument(data));
       } catch (error) {
         if (active) {
@@ -47,7 +49,7 @@ export default function ArtifactDetails() {
     return () => {
       active = false;
     };
-  }, [id]);
+  }, [id, language]);
 
   if (!artifact) {
     return (

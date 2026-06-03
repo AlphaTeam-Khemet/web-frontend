@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { Bot, MessageSquarePlus, Sparkles, Trash2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useSearchParams } from 'react-router-dom';
@@ -15,16 +15,28 @@ import { getApiErrorMessage } from '../utils/apiData';
 
 import '../styles/chat-ai.css';
 
-const CHAT_MESSAGES_KEY = 'khemet-chat-messages';
-const RECENT_CHATS_KEY = 'khemet-recent-chats';
-const ACTIVE_CHAT_KEY = 'khemet-active-chat-id';
+const LEGACY_CHAT_MESSAGES_KEY = 'khemet-chat-messages';
+const LEGACY_RECENT_CHATS_KEY = 'khemet-recent-chats';
+const LEGACY_ACTIVE_CHAT_KEY = 'khemet-active-chat-id';
 
-const createChatId = () => `${Date.now()}-${Math.random().toString(16).slice(2)}`;
+const createLocalMessageId = () =>
+  `local-${Date.now()}-${Math.random().toString(16).slice(2)}`;
 
-const getChatTitle = (text) => {
-  const words = text.trim().split(/\s+/).filter(Boolean);
-  return words.slice(0, 3).join(' ') || 'New Chat';
-};
+const normalizeConversation = (conversation) => ({
+  id: conversation.id,
+  title: conversation.title || 'New Chat',
+  updated_at: conversation.updated_at,
+  created_at: conversation.created_at,
+  last_message_preview: conversation.last_message_preview || '',
+});
+
+const normalizeMessage = (message) => ({
+  id: message.id || createLocalMessageId(),
+  role: message.role === 'assistant' ? 'ai' : message.role,
+  content: message.content || '',
+  sources: message.sources || [],
+  created_at: message.created_at,
+});
 
 export default function ChatAI() {
   const { t } = useTranslation();
@@ -33,171 +45,157 @@ export default function ChatAI() {
   const isFirstRender = useRef(true);
   const initialArtifactPromptSent = useRef(false);
 
-  const initialMessages = [
+  const getWelcomeMessages = useCallback(() => [
     {
-      id: 1,
+      id: 'welcome',
       role: 'ai',
       content: t('chat.welcome'),
     },
-  ];
+  ], [t]);
 
-  const savedMessages = (() => {
-    const savedMessages = sessionStorage.getItem(CHAT_MESSAGES_KEY);
-
-    if (!savedMessages) {
-      return initialMessages;
-    }
-
-    try {
-      return JSON.parse(savedMessages);
-    } catch {
-      return initialMessages;
-    }
-  })();
-
-  const [chatSessions, setChatSessions] = useState(() => {
-    const savedChats = localStorage.getItem(RECENT_CHATS_KEY);
-
-    if (!savedChats) {
-      return [
-        {
-          id: createChatId(),
-          title: getChatTitle(t('chat.suggestion.tutankhamun')),
-          messages: savedMessages,
-        },
-        {
-          id: createChatId(),
-          title: getChatTitle(t('chat.suggestion.ramesses')),
-          messages: initialMessages,
-        },
-        {
-          id: createChatId(),
-          title: 'Tutankhamun Mask',
-          messages: initialMessages,
-        },
-      ];
-    }
-
-    try {
-      const parsedChats = JSON.parse(savedChats);
-
-      if (parsedChats.every((item) => typeof item === 'string')) {
-        return parsedChats.map((item) => ({
-          id: createChatId(),
-          title: getChatTitle(item),
-          messages: initialMessages,
-        }));
-      }
-
-      return parsedChats.map((item) => ({
-        id: item.id || createChatId(),
-        title: getChatTitle(item.title || 'New Chat'),
-        messages: Array.isArray(item.messages) ? item.messages : initialMessages,
-      }));
-    } catch {
-      return [];
-    }
-  });
-
-  const [activeChatId, setActiveChatId] = useState(() => {
-    return localStorage.getItem(ACTIVE_CHAT_KEY);
-  });
-
+  const [chatSessions, setChatSessions] = useState([]);
+  const [activeChatId, setActiveChatId] = useState(null);
+  const [messages, setMessages] = useState(() => getWelcomeMessages());
   const [isTyping, setIsTyping] = useState(false);
+  const [isLoadingConversations, setIsLoadingConversations] = useState(false);
+  const [isLoadingMessages, setIsLoadingMessages] = useState(false);
+  const [chatError, setChatError] = useState('');
+
   const artifactName = searchParams.get('artifact');
 
-  const activeSession =
-    chatSessions.find((session) => session.id === activeChatId) ||
-    chatSessions[0];
+  const loadConversations = useCallback(async () => {
+    setIsLoadingConversations(true);
+    setChatError('');
 
-  const messages = activeSession?.messages || initialMessages;
-
-  const updateSessionMessages = (sessionId, updater) => {
-    setChatSessions((prev) =>
-      prev.map((session) =>
-        session.id === sessionId
-          ? {
-              ...session,
-              messages: updater(session.messages || initialMessages),
-            }
-          : session
-      )
-    );
-  };
-
-  const updateSessionTitle = (sessionId, text) => {
-    setChatSessions((prev) =>
-      prev.map((session) => {
-        if (session.id !== sessionId || session.title !== 'New Chat') {
-          return session;
-        }
-
-        return {
-          ...session,
-          title: getChatTitle(text),
-        };
-      })
-    );
-  };
+    try {
+      const { data } = await aiGuideApi.getConversations();
+      const conversations = Array.isArray(data) ? data.map(normalizeConversation) : [];
+      setChatSessions(conversations);
+      return conversations;
+    } catch (error) {
+      setChatError(getApiErrorMessage(error, 'Unable to load recent chats.'));
+      return [];
+    } finally {
+      setIsLoadingConversations(false);
+    }
+  }, []);
 
   useEffect(() => {
-    if (!activeSession && chatSessions.length > 0) {
-      setActiveChatId(chatSessions[0].id);
-    }
-  }, [activeSession, chatSessions]);
+    // Chat history now lives in PostgreSQL through the backend history APIs.
+    localStorage.removeItem(LEGACY_RECENT_CHATS_KEY);
+    localStorage.removeItem(LEGACY_ACTIVE_CHAT_KEY);
+    sessionStorage.removeItem(LEGACY_CHAT_MESSAGES_KEY);
+    loadConversations();
+  }, [loadConversations]);
 
-  const handleSelectChat = (sessionId) => {
+  useEffect(() => {
+    setMessages((current) => {
+      if (current.length === 1 && current[0].id === 'welcome') {
+        return getWelcomeMessages();
+      }
+
+      return current;
+    });
+  }, [getWelcomeMessages]);
+
+  const handleNewChat = () => {
+    setActiveChatId(null);
+    setMessages(getWelcomeMessages());
+    setChatError('');
+  };
+
+  const handleSelectChat = async (sessionId) => {
+    if (!sessionId || sessionId === activeChatId) return;
+
     setActiveChatId(sessionId);
+    setIsLoadingMessages(true);
+    setChatError('');
+
+    try {
+      const { data } = await aiGuideApi.getConversationMessages(sessionId);
+      const loadedMessages = Array.isArray(data?.messages)
+        ? data.messages.map(normalizeMessage)
+        : [];
+
+      setMessages(loadedMessages.length > 0 ? loadedMessages : getWelcomeMessages());
+
+      if (data?.conversation) {
+        setChatSessions((prev) =>
+          prev.map((session) =>
+            session.id === data.conversation.id
+              ? { ...session, title: data.conversation.title || session.title }
+              : session
+          )
+        );
+      }
+    } catch (error) {
+      setMessages(getWelcomeMessages());
+      setChatError(getApiErrorMessage(error, 'Unable to load this conversation.'));
+    } finally {
+      setIsLoadingMessages(false);
+    }
+  };
+
+  const upsertConversation = (conversation) => {
+    if (!conversation?.id) return;
+
+    const normalized = normalizeConversation(conversation);
+
+    setChatSessions((prev) => [
+      normalized,
+      ...prev
+        .filter((session) => session.id !== normalized.id)
+        .map((session) => ({ ...session })),
+    ]);
   };
 
   const handleSendMessage = async (text) => {
-    let targetSessionId = activeSession?.id;
+    if (isTyping || isLoadingMessages) return;
 
-    if (!targetSessionId) {
-      targetSessionId = createChatId();
-
-      setChatSessions((prev) => [
-        {
-          id: targetSessionId,
-          title: getChatTitle(text),
-          messages: initialMessages,
-        },
-        ...prev,
-      ]);
-
-      setActiveChatId(targetSessionId);
-    } else {
-      updateSessionTitle(targetSessionId, text);
-    }
-
+    const conversationIdAtSend = activeChatId;
     const userMessage = {
-      id: Date.now(),
+      id: createLocalMessageId(),
       role: 'user',
       content: text,
     };
 
-    updateSessionMessages(targetSessionId, (prev) => [...prev, userMessage]);
+    setMessages((prev) => [...prev, userMessage]);
     setIsTyping(true);
+    setChatError('');
 
     try {
       const { data } = await aiGuideApi.ask({
         question: text,
         topic: 'museum',
+        conversation_id: conversationIdAtSend || undefined,
       });
 
+      const backendConversationId = data.conversation_id || conversationIdAtSend;
+      const backendConversationTitle = data.conversation_title || 'New Chat';
+
       const aiResponse = {
-        id: Date.now() + 1,
+        id: createLocalMessageId(),
         role: 'ai',
-        content:
-          data.answer ||
-          data.response ||
-          t('chat.mock.default'),
+        content: data.answer || data.response || t('chat.mock.default'),
+        sources: data.sources || [],
       };
 
-      updateSessionMessages(targetSessionId, (prev) => [...prev, aiResponse]);
+      setMessages((prev) => [...prev, aiResponse]);
+
+      if (backendConversationId) {
+        setActiveChatId(backendConversationId);
+        upsertConversation({
+          id: backendConversationId,
+          title: backendConversationTitle,
+          updated_at: new Date().toISOString(),
+          last_message_preview: aiResponse.content,
+        });
+      }
+
+      await loadConversations();
     } catch (error) {
       const errorResponse = {
-        id: Date.now() + 1,
+        id: createLocalMessageId(),
         role: 'ai',
         content: getApiErrorMessage(
           error,
@@ -205,53 +203,34 @@ export default function ChatAI() {
         ),
       };
 
-      updateSessionMessages(targetSessionId, (prev) => [...prev, errorResponse]);
+      setMessages((prev) => [...prev, errorResponse]);
     } finally {
       setIsTyping(false);
     }
   };
 
-  const handleNewChat = () => {
-    const nextSession = {
-      id: createChatId(),
-      title: 'New Chat',
-      messages: initialMessages,
-    };
+  const handleDeleteRecent = async (event, sessionId) => {
+    event.stopPropagation();
+    if (!sessionId) return;
 
-    setChatSessions((prev) => [nextSession, ...prev]);
-    setActiveChatId(nextSession.id);
-  };
+    const wasActive = sessionId === activeChatId;
+    const previousSessions = chatSessions;
 
-  const handleDeleteRecent = (sessionId) => {
-    setChatSessions((prev) => {
-      const next = prev.filter((item) => item.id !== sessionId);
+    setChatSessions((prev) => prev.filter((item) => item.id !== sessionId));
 
-      if (sessionId === activeChatId) {
-        setActiveChatId(next[0]?.id || null);
-      }
-
-      return next;
-    });
-  };
-
-  useEffect(() => {
-    sessionStorage.setItem(
-      CHAT_MESSAGES_KEY,
-      JSON.stringify(messages)
-    );
-  }, [messages]);
-
-  useEffect(() => {
-    localStorage.setItem(RECENT_CHATS_KEY, JSON.stringify(chatSessions));
-  }, [chatSessions]);
-
-  useEffect(() => {
-    if (activeChatId) {
-      localStorage.setItem(ACTIVE_CHAT_KEY, activeChatId);
-    } else {
-      localStorage.removeItem(ACTIVE_CHAT_KEY);
+    if (wasActive) {
+      setActiveChatId(null);
+      setMessages(getWelcomeMessages());
     }
-  }, [activeChatId]);
+
+    try {
+      await aiGuideApi.deleteConversation(sessionId);
+      await loadConversations();
+    } catch (error) {
+      setChatSessions(previousSessions);
+      setChatError(getApiErrorMessage(error, 'Unable to delete this conversation.'));
+    }
+  };
 
   useEffect(() => {
     if (!artifactName || initialArtifactPromptSent.current) {
@@ -276,7 +255,9 @@ export default function ChatAI() {
         behavior: 'smooth',
       });
     }
-  }, [messages, isTyping]);
+  }, [messages, isTyping, isLoadingMessages]);
+
+  const inputDisabled = isTyping || isLoadingMessages;
 
   return (
     <main className="chat-ai-page">
@@ -308,10 +289,18 @@ export default function ChatAI() {
             <h2>Recent Chat</h2>
 
             <div className="chat-recent-list">
+              {isLoadingConversations && (
+                <div className="chat-recent-empty">Loading chats...</div>
+              )}
+
+              {!isLoadingConversations && chatSessions.length === 0 && (
+                <div className="chat-recent-empty">No saved chats yet</div>
+              )}
+
               {chatSessions.map((item) => (
                 <div
                   className={
-                    item.id === activeSession?.id
+                    item.id === activeChatId
                       ? 'chat-recent-item active'
                       : 'chat-recent-item'
                   }
@@ -327,7 +316,7 @@ export default function ChatAI() {
                   <button
                     type="button"
                     className="chat-delete-recent"
-                    onClick={() => handleDeleteRecent(item.id)}
+                    onClick={(event) => handleDeleteRecent(event, item.id)}
                     aria-label="Delete recent chat"
                   >
                     <Trash2 size={16} />
@@ -345,18 +334,32 @@ export default function ChatAI() {
             <div className="chat-watermark" />
 
             <div className="chat-messages-container">
-              {messages.map((message) => (
-                <ChatMessage key={message.id} message={message} />
-              ))}
+              {isLoadingMessages ? (
+                <TypingIndicator />
+              ) : (
+                messages.map((message) => (
+                  <ChatMessage key={message.id} message={message} />
+                ))
+              )}
 
               {isTyping && <TypingIndicator />}
+
+              {chatError && (
+                <ChatMessage
+                  message={{
+                    id: 'chat-error',
+                    role: 'ai',
+                    content: chatError,
+                  }}
+                />
+              )}
 
               <div ref={messagesEndRef} />
             </div>
 
             <SuggestionChips onSelect={handleSendMessage} />
 
-            <ChatInput onSend={handleSendMessage} disabled={isTyping} />
+            <ChatInput onSend={handleSendMessage} disabled={inputDisabled} />
           </section>
         </div>
       </section>

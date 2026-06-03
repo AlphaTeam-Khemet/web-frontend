@@ -12,10 +12,10 @@ import { useLanguage } from '../../context/LanguageContext';
 const backendLanguageIds = {
   en: 1,
   ar: 2,
-  es: 1,
-  fr: 1,
-  de: 4,
-  zh: 1,
+  de: 3,
+  fr: 4,
+  es: 5,
+  zh: 6,
 };
 
 export default function RegisterForm() {

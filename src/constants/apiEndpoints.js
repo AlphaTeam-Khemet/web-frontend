@@ -29,6 +29,10 @@ export const API_ENDPOINTS = {
   aiGuide: {
     health: '/ai-guide/health',
     ask: '/ai-guide/ask',
+    conversations: '/ai-guide/conversations',
+    conversationMessages: (id) => `/ai-guide/conversations/${id}/messages`,
+    conversationTitle: (id) => `/ai-guide/conversations/${id}/title`,
+    deleteConversation: (id) => `/ai-guide/conversations/${id}`,
     describe: '/ai-guide/describe',
     identify: '/ai-guide/identify',
   },

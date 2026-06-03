@@ -11,6 +11,8 @@
   "dependencies": {
     "@tanstack/react-query": "latest",
     "@vitejs/plugin-react": "latest",
+    "@emnapi/core": "1.10.0",
+    "@emnapi/runtime": "1.10.0",
     "axios": "latest",
     "framer-motion": "latest",
     "i18next": "^26.2.0",

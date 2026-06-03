@@ -7,12 +7,14 @@ import UploadBox from '../components/scan/UploadBox';
 import ScanResult from '../components/scan/ScanResult';
 import { scanApi } from '../api/scanApi';
 import { galleryApi } from '../api/galleryApi';
+import { useLanguage } from '../context/LanguageContext';
 import { getApiErrorMessage, normalizeScanResult } from '../utils/apiData';
 
 import '../styles/scan-ai.css';
 
 export default function ScanAI() {
   const { t } = useTranslation();
+  const { language } = useLanguage();
   const navigate = useNavigate();
   const [selectedFile, setSelectedFile] = useState(null);
   const [preview, setPreview] = useState('');
@@ -52,7 +54,7 @@ export default function ScanAI() {
     setErrorMessage('');
 
     try {
-      const { data } = await scanApi.scanArtifact(selectedFile);
+      const { data } = await scanApi.scanArtifact(selectedFile, language);
       setResult(normalizeScanResult(data));
     } catch (error) {
       setErrorMessage(

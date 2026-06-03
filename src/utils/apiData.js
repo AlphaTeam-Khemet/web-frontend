@@ -1,7 +1,7 @@
 const API_ORIGIN = (import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000/api').replace(/\/api\/?$/, '');
 
 export function getApiErrorMessage(error, fallback = 'Request failed. Please try again.') {
-  return error?.response?.data?.error || error?.response?.data?.message || error?.message || fallback;
+  return error?.response?.data?.message || error?.response?.data?.error || error?.message || fallback;
 }
 
 export function getFileUrl(path) {

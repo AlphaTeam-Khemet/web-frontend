@@ -6,6 +6,7 @@ import CollectionCard from '../components/collections/CollectionCard';
 import Footer from '../components/home/Footer';
 import { collectionsMockData } from '../data/collectionsMockData';
 import { useFavorites } from '../context/FavoritesContext';
+import { useLanguage } from '../context/LanguageContext';
 import { artifactsApi } from '../api/artifactsApi';
 import { getApiErrorMessage, normalizeMonument } from '../utils/apiData';
 
@@ -23,6 +24,7 @@ const LOAD_MORE_COUNT = 4;
 
 export default function Collections() {
   const { t } = useTranslation();
+  const { language } = useLanguage();
   const { toggleFavorite, isFavorite } = useFavorites();
 
   const [searchTerm, setSearchTerm] = useState('');
@@ -40,7 +42,7 @@ export default function Collections() {
       setErrorMessage('');
 
       try {
-        const { data } = await artifactsApi.getAll();
+        const { data } = await artifactsApi.getAll({ lang: language });
         if (active) setCollections(data.map(normalizeMonument));
       } catch (error) {
         if (active) {
@@ -56,7 +58,7 @@ export default function Collections() {
     return () => {
       active = false;
     };
-  }, []);
+  }, [language]);
 
   const filteredCollections = useMemo(() => {
     const searchValue = searchTerm.trim().toLowerCase();
