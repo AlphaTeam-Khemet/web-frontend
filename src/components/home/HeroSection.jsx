@@ -28,7 +28,7 @@ export default function HeroSection() {
             type="button"
             onClick={() => navigate(ROUTES.TOUR)}
           >
-            Start Tour-&gt;
+            {t('home.hero.startTour')}-&gt;
           </button>
 
           

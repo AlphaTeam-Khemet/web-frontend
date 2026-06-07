@@ -6,11 +6,12 @@ import { useLanguage } from '../../context/LanguageContext';
 
 const languages = [
   { code: 'en', label: 'English' },
-  { code: 'ar', label: 'العربية' },
-  { code: 'es', label: 'Español' },
-  { code: 'fr', label: 'Français' },
-  { code: 'de', label: 'Deutsch' },
-  { code: 'zh', label: '中文' },
+  { code: 'ar', label: 'Arabic' },
+  { code: 'es', label: 'Spanish' },
+  { code: 'fr', label: 'French' },
+  { code: 'de', label: 'German' },
+  { code: 'ru', label: 'Russian' },
+  { code: 'zh', label: 'Chinese' },
 ];
 
 export default function SettingsContent({

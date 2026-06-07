@@ -1,4 +1,8 @@
+import { useTranslation } from 'react-i18next';
+
 export default function PasswordStrength({ password }) {
+  const { t } = useTranslation();
+
   const score =
     password.length >= 12 ? 4 :
     password.length >= 8 ? 3 :
@@ -6,15 +10,15 @@ export default function PasswordStrength({ password }) {
     password.length > 0 ? 1 : 0;
 
   const label =
-    score >= 4 ? 'Strong' :
-    score === 3 ? 'Good' :
-    score === 2 ? 'Weak' :
-    'Too Weak';
+    score >= 4 ? t('auth.passwordStrong') :
+    score === 3 ? t('auth.passwordGood') :
+    score === 2 ? t('auth.passwordWeak') :
+    t('auth.passwordTooWeak');
 
   return (
     <div className="cnp-strength">
       <div className="cnp-strength-header">
-        <span>Password Strength</span>
+        <span>{t('auth.passwordStrength')}</span>
         <strong>{label}</strong>
       </div>
 

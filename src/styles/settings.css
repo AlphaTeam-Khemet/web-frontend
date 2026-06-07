@@ -71,6 +71,8 @@
   gap: 8px;
   color: #7a654b;
   font-size: 14px;
+  max-width: 100%;
+  overflow-wrap: anywhere;
 }
 
 .settings-profile-info {
@@ -262,11 +264,14 @@
 .settings-info-grid strong {
   color: #24180f;
   font-size: 15px;
+  overflow-wrap: anywhere;
 }
 
 .settings-info-grid button,
 .settings-action-row button {
-  height: 52px;
+  min-height: 52px;
+  height: auto;
+  padding: 12px 18px;
   border: 0;
   border-radius: 16px;
   background: linear-gradient(180deg, #e7c570, #b98d3d);
@@ -418,8 +423,8 @@ html[dir="rtl"] .settings-activity-card {
   .settings-main-card,
   .settings-profile-card,
   .settings-activity-card {
-    padding: 24px;
-    border-radius: 24px;
+    padding: 18px;
+    border-radius: 20px;
   }
 
   .settings-info-grid,
@@ -434,6 +439,20 @@ html[dir="rtl"] .settings-activity-card {
 
   .settings-action-row button {
     width: 100%;
+  }
+
+  .settings-hero-card h1 {
+    font-size: 38px;
+  }
+
+  .settings-card-title {
+    gap: 10px;
+  }
+
+  .settings-profile-actions button {
+    width: 100%;
+    justify-content: center;
+    padding: 12px 18px;
   }
 }
 
@@ -511,7 +530,8 @@ html[dir="rtl"] .settings-avatar-upload {
 }
 
 .settings-profile-actions button {
-  height: 52px;
+  min-height: 52px;
+  height: auto;
   padding: 0 22px;
   border: 0;
   border-radius: 16px;

@@ -3,10 +3,12 @@ import khemetLogo from '../../assets/logo/khemet-logo.png';
 import welcomeBg from '../../assets/images/welcome-bg.png';
 import WelcomeActions from './WelcomeActions';
 import useAuth from '../../hooks/useAuth';
+import { useTranslation } from 'react-i18next';
 
 export default function WelcomeHero() {
   const navigate = useNavigate();
   const { continueAsGuest } = useAuth();
+  const { t } = useTranslation();
 
   const handleGuest = () => {
     continueAsGuest();
@@ -20,7 +22,7 @@ export default function WelcomeHero() {
       <div className="welcome-overlay" />
 
       <section className="welcome-content">
-        <p className="welcome-kicker">WELCOME TO</p>
+        <p className="welcome-kicker">{t('welcome.kicker')}</p>
 
         <div className="welcome-logo-wrap">
           <img src={khemetLogo} alt="KHEMET" className="welcome-logo" />
@@ -38,13 +40,11 @@ export default function WelcomeHero() {
         />
 
         <p className="welcome-register">
-          Don&apos;t have an account? <Link to="/sign-up">REGISTER</Link>
+          {t('auth.noAccount')} <Link to="/sign-up">{t('auth.register')}</Link>
         </p>
       </section>
 
-      <p className="welcome-footer">
-        GRAND EGYPTIAN MUSEUM ♦ SMART GUIDE
-      </p>
+      <p className="welcome-footer">{t('welcome.footer')}</p>
     </main>
   );
 }

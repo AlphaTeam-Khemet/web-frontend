@@ -1,11 +1,12 @@
-import { Link } from 'react-router-dom';
-import { ArrowLeft, LockKeyhole, Timer } from 'lucide-react';
+import { LockKeyhole } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import RegisterForm from '../../components/auth/RegisterForm';
 import registerBg from '../../assets/images/register-bg.png';
-import { ROUTES } from '../../constants/routes';
 import '../../styles/register.css';
 
 export default function SignUp() {
+  const { t } = useTranslation();
+
   return (
     <main className="register-page">
       <img src={registerBg} alt="" className="register-bg" />
@@ -20,13 +21,13 @@ export default function SignUp() {
       <footer className="register-footer">
         <p>
           <LockKeyhole size={16} />
-          Secured by Khemet Vault Encryption
+          {t('auth.vaultSecurity')}
         </p>
 
         <div>
-          <a href="#">Privacy Policy</a>
-          <a href="#">Terms of Service</a>
-          <a href="#">Contact Support</a>
+          <a href="#">{t('auth.privacy')}</a>
+          <a href="#">{t('auth.terms')}</a>
+          <a href="#">{t('auth.contactSupport')}</a>
         </div>
       </footer>
     </main>

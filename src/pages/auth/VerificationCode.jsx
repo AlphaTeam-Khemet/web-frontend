@@ -1,6 +1,7 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { ArrowLeft, LockKeyhole, Mail, RotateCcw, ShieldCheck } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import OTPInput from '../../components/auth/OTPInput';
 import verificationBg from '../../assets/images/verification-bg.png';
 import { ROUTES } from '../../constants/routes';
@@ -11,11 +12,11 @@ import '../../styles/verification-code.css';
 export default function VerificationCode() {
   const navigate = useNavigate();
   const location = useLocation();
+  const { t } = useTranslation();
 
   const email = location.state?.email || 'your-email@example.com';
 
   const [code, setCode] = useState('');
-  const [timer, setTimer] = useState(45);
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
@@ -27,22 +28,12 @@ export default function VerificationCode() {
     return `${visible}${'*'.repeat(Math.max(name.length - 4, 4))}@${domain}`;
   }, [email]);
 
-  useEffect(() => {
-    if (timer <= 0) return;
-
-    const interval = setInterval(() => {
-      setTimer((prev) => prev - 1);
-    }, 1000);
-
-    return () => clearInterval(interval);
-  }, [timer]);
-
   const handleVerify = async (event) => {
     event.preventDefault();
     setErrorMessage('');
 
     if (code.length !== 6) {
-      setErrorMessage('Please enter the full 6-digit verification code.');
+      setErrorMessage(t('auth.errors.fullCode'));
       return;
     }
 
@@ -55,22 +46,19 @@ export default function VerificationCode() {
   state: { email, code },
 });
     } catch (error) {
-      setErrorMessage(getApiErrorMessage(error, 'Invalid verification code. Please try again.'));
+      setErrorMessage(getApiErrorMessage(error, t('auth.errors.invalidCode')));
     } finally {
       setIsLoading(false);
     }
   };
 
   const handleResend = async () => {
-    if (timer > 0) return;
-
-    setTimer(45);
     setErrorMessage('');
 
     try {
       await authApi.forgotPassword({ email });
     } catch {
-      setErrorMessage('Unable to resend code. Please try again.');
+      setErrorMessage(t('auth.errors.resendCode'));
     }
   };
 
@@ -84,20 +72,15 @@ export default function VerificationCode() {
 
       <p className="verification-brand">KHEMET</p>
 
-      <p className="verification-session">
-        Session: 3m 27s
-      </p>
-
       <section className="verification-card">
         <div className="verification-icon">
           <ShieldCheck size={34} />
         </div>
 
-        <h1>verification code</h1>
+        <h1>{t('auth.verificationCode')}</h1>
 
         <p className="verification-subtitle">
-          We have sent a verification code (OTP) to your registered email.
-          Enter the code to proceed.
+          {t('auth.verificationSubtitle')}
         </p>
 
         <div className="verification-email">
@@ -117,7 +100,7 @@ export default function VerificationCode() {
             className="verification-submit"
             disabled={isLoading}
           >
-            {isLoading ? 'Authenticating...' : 'Authenticate Scroll'}
+            {isLoading ? t('auth.authenticating') : t('auth.authenticate')}
             <LockKeyhole size={18} />
           </button>
         </form>
@@ -126,24 +109,22 @@ export default function VerificationCode() {
           type="button"
           className="verification-resend"
           onClick={handleResend}
-          disabled={timer > 0}
         >
           <RotateCcw size={17} />
-          Resend Code
-          {timer > 0 && <span>({`00:${String(timer).padStart(2, '0')}`})</span>}
+          {t('auth.resendCode')}
         </button>
       </section>
 
       <footer className="verification-footer">
         <p>
           <LockKeyhole size={16} />
-          Secured by Khemet Vault Encryption
+          {t('auth.vaultSecurity')}
         </p>
 
         <div>
-          <a href="#">Privacy Policy</a>
-          <a href="#">Terms of Service</a>
-          <a href="#">Contact Support</a>
+          <a href="#">{t('auth.privacy')}</a>
+          <a href="#">{t('auth.terms')}</a>
+          <a href="#">{t('auth.contactSupport')}</a>
         </div>
       </footer>
     </main>

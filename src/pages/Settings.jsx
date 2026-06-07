@@ -20,11 +20,12 @@ import '../styles/settings.css';
 
 const languageLabels = {
   en: 'English',
-  ar: 'العربية',
-  fr: 'Français',
-  de: 'Deutsch',
-  es: 'Español',
-  zh: '中文',
+  ar: 'Arabic',
+  fr: 'French',
+  de: 'German',
+  ru: 'Russian',
+  es: 'Spanish',
+  zh: 'Chinese',
 };
 
 export default function Settings() {

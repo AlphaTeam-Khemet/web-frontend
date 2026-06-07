@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Mail, ArrowLeft } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import forgotBg from '../../assets/images/forgot-bg.png';
 import { ROUTES } from '../../constants/routes';
 import { authApi } from '../../api/authApi';
@@ -8,6 +9,7 @@ import { getApiErrorMessage } from '../../utils/apiData';
 import '../../styles/forgot-password.css';
 export default function ForgotPassword() {
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const [email, setEmail] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -22,7 +24,7 @@ export default function ForgotPassword() {
 
     try {
       const { data } = await authApi.forgotPassword({ email });
-      setMessage(data.message || 'If this email exists, a password reset code has been sent.');
+      setMessage(data.message || t('auth.resetCodeSent'));
 
       setTimeout(() => {
         navigate(ROUTES.VERIFICATION_CODE, {
@@ -30,7 +32,7 @@ export default function ForgotPassword() {
         });
       }, 900);
     } catch (error) {
-      setErrorMessage(getApiErrorMessage(error, 'Something went wrong. Please try again.'));
+      setErrorMessage(getApiErrorMessage(error, t('auth.errors.generic')));
     } finally {
       setIsLoading(false);
     }
@@ -48,17 +50,15 @@ export default function ForgotPassword() {
           <Mail size={34} />
         </div>
 
-        <p className="forgot-kicker">ACCOUNT RECOVERY</p>
+        <p className="forgot-kicker">{t('auth.accountRecovery')}</p>
 
-        <h1>Recover Your Access</h1>
+        <h1>{t('auth.recoverAccess')}</h1>
 
-        <p className="forgot-subtitle">
-          Enter your email address and we’ll send you a secure reset code.
-        </p>
+        <p className="forgot-subtitle">{t('auth.recoverSubtitle')}</p>
 
         <form className="forgot-form" onSubmit={handleSubmit}>
           <div className="forgot-field">
-            <label htmlFor="email">EMAIL ADDRESS</label>
+            <label htmlFor="email">{t('auth.email')}</label>
             <input
               id="email"
               type="email"
@@ -77,12 +77,12 @@ export default function ForgotPassword() {
           {errorMessage && <p className="forgot-error">{errorMessage}</p>}
 
           <button className="forgot-submit" type="submit" disabled={isLoading}>
-            {isLoading ? 'Sending Code...' : 'Send Reset Code'}
+            {isLoading ? t('auth.sendingCode') : t('auth.sendResetCode')}
           </button>
         </form>
 
         <p className="forgot-note">
-          Remember your password? <Link to={ROUTES.SIGN_IN}>Sign In</Link>
+          {t('auth.rememberPassword')} <Link to={ROUTES.SIGN_IN}>{t('auth.signIn')}</Link>
         </p>
       </section>
     </main>

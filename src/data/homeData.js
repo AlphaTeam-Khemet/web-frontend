@@ -32,7 +32,7 @@ export const navLinks = [
 
 export const stats = [
   { icon: Landmark, value: '11+', label: 'Artifacts' },
-  { icon: Globe2, value: '6', label: 'Languages' },
+  { icon: Globe2, value: '7', label: 'Languages' },
   { icon: Sparkles, value: 'AI', label: 'Powered' },
   { icon: Box, value: 'chat', label: 'Experience' },
 ];

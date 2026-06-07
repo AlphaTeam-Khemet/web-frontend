@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { Bot, MessageSquarePlus, Sparkles, Trash2 } from 'lucide-react';
+import { Bot, Check, MessageSquarePlus, Pencil, Sparkles, Trash2, X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useSearchParams } from 'react-router-dom';
 
@@ -22,9 +22,9 @@ const LEGACY_ACTIVE_CHAT_KEY = 'khemet-active-chat-id';
 const createLocalMessageId = () =>
   `local-${Date.now()}-${Math.random().toString(16).slice(2)}`;
 
-const normalizeConversation = (conversation) => ({
+const normalizeConversation = (conversation, defaultTitle = 'New Chat') => ({
   id: conversation.id,
-  title: conversation.title || 'New Chat',
+  title: conversation.title || defaultTitle,
   updated_at: conversation.updated_at,
   created_at: conversation.created_at,
   last_message_preview: conversation.last_message_preview || '',
@@ -37,6 +37,53 @@ const normalizeMessage = (message) => ({
   sources: message.sources || [],
   created_at: message.created_at,
 });
+
+const TITLE_PREFIX_PATTERNS = [
+  /^(please\s+)?(tell me more about|tell me about|who is|what is|explain|describe|give me|show me)\s+/i,
+  /^(please\s+)?(can you|could you|would you)\s+/i,
+  /^(من هو|ما هو|اشرح|حدثني عن|تكلم عن|اعرفني على)\s+/u,
+];
+
+const buildConversationTitle = (text, fallbackTitle) => {
+  const cleaned = text
+    .replace(/\s+/g, ' ')
+    .replace(/[?!.,;:،؛؟]+$/u, '')
+    .trim();
+
+  if (!cleaned) return fallbackTitle;
+
+  const withoutPromptPrefix = TITLE_PREFIX_PATTERNS.reduce(
+    (value, pattern) => value.replace(pattern, ''),
+    cleaned
+  ).trim();
+
+  const titleSource = withoutPromptPrefix || cleaned;
+  const words = titleSource.split(' ').filter(Boolean);
+  const title = words.slice(0, 6).join(' ');
+
+  return title || fallbackTitle;
+};
+
+const shouldPreferGeneratedTitle = (backendTitle, generatedTitle, fallbackTitle, question) => {
+  if (!backendTitle) return true;
+
+  const normalizedBackendTitle = backendTitle.trim().toLowerCase();
+  const normalizedFallbackTitle = fallbackTitle.trim().toLowerCase();
+  const normalizedQuestion = question.trim().toLowerCase();
+
+  if (
+    normalizedBackendTitle === normalizedFallbackTitle ||
+    normalizedBackendTitle === 'new chat'
+  ) {
+    return true;
+  }
+
+  const backendWordCount = normalizedBackendTitle.split(/\s+/).filter(Boolean).length;
+
+  return backendWordCount <= 3 &&
+    generatedTitle.trim().toLowerCase() !== normalizedBackendTitle &&
+    normalizedQuestion.startsWith(normalizedBackendTitle);
+};
 
 export default function ChatAI() {
   const { t } = useTranslation();
@@ -60,6 +107,9 @@ export default function ChatAI() {
   const [isLoadingConversations, setIsLoadingConversations] = useState(false);
   const [isLoadingMessages, setIsLoadingMessages] = useState(false);
   const [chatError, setChatError] = useState('');
+  const [renamingChatId, setRenamingChatId] = useState(null);
+  const [renameDraft, setRenameDraft] = useState('');
+  const [isRenaming, setIsRenaming] = useState(false);
 
   const artifactName = searchParams.get('artifact');
 
@@ -69,16 +119,17 @@ export default function ChatAI() {
 
     try {
       const { data } = await aiGuideApi.getConversations();
-      const conversations = Array.isArray(data) ? data.map(normalizeConversation) : [];
+      const defaultTitle = t('chat.newChat') || 'New Chat';
+      const conversations = Array.isArray(data) ? data.map(item => normalizeConversation(item, defaultTitle)) : [];
       setChatSessions(conversations);
       return conversations;
     } catch (error) {
-      setChatError(getApiErrorMessage(error, 'Unable to load recent chats.'));
+      setChatError(getApiErrorMessage(error, t('chat.loadError') || 'Unable to load recent chats.'));
       return [];
     } finally {
       setIsLoadingConversations(false);
     }
-  }, []);
+  }, [t]);
 
   useEffect(() => {
     // Chat history now lives in PostgreSQL through the backend history APIs.
@@ -102,6 +153,8 @@ export default function ChatAI() {
     setActiveChatId(null);
     setMessages(getWelcomeMessages());
     setChatError('');
+    setRenamingChatId(null);
+    setRenameDraft('');
   };
 
   const handleSelectChat = async (sessionId) => {
@@ -171,7 +224,16 @@ export default function ChatAI() {
       });
 
       const backendConversationId = data.conversation_id || conversationIdAtSend;
-      const backendConversationTitle = data.conversation_title || 'New Chat';
+      const defaultTitle = t('chat.newChat') || 'New Chat';
+      const generatedTitle = buildConversationTitle(text, defaultTitle);
+      const backendConversationTitle = shouldPreferGeneratedTitle(
+        data.conversation_title,
+        generatedTitle,
+        defaultTitle,
+        text
+      )
+        ? generatedTitle
+        : data.conversation_title;
 
       const aiResponse = {
         id: createLocalMessageId(),
@@ -190,6 +252,16 @@ export default function ChatAI() {
           updated_at: new Date().toISOString(),
           last_message_preview: aiResponse.content,
         });
+
+        if (backendConversationTitle !== data.conversation_title) {
+          try {
+            await aiGuideApi.updateConversationTitle(backendConversationId, {
+              title: backendConversationTitle,
+            });
+          } catch {
+            // Keep the optimistic title locally; a later manual rename can retry.
+          }
+        }
       }
 
       await loadConversations();
@@ -229,6 +301,47 @@ export default function ChatAI() {
     } catch (error) {
       setChatSessions(previousSessions);
       setChatError(getApiErrorMessage(error, 'Unable to delete this conversation.'));
+    }
+  };
+
+  const handleStartRename = (event, session) => {
+    event.stopPropagation();
+    setRenamingChatId(session.id);
+    setRenameDraft(session.title || '');
+    setChatError('');
+  };
+
+  const handleCancelRename = (event) => {
+    event.stopPropagation();
+    setRenamingChatId(null);
+    setRenameDraft('');
+  };
+
+  const handleRenameSubmit = async (event, sessionId) => {
+    event.preventDefault();
+    event.stopPropagation();
+
+    const nextTitle = renameDraft.trim();
+    if (!nextTitle || isRenaming) return;
+
+    const previousSessions = chatSessions;
+    setIsRenaming(true);
+    setChatSessions((prev) =>
+      prev.map((session) =>
+        session.id === sessionId ? { ...session, title: nextTitle } : session
+      )
+    );
+
+    try {
+      await aiGuideApi.updateConversationTitle(sessionId, { title: nextTitle });
+      setRenamingChatId(null);
+      setRenameDraft('');
+      await loadConversations();
+    } catch (error) {
+      setChatSessions(previousSessions);
+      setChatError(getApiErrorMessage(error, t('chat.renameError')));
+    } finally {
+      setIsRenaming(false);
     }
   };
 
@@ -283,18 +396,18 @@ export default function ChatAI() {
               onClick={handleNewChat}
             >
               <MessageSquarePlus size={20} />
-              New Chat
+              {t('chat.newChat')}
             </button>
 
-            <h2>Recent Chat</h2>
+            <h2>{t('chat.recentChat')}</h2>
 
             <div className="chat-recent-list">
               {isLoadingConversations && (
-                <div className="chat-recent-empty">Loading chats...</div>
+                <div className="chat-recent-empty">{t('chat.loadingChats')}</div>
               )}
 
               {!isLoadingConversations && chatSessions.length === 0 && (
-                <div className="chat-recent-empty">No saved chats yet</div>
+                <div className="chat-recent-empty">{t('chat.noSavedChats')}</div>
               )}
 
               {chatSessions.map((item) => (
@@ -306,21 +419,80 @@ export default function ChatAI() {
                   }
                   key={item.id}
                 >
-                  <button
-                    type="button"
-                    onClick={() => handleSelectChat(item.id)}
-                  >
-                    {item.title}
-                  </button>
+                  {renamingChatId === item.id ? (
+                    <form
+                      className="chat-rename-form"
+                      onSubmit={(event) => handleRenameSubmit(event, item.id)}
+                    >
+                      <input
+                        type="text"
+                        value={renameDraft}
+                        placeholder={t('chat.renamePlaceholder')}
+                        onChange={(event) => setRenameDraft(event.target.value)}
+                        onClick={(event) => event.stopPropagation()}
+                        onKeyDown={(event) => {
+                          if (event.key === 'Escape') {
+                            event.preventDefault();
+                            setRenamingChatId(null);
+                            setRenameDraft('');
+                          }
+                        }}
+                        autoFocus
+                      />
 
-                  <button
-                    type="button"
-                    className="chat-delete-recent"
-                    onClick={(event) => handleDeleteRecent(event, item.id)}
-                    aria-label="Delete recent chat"
-                  >
-                    <Trash2 size={16} />
-                  </button>
+                      <button
+                        type="submit"
+                        className="chat-recent-action save"
+                        disabled={isRenaming || !renameDraft.trim()}
+                        aria-label={t('chat.renameSave')}
+                        title={t('chat.renameSave')}
+                      >
+                        <Check size={15} />
+                      </button>
+
+                      <button
+                        type="button"
+                        className="chat-recent-action"
+                        onClick={handleCancelRename}
+                        aria-label={t('chat.renameCancel')}
+                        title={t('chat.renameCancel')}
+                      >
+                        <X size={15} />
+                      </button>
+                    </form>
+                  ) : (
+                    <>
+                      <button
+                        type="button"
+                        onClick={() => handleSelectChat(item.id)}
+                        title={item.title}
+                      >
+                        {item.title}
+                      </button>
+
+                      <div className="chat-recent-actions">
+                        <button
+                          type="button"
+                          className="chat-recent-action"
+                          onClick={(event) => handleStartRename(event, item)}
+                          aria-label={t('chat.rename')}
+                          title={t('chat.rename')}
+                        >
+                          <Pencil size={15} />
+                        </button>
+
+                        <button
+                          type="button"
+                          className="chat-recent-action delete"
+                          onClick={(event) => handleDeleteRecent(event, item.id)}
+                          aria-label={t('chat.deleteRecent')}
+                          title={t('chat.deleteRecent')}
+                        >
+                          <Trash2 size={15} />
+                        </button>
+                      </div>
+                    </>
+                  )}
                 </div>
               ))}
             </div>

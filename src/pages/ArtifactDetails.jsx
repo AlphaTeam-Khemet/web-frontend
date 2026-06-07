@@ -110,7 +110,7 @@ export default function ArtifactDetails() {
               onClick={handleAskAi}
             >
               <Sparkle size={20} fill="currentColor" />
-              Ask Khemet AI about {title}
+              {t('artifact.askAiAbout', { name: title })}
             </button>
 
             <div className="artifact-info-list">

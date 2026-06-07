@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Eye, EyeOff } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import authBg from '../../assets/images/auth-bg.png';
 import useAuth from '../../hooks/useAuth';
 import { ROUTES } from '../../constants/routes';
@@ -11,6 +12,7 @@ import '../../styles/auth.css';
 export default function SignIn() {
   const navigate = useNavigate();
   const { login, continueAsGuest } = useAuth();
+  const { t } = useTranslation();
 
   const [formData, setFormData] = useState({
     email: '',
@@ -42,7 +44,7 @@ export default function SignIn() {
       login(data);
       navigate(ROUTES.HOME);
     } catch (error) {
-      setErrorMessage(getApiErrorMessage(error, 'Invalid email or password. Please try again.'));
+      setErrorMessage(getApiErrorMessage(error, t('auth.errors.invalidCredentials')));
     } finally {
       setIsLoading(false);
     }
@@ -59,14 +61,14 @@ export default function SignIn() {
       <div className="auth-overlay" />
 
       <section className="signin-card">
-        <h1>Sign In</h1>
+        <h1>{t('auth.signIn')}</h1>
         <p className="signin-subtitle">
-          Welcome back to KHEMET Smart Guide
+          {t('auth.signInSubtitle')}
         </p>
 
         <form className="signin-form" onSubmit={handleSubmit}>
           <div className="signin-field">
-            <label htmlFor="email">EMAIL ADDRESS</label>
+            <label htmlFor="email">{t('auth.email')}</label>
             <input
               id="email"
               name="email"
@@ -79,14 +81,14 @@ export default function SignIn() {
           </div>
 
           <div className="signin-field">
-            <label htmlFor="password">PASSWORD</label>
+            <label htmlFor="password">{t('auth.password')}</label>
 
             <div className="password-wrapper">
               <input
                 id="password"
                 name="password"
                 type={showPassword ? 'text' : 'password'}
-                placeholder="Enter your password"
+                placeholder={t('auth.passwordPlaceholder')}
                 value={formData.password}
                 onChange={handleChange}
                 required
@@ -105,7 +107,7 @@ export default function SignIn() {
 
           <div className="signin-options">
             <Link to={ROUTES.FORGOT_PASSWORD}>
-              Forgot password?
+              {t('auth.forgotPassword')}
             </Link>
           </div>
 
@@ -114,12 +116,12 @@ export default function SignIn() {
           )}
 
           <button className="signin-submit" type="submit" disabled={isLoading}>
-            {isLoading ? 'Signing In...' : 'Sign In'}
+            {isLoading ? t('auth.signingIn') : t('auth.signIn')}
           </button>
 
           <div className="signin-divider">
             <span />
-            <p>OR</p>
+            <p>{t('auth.or')}</p>
             <span />
           </div>
 
@@ -128,21 +130,21 @@ export default function SignIn() {
             className="signin-guest"
             onClick={handleGuest}
           >
-            Continue as Guest
+            {t('auth.continueAsGuest')}
           </button>
 
           <p className="signin-register">
-            Don&apos;t have an account?{' '}
-            <Link to={ROUTES.SIGN_UP}>Register</Link>
+            {t('auth.noAccount')}{' '}
+            <Link to={ROUTES.SIGN_UP}>{t('auth.register')}</Link>
           </p>
         </form>
       </section>
 
       <footer className="auth-footer">
-        <p>Secure authentication provided by Grand Egyptian Museum</p>
+        <p>{t('auth.secureAuthentication')}</p>
         <div>
-          <a href="#">Privacy Policy</a>
-          <a href="#">Terms of Service</a>
+          <a href="#">{t('auth.privacy')}</a>
+          <a href="#">{t('auth.terms')}</a>
         </div>
       </footer>
     </main>

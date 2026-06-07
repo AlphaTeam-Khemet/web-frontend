@@ -3,11 +3,13 @@
   background: #efe3d0;
   color: #24180f;
   padding: 128px 0 56px;
+  overflow: visible;
 }
 
 .collections-container {
   width: min(1180px, calc(100% - 36px));
   margin: 0 auto;
+  overflow: visible;
 }
 
 .collections-heading {
@@ -70,7 +72,8 @@
 }
 
 .collections-filters button {
-  height: 34px;
+  min-height: 34px;
+  height: auto;
   padding: 0 18px;
   border: 0;
   border-radius: 999px;
@@ -94,9 +97,12 @@
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 34px 28px;
+  align-items: start;
 }
 
 .collection-card {
+  position: relative;
+  min-width: 0;
   opacity: 0;
   transform: translateY(22px);
   animation: collectionCardShow 0.6s ease forwards;
@@ -105,8 +111,10 @@
 
 .collection-card-image {
   position: relative;
-  height: 245px;
-  border-radius: 20px;
+  display: block;
+  aspect-ratio: 3 / 4;
+  height: auto;
+  border-radius: 22px;
   overflow: hidden;
   background: #21160e;
   box-shadow: 0 18px 42px rgba(55, 34, 15, 0.18);
@@ -158,8 +166,8 @@
 .collection-card-content h3 {
   margin: 0;
   font-family: "Cormorant Garamond", serif;
-  font-size: 22px;
-  line-height: 1.05;
+  font-size: 21px;
+  line-height: 1.1;
   color: #24180f;
 }
 
@@ -198,8 +206,9 @@
 
 .collections-more button {
   position: relative;
-  height: 48px;
-  padding: 0 34px;
+  min-height: 48px;
+  height: auto;
+  padding: 12px 34px;
   border-radius: 999px;
   border: 1px solid rgba(169, 125, 53, 0.5);
   background: transparent;
@@ -262,7 +271,7 @@ html[dir="rtl"] .favorite-btn {
   }
 
   .collection-card-image {
-    height: 230px;
+    aspect-ratio: 4 / 3;
   }
 }
 
@@ -271,61 +280,32 @@ html[dir="rtl"] .favorite-btn {
     padding-top: 112px;
   }
 
+  .collections-container {
+    width: calc(100% - 24px);
+  }
+
   .collections-grid {
     grid-template-columns: 1fr;
+    gap: 28px;
+  }
+
+  .collections-heading h1 {
+    font-size: 38px;
+  }
+
+  .collections-search {
+    height: auto;
+    min-height: 50px;
+    border-radius: 18px;
+  }
+
+  .collections-filters {
+    gap: 8px;
+  }
+
+  .collections-filters button {
+    padding: 8px 14px;
   }
 }
 
-.collections-page {
-  min-height: auto;
-  background: #efe3d0;
-  color: #24180f;
-  padding: 128px 0 56px;
-  overflow: visible;
-}
 
-.collections-container {
-  width: min(1180px, calc(100% - 36px));
-  margin: 0 auto;
-  overflow: visible;
-}
-
-.collections-grid {
-  align-items: start;
-}
-
-.collection-card {
-  position: relative;
-  min-width: 0;
-}
-
-.collection-card-image {
-  display: block;
-  height: 360px;
-  border-radius: 22px;
-}
-
-.collection-card-image img {
-  object-fit: cover ;
-}
-
-.collection-card-content h3 {
-  font-size: 21px;
-  line-height: 1.1;
-}
-
-html,
-body,
-#root {
-  height: auto !important;
-  min-height: 100%;
-  overflow-y: auto !important;
-  overflow-x: hidden;
-  scroll-behavior: smooth;
-}
-
-.main-layout {
-  min-height: 100vh;
-  height: auto !important;
-  overflow: visible !important;
-}

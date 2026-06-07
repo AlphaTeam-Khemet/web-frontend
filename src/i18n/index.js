@@ -7,6 +7,7 @@ import es from '../locales/es.json';
 import de from '../locales/de.json';
 import fr from '../locales/fr.json';
 import zh from '../locales/zh.json';
+import ru from '../locales/ru.json';
 
 const resources = {
   ar: { translation: ar },
@@ -15,6 +16,7 @@ const resources = {
   de: { translation: de },
   fr: { translation: fr },
   zh: { translation: zh },
+  ru: { translation: { ...en, ...ru } },
 };
 
 i18n.use(initReactI18next).init({

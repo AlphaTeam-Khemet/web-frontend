@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import {
   Globe2,
@@ -6,6 +6,8 @@ import {
   ChevronDown,
   LogOut,
   Settings,
+  Menu,
+  X,
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
@@ -26,11 +28,12 @@ const navLinks = [
 
 const languages = [
   { code: 'en', label: 'English', short: 'EN' },
-  { code: 'ar', label: 'العربية', short: 'AR' },
-  { code: 'fr', label: 'Français', short: 'FR' },
-  { code: 'de', label: 'Deutsch', short: 'DE' },
-  { code: 'es', label: 'Español', short: 'ES' },
-  { code: 'zh', label: '中文', short: 'ZH' },
+  { code: 'ar', label: 'Arabic', short: 'AR' },
+  { code: 'fr', label: 'French', short: 'FR' },
+  { code: 'de', label: 'German', short: 'DE' },
+  { code: 'ru', label: 'Russian', short: 'RU' },
+  { code: 'es', label: 'Spanish', short: 'ES' },
+  { code: 'zh', label: 'Chinese', short: 'ZH' },
 ];
 
 export default function Navbar() {
@@ -44,6 +47,7 @@ export default function Navbar() {
 
   const [isLanguageOpen, setIsLanguageOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const isSettingsPage = location.pathname.toLowerCase() === '/settings';
 
@@ -54,6 +58,10 @@ export default function Navbar() {
     isAuthenticated && authUser
       ? { ...profileUser, ...authUser }
       : profileUser;
+
+  useEffect(() => {
+    setIsMobileMenuOpen(false);
+  }, [location.pathname]);
 
   const handleLanguageChange = (code) => {
     setLanguage(code);
@@ -76,13 +84,13 @@ export default function Navbar() {
   };
 
   const handleLogout = async () => {
-  setIsProfileOpen(false);
+    setIsProfileOpen(false);
 
-  await logout();
-  clearUser();
+    await logout();
+    clearUser();
 
-  navigate('/welcome');
-};
+    navigate('/welcome');
+  };
 
   return (
     <header className="home-navbar">
@@ -91,7 +99,7 @@ export default function Navbar() {
           <img src={logo} alt="Khemet Logo" />
         </NavLink>
 
-        <nav className="home-nav-links">
+        <nav className="home-nav-links desktop-only">
           {navLinks.map((link) => (
             <NavLink key={link.labelKey} to={link.path}>
               {t(link.labelKey)}
@@ -99,7 +107,7 @@ export default function Navbar() {
           ))}
         </nav>
 
-        <div className="home-nav-actions">
+        <div className="home-nav-actions desktop-only">
           <div className="home-language-menu">
             <button
               className="home-lang-btn"
@@ -178,16 +186,119 @@ export default function Navbar() {
 
                 <button type="button" onClick={handleOpenSettings}>
                   <Settings size={16} />
-                  Profile
+                  {t('common.profile')}
                 </button>
 
                 <button type="button" onClick={handleLogout}>
                   <LogOut size={16} />
-                  Logout
+                  {t('common.logout')}
                 </button>
               </div>
             )}
           </div>
+        </div>
+
+        <button
+          className="home-hamburger"
+          type="button"
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
+        >
+          {isMobileMenuOpen ? <X size={26} /> : <Menu size={26} />}
+        </button>
+      </div>
+
+      {/* Mobile Drawer Menu */}
+      <div
+        className={`home-mobile-menu-overlay ${isMobileMenuOpen ? 'open' : ''}`}
+        onClick={() => setIsMobileMenuOpen(false)}
+      />
+
+      <div className={`home-mobile-menu ${isMobileMenuOpen ? 'open' : ''}`}>
+        <div className="home-mobile-menu-header">
+          <NavLink to="/home" className="home-logo" onClick={() => setIsMobileMenuOpen(false)}>
+            <img src={logo} alt="Khemet Logo" />
+          </NavLink>
+          <button
+            className="home-mobile-close"
+            type="button"
+            onClick={() => setIsMobileMenuOpen(false)}
+            aria-label="Close menu"
+          >
+            <X size={26} />
+          </button>
+        </div>
+
+        <nav className="home-mobile-nav-links">
+          {navLinks.map((link) => (
+            <NavLink
+              key={link.labelKey}
+              to={link.path}
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              {t(link.labelKey)}
+            </NavLink>
+          ))}
+        </nav>
+
+        <div className="home-mobile-divider" />
+
+        <div className="home-mobile-actions">
+          <div className="home-mobile-section-title">{t('common.language') || 'Language'}</div>
+          <div className="home-mobile-languages">
+            {languages.map((item) => (
+              <button
+                key={item.code}
+                type="button"
+                className={`home-mobile-lang-item ${item.code === language ? 'active' : ''}`}
+                onClick={() => {
+                  handleLanguageChange(item.code);
+                }}
+              >
+                <span>{item.label}</span>
+                <strong>{item.short}</strong>
+              </button>
+            ))}
+          </div>
+
+          <div className="home-mobile-divider" />
+
+          {isAuthenticated || isGuest ? (
+            <div className="home-mobile-profile-section">
+              <div className="home-mobile-profile-info">
+                <div className="home-mobile-avatar">
+                  {displayUser?.avatar ? (
+                    <img src={displayUser.avatar} alt={displayUser.name} />
+                  ) : (
+                    <UserCircle2 size={36} />
+                  )}
+                </div>
+                <div className="home-mobile-user-details">
+                  <strong>{displayUser?.name}</strong>
+                  <span>{displayUser?.email}</span>
+                </div>
+              </div>
+              <div className="home-mobile-profile-actions">
+                <button type="button" onClick={() => { handleOpenSettings(); setIsMobileMenuOpen(false); }}>
+                  <Settings size={18} />
+                  {t('common.profile')}
+                </button>
+                <button type="button" className="logout-btn" onClick={() => { handleLogout(); setIsMobileMenuOpen(false); }}>
+                  <LogOut size={18} />
+                  {t('common.logout')}
+                </button>
+              </div>
+            </div>
+          ) : (
+            <button
+              className="home-mobile-signin-btn"
+              type="button"
+              onClick={() => { navigate('/sign-in'); setIsMobileMenuOpen(false); }}
+            >
+              <UserCircle2 size={20} />
+              {t('auth.signIn') || 'Sign In'}
+            </button>
+          )}
         </div>
       </div>
     </header>

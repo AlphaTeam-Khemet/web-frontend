@@ -1,5 +1,6 @@
 import { useRef } from 'react';
 import { Camera, LogOut, Mail, Globe2, UserRound } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 export default function ProfileCard({
   user,
@@ -7,6 +8,7 @@ export default function ProfileCard({
   onLogout,
   onAvatarChange,
 }) {
+  const { t } = useTranslation();
   const fileInputRef = useRef(null);
 
   const handleAvatarUpload = (event) => {
@@ -59,7 +61,7 @@ export default function ProfileCard({
       <div className="settings-profile-info">
         <div>
           <Globe2 size={18} />
-          <span>Current Language</span>
+          <span>{t('settings.currentLanguage')}</span>
           <strong>{currentLanguage}</strong>
         </div>
       </div>
@@ -70,7 +72,7 @@ export default function ProfileCard({
         onClick={onLogout}
       >
         <LogOut size={18} />
-        Logout
+        {t('common.logout')}
       </button>
     </aside>
   );

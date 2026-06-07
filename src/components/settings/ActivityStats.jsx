@@ -1,24 +1,26 @@
 import { Heart, MessageCircle, ScanLine } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 export default function ActivityStats({
   favoritesCount = 0,
   chatsCount = 0,
   scansCount = 0,
 }) {
+  const { t } = useTranslation();
   const stats = [
     {
       icon: Heart,
-      label: 'Favorite Artifacts',
+      label: t('settings.favoriteArtifacts'),
       value: favoritesCount,
     },
     {
       icon: MessageCircle,
-      label: 'AI Chats',
+      label: t('settings.aiChats'),
       value: chatsCount,
     },
     {
       icon: ScanLine,
-      label: 'Uploaded Scans',
+      label: t('settings.uploadedScans'),
       value: scansCount,
     },
   ];
@@ -26,8 +28,8 @@ export default function ActivityStats({
   return (
     <section className="settings-activity-card">
       <div className="settings-section-head">
-        <span>My Activity</span>
-        <h3>Your Museum Journey</h3>
+        <span>{t('settings.myActivity')}</span>
+        <h3>{t('settings.museumJourney')}</h3>
       </div>
 
       <div className="settings-stats-grid">

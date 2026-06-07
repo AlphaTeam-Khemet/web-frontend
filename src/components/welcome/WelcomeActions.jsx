@@ -1,4 +1,5 @@
 import { Globe2 } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { useLanguage } from '../../context/LanguageContext';
 
 const languages = [
@@ -6,23 +7,25 @@ const languages = [
   { value: 'en', label: 'English' },
   { value: 'es', label: 'Spanish' },
   { value: 'de', label: 'German' },
+  { value: 'ru', label: 'Russian' },
   { value: 'fr', label: 'French' },
   { value: 'zh', label: 'Chinese' },
 ];
 
 export default function WelcomeActions({ onSignIn, onGuest }) {
+  const { t } = useTranslation();
   const { language, setLanguage } = useLanguage();
 
   return (
     <div className="welcome-actions">
       <button className="welcome-btn primary" onClick={onSignIn}>
-        SIGN IN
+        {t('auth.signIn')}
       </button>
 
       <label className="welcome-language">
         <span>
           <Globe2 size={16} />
-          Preferred Language
+          {t('auth.language')}
         </span>
 
         <select
@@ -38,7 +41,7 @@ export default function WelcomeActions({ onSignIn, onGuest }) {
       </label>
 
       <button className="welcome-btn secondary" onClick={onGuest}>
-        CONTINUE AS GUEST
+        {t('auth.continueAsGuest')}
       </button>
     </div>
   );

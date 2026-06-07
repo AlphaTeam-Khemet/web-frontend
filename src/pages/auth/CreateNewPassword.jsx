@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { ArrowLeft, LockKeyhole, Timer } from 'lucide-react';
+import { ArrowLeft, LockKeyhole } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import PasswordInput from '../../components/auth/PasswordInput';
 import PasswordStrength from '../../components/auth/PasswordStrength';
 import createPasswordBg from '../../assets/images/create-new-password-bg.png';
@@ -12,6 +13,7 @@ import '../../styles/create-new-password.css';
 export default function CreateNewPassword() {
   const navigate = useNavigate();
   const location = useLocation();
+  const { t } = useTranslation();
 
   const email = location.state?.email || '';
   const code = location.state?.code || '';
@@ -28,12 +30,12 @@ export default function CreateNewPassword() {
     setErrorMessage('');
 
     if (newPassword.length < 8) {
-      setErrorMessage('Password must be at least 8 characters.');
+      setErrorMessage(t('auth.errors.passwordMin'));
       return;
     }
 
     if (newPassword !== confirmPassword) {
-      setErrorMessage('Passwords do not match.');
+      setErrorMessage(t('auth.errors.passwordMismatch'));
       return;
     }
 
@@ -48,7 +50,7 @@ export default function CreateNewPassword() {
 
       navigate(ROUTES.SIGN_IN);
     } catch (error) {
-      setErrorMessage(getApiErrorMessage(error, 'Something went wrong. Please try again.'));
+      setErrorMessage(getApiErrorMessage(error, t('auth.errors.generic')));
     } finally {
       setIsLoading(false);
     }
@@ -64,37 +66,32 @@ export default function CreateNewPassword() {
 
       <p className="cnp-brand">KHEMET</p>
 
-      <p className="cnp-session">
-        <Timer size={16} />
-        Session: <strong>3m 27s</strong>
-      </p>
-
       <section className="cnp-card">
         <div className="cnp-icon">
           <LockKeyhole size={30} />
         </div>
 
-        <h1>Create New Password</h1>
+        <h1>{t('auth.createNewPassword')}</h1>
 
         <p className="cnp-subtitle">
-          Your new password must be different from the previous one.
+          {t('auth.createNewPasswordSubtitle')}
         </p>
 
         <form onSubmit={handleSubmit}>
           <PasswordInput
-            label="NEW PASSWORD"
+            label={t('auth.newPassword')}
             value={newPassword}
             onChange={setNewPassword}
-            placeholder="Enter your new password"
+            placeholder={t('auth.newPasswordPlaceholder')}
             showPassword={showNewPassword}
             onToggle={() => setShowNewPassword((prev) => !prev)}
           />
 
           <PasswordInput
-            label="CONFIRM PASSWORD"
+            label={t('auth.confirmPassword')}
             value={confirmPassword}
             onChange={setConfirmPassword}
-            placeholder="Confirm your new password"
+            placeholder={t('auth.confirmPasswordPlaceholder')}
             showPassword={showConfirmPassword}
             onToggle={() => setShowConfirmPassword((prev) => !prev)}
           />
@@ -106,26 +103,26 @@ export default function CreateNewPassword() {
           )}
 
           <button className="cnp-submit" type="submit" disabled={isLoading}>
-            {isLoading ? 'Saving...' : 'Save Password'}
+            {isLoading ? t('common.loading') : t('auth.savePassword')}
           </button>
         </form>
 
         <Link to={ROUTES.SIGN_IN} className="cnp-bottom-link">
           <ArrowLeft size={17} />
-          Back to Sign In
+          {t('auth.backToSignIn')}
         </Link>
       </section>
 
       <footer className="cnp-footer">
         <p>
           <LockKeyhole size={16} />
-          Secured by Khemet Vault Encryption
+          {t('auth.vaultSecurity')}
         </p>
 
         <div>
-          <a href="#">Privacy Policy</a>
-          <a href="#">Terms of Service</a>
-          <a href="#">Contact Support</a>
+          <a href="#">{t('auth.privacy')}</a>
+          <a href="#">{t('auth.terms')}</a>
+          <a href="#">{t('auth.contactSupport')}</a>
         </div>
       </footer>
     </main>

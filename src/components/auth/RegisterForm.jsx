@@ -6,8 +6,8 @@ import PasswordStrength from './PasswordStrength';
 import { ROUTES } from '../../constants/routes';
 import { authApi } from '../../api/authApi';
 import { getApiErrorMessage } from '../../utils/apiData';
-import useAuth from '../../hooks/useAuth';
 import { useLanguage } from '../../context/LanguageContext';
+import { useTranslation } from 'react-i18next';
 
 const backendLanguageIds = {
   en: 1,
@@ -16,12 +16,13 @@ const backendLanguageIds = {
   fr: 4,
   es: 5,
   zh: 6,
+  ru: 7,
 };
 
 export default function RegisterForm() {
   const navigate = useNavigate();
-  const { login } = useAuth();
   const { language } = useLanguage();
+  const { t } = useTranslation();
 
   const [formData, setFormData] = useState({
     fullName: '',
@@ -61,24 +62,24 @@ export default function RegisterForm() {
       !formData.password ||
       !formData.confirmPassword
     ) {
-      setErrorMessage('Please fill in all required fields.');
+      setErrorMessage(t('auth.errors.required'));
       return;
     }
 
     if (!validatePassword(formData.password)) {
       setErrorMessage(
-        'Password must contain capital letter, small letter, number, underscore, and at least 8 characters.'
+        t('auth.errors.passwordRules')
       );
       return;
     }
 
     if (formData.password !== formData.confirmPassword) {
-      setErrorMessage('Passwords do not match.');
+      setErrorMessage(t('auth.errors.passwordMismatch'));
       return;
     }
 
     if (!acceptedTerms) {
-      setErrorMessage('You must accept the Terms and Privacy Policy.');
+      setErrorMessage(t('auth.errors.acceptTerms'));
       return;
     }
 
@@ -91,10 +92,14 @@ export default function RegisterForm() {
         password: formData.password,
         preferred_language: backendLanguageIds[language] || backendLanguageIds.en,
       });
-      login(data);
-      navigate(ROUTES.HOME);
+      navigate(ROUTES.EMAIL_VERIFICATION_CHOICE, {
+        state: {
+          email: formData.email,
+          verificationToken: data?.verification_token || data?.token,
+        },
+      });
     } catch (error) {
-      setErrorMessage(getApiErrorMessage(error, 'This email may already be registered. Please try again.'));
+      setErrorMessage(getApiErrorMessage(error, t('auth.errors.emailRegistered')));
     } finally {
       setIsLoading(false);
     }
@@ -102,39 +107,39 @@ export default function RegisterForm() {
 
   return (
     <section className="register-card">
-      <h1>Create Account</h1>
+      <h1>{t('auth.signUp')}</h1>
 
       <p className="register-subtitle">
-        Start your smart journey through ancient Egypt.
+        {t('auth.signUpSubtitle')}
       </p>
 
       <form onSubmit={handleSubmit}>
         <div className="register-field">
-          <label>Full Name</label>
+          <label>{t('auth.fullName')}</label>
           <input
             type="text"
-            placeholder="Enter your full name"
+            placeholder={t('auth.fullNamePlaceholder')}
             value={formData.fullName}
             onChange={(event) => updateField('fullName', event.target.value)}
           />
         </div>
 
         <div className="register-field">
-          <label>Email</label>
+          <label>{t('auth.email')}</label>
           <input
             type="email"
-            placeholder="Enter your email address"
+            placeholder={t('auth.emailPlaceholder')}
             value={formData.email}
             onChange={(event) => updateField('email', event.target.value)}
           />
         </div>
 
         <div className="register-field">
-          <label>Password</label>
+          <label>{t('auth.password')}</label>
           <div className="register-password">
             <input
               type={showPassword ? 'text' : 'password'}
-              placeholder="Create a strong password"
+              placeholder={t('auth.createPasswordPlaceholder')}
               value={formData.password}
               onChange={(event) => updateField('password', event.target.value)}
             />
@@ -148,11 +153,11 @@ export default function RegisterForm() {
         <PasswordStrength password={formData.password} />
 
         <div className="register-field">
-          <label>Confirm Password</label>
+          <label>{t('auth.confirmPassword')}</label>
           <div className="register-password">
             <input
               type={showConfirmPassword ? 'text' : 'password'}
-              placeholder="Confirm your password"
+              placeholder={t('auth.confirmPasswordPlaceholder')}
               value={formData.confirmPassword}
               onChange={(event) =>
                 updateField('confirmPassword', event.target.value)
@@ -172,19 +177,19 @@ export default function RegisterForm() {
 
         <div className="register-captcha">
           <ShieldCheck size={16} />
-          Protected by Invisible CAPTCHA
+          {t('auth.captcha')}
         </div>
 
         {errorMessage && <p className="register-error">{errorMessage}</p>}
 
         <button className="register-submit" type="submit" disabled={isLoading}>
-          {isLoading ? 'Creating Account...' : 'Create Account'}
+          {isLoading ? t('auth.creatingAccount') : t('auth.signUp')}
           <ArrowRight size={18} />
         </button>
       </form>
 
       <p className="register-login">
-        Already have an account? <Link to={ROUTES.SIGN_IN}>Sign In</Link>
+        {t('auth.alreadyAccount')} <Link to={ROUTES.SIGN_IN}>{t('auth.signIn')}</Link>
       </p>
     </section>
   );

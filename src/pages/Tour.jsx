@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { ArrowLeft, Maximize2 } from 'lucide-react';
 import { FaFacebook, FaInstagram, FaYoutube } from 'react-icons/fa';
 
@@ -9,6 +10,7 @@ import '../styles/tour.css';
 
 export default function Tour() {
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   return (
     <main className="tour-page">
@@ -17,7 +19,7 @@ export default function Tour() {
           type="button"
           className="tour-back"
           onClick={() => navigate('/home')}
-          aria-label="Back to home"
+          aria-label={t('tour.back')}
         >
           <ArrowLeft size={20} />
         </button>
@@ -42,9 +44,9 @@ export default function Tour() {
         </div>
 
         <h1>
-          Discover Ancient Egypt
+          {t('tour.title1')}
           <br />
-          Through Khemet
+          {t('tour.title2')}
         </h1>
       </section>
 
@@ -53,12 +55,12 @@ export default function Tour() {
 
         <div className="tour-footer-center">
           <div>
-            <a href="https://example.com/privacy">Privacy policy</a>
+            <a href="https://example.com/privacy">{t('home.footer.privacy')}</a>
             <span>|</span>
-            <a href="https://example.com/accessibility">Accessibility</a>
+            <a href="https://example.com/accessibility">{t('home.footer.accessibility')}</a>
           </div>
 
-          <p>© 2026 KHEMET Digital museum.</p>
+          <p>{t('home.footer.copyright')}</p>
         </div>
 
         <div className="tour-social">

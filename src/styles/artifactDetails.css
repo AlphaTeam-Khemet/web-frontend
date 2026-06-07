@@ -36,7 +36,8 @@
 }
 
 .artifact-image-frame {
-  height: 620px;
+  aspect-ratio: 5 / 4;
+  height: auto;
   border-radius: 28px;
   overflow: hidden;
   background: #21160e;
@@ -98,7 +99,7 @@
 .artifact-ai-btn {
   margin-top: 24px;
   min-height: 52px;
-  padding: 0 22px;
+  padding: 12px 22px;
   border: 0;
   border-radius: 14px;
   background: linear-gradient(180deg, #e7c570, #b98d3d);
@@ -221,7 +222,7 @@ html[dir="rtl"] .artifact-back-link:hover {
   }
 
   .artifact-image-frame {
-    height: 520px;
+    aspect-ratio: 16 / 10;
   }
 
   .artifact-text-panel {
@@ -235,11 +236,28 @@ html[dir="rtl"] .artifact-back-link:hover {
   }
 
   .artifact-image-frame {
-    height: 420px;
+    aspect-ratio: 4 / 3;
     border-radius: 24px;
   }
 
   .artifact-bottom-note {
     padding: 24px;
+  }
+
+  .artifact-details-container {
+    width: calc(100% - 24px);
+  }
+
+  .artifact-text-panel h1 {
+    font-size: 40px;
+  }
+
+  .artifact-info-list div {
+    align-items: flex-start;
+  }
+
+  .artifact-ai-btn {
+    width: 100%;
+    justify-content: center;
   }
 }

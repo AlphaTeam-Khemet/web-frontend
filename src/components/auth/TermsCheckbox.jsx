@@ -1,4 +1,8 @@
+import { useTranslation } from 'react-i18next';
+
 export default function TermsCheckbox({ checked, onChange }) {
+  const { t } = useTranslation();
+
   return (
     <label className="register-terms">
       <input
@@ -8,8 +12,8 @@ export default function TermsCheckbox({ checked, onChange }) {
       />
 
       <span>
-        I agree to the <a href="#">Terms of Service</a> and{' '}
-        <a href="#">Privacy Policy</a>.
+        {t('auth.termsPrefix')} <a href="#">{t('auth.terms')}</a>{' '}
+        {t('auth.termsAnd')} <a href="#">{t('auth.privacy')}</a>.
       </span>
     </label>
   );
