@@ -56,6 +56,8 @@ export function normalizeScanResult(scanResponse = {}) {
 
   return {
     raw: scanResponse,
+    // Expose the monument id at top level so VoiceGuideButton receives it
+    id: monument.id ?? scanResponse.monument?.id ?? null,
     sessionId: scanResponse.session?.id,
     name: monument.name || scanResponse.mapped_monument_name || aiResult.class_name || 'Unknown artifact',
     category: monument.category || aiResult.class_name || 'AI Recognition',

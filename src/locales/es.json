@@ -239,5 +239,16 @@
   "chat.renameCancel": "Cancelar cambio de nombre",
   "chat.renameError": "No se pudo renombrar esta conversaci?n.",
   "chat.deleteRecent": "Eliminar chat reciente",
+  "translate.errorTitle": "Error de traducción",
+  "translate.errorMessage": "El servicio de traducción de jeroglíficos no pudo procesar esta imagen.",
+  "translate.noSymbols": "No se detectaron jeroglíficos",
+  "translate.noSymbolsMessage": "No se detectaron símbolos jeroglíficos en esta imagen. Sube una imagen más clara con jeroglíficos visibles.",
+  "translate.detectedSymbols": "Símbolos detectados",
+  "translate.translationTitle": "Traducción",
+  "scan.tryAgain": "Intentar de nuevo",
+  "scan.tabScan": "ESCANEAR",
+  "scan.tabTranslate": "Traducir",
+  "scan.analyzeButton": "Analizar",
+  "scan.translateButton": "Traducir",
   "common.language": "Idioma"
 }

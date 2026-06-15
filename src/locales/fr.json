@@ -239,5 +239,16 @@
   "chat.renameCancel": "Annuler le renommage",
   "chat.renameError": "Impossible de renommer cette conversation.",
   "chat.deleteRecent": "Supprimer le chat r?cent",
+  "translate.errorTitle": "Échec de la traduction",
+  "translate.errorMessage": "Le service de traduction des hiéroglyphes n'a pas pu traiter cette image.",
+  "translate.noSymbols": "Aucun hiéroglyphe détecté",
+  "translate.noSymbolsMessage": "Aucun symbole hiéroglyphique n'a été détecté dans cette image. Essayez d'importer une image plus nette avec des hiéroglyphes visibles.",
+  "translate.detectedSymbols": "Symboles détectés",
+  "translate.translationTitle": "Traduction",
+  "scan.tryAgain": "Réessayer",
+  "scan.tabScan": "SCAN",
+  "scan.tabTranslate": "Traduire",
+  "scan.analyzeButton": "Analyser",
+  "scan.translateButton": "Traduire",
   "common.language": "Langue"
 }

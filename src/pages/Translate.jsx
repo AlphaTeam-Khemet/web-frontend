@@ -1,17 +1,15 @@
-import PageLayout from '../components/layout/PageLayout';
-import { useTranslation } from 'react-i18next';
+import { Navigate, useLocation } from 'react-router-dom';
 
+/**
+ * Translate.jsx
+ * =============
+ * Redirects to the ScanAI page with the translate tab pre-selected.
+ * The full hieroglyph translation UI lives in ScanAI (/scan?tab=translate).
+ */
 export default function Translate() {
-  const { t } = useTranslation();
-
-  return (
-    <PageLayout>
-      <section className="mx-auto max-w-7xl px-6 py-16">
-        <h1 className="font-display text-5xl font-bold text-khemet-dark">
-          {t('translate.title')}
-        </h1>
-        <p className="mt-4 text-khemet-gray">{t('translate.description')}</p>
-      </section>
-    </PageLayout>
-  );
+  const location = useLocation();
+  // Preserve any extra query params the caller may have appended
+  const params = new URLSearchParams(location.search);
+  params.set('tab', 'translate');
+  return <Navigate to={`/scan?${params.toString()}`} replace />;
 }

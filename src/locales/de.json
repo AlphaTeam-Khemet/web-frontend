@@ -239,5 +239,16 @@
   "chat.renameCancel": "Umbenennen abbrechen",
   "chat.renameError": "Diese Unterhaltung konnte nicht umbenannt werden.",
   "chat.deleteRecent": "Letzten Chat l?schen",
+  "translate.errorTitle": "Übersetzung fehlgeschlagen",
+  "translate.errorMessage": "Der Hieroglyphen-Übersetzungsdienst konnte dieses Bild nicht verarbeiten.",
+  "translate.noSymbols": "Keine Hieroglyphen erkannt",
+  "translate.noSymbolsMessage": "In diesem Bild wurden keine Hieroglyphen erkannt. Lade ein klareres Bild mit sichtbaren Hieroglyphen hoch.",
+  "translate.detectedSymbols": "Erkannte Symbole",
+  "translate.translationTitle": "Übersetzung",
+  "scan.tryAgain": "Erneut versuchen",
+  "scan.tabScan": "SCAN",
+  "scan.tabTranslate": "Übersetzen",
+  "scan.analyzeButton": "Analysieren",
+  "scan.translateButton": "Übersetzen",
   "common.language": "Sprache"
 }

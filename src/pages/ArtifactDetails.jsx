@@ -9,6 +9,7 @@ import { ROUTES } from '../constants/routes';
 import { useLanguage } from '../context/LanguageContext';
 import { artifactsApi } from '../api/artifactsApi';
 import { getApiErrorMessage, normalizeMonument } from '../utils/apiData';
+import VoiceGuideButton from '../components/common/VoiceGuideButton';
 
 import '../styles/artifactDetails.css';
 
@@ -103,6 +104,12 @@ export default function ArtifactDetails() {
             <p className="artifact-description">
               {overviewText}
             </p>
+
+            <VoiceGuideButton 
+              artifactId={id} 
+              artifactName={title} 
+              artifactDescription={overviewText} 
+            />
 
             <button
               type="button"

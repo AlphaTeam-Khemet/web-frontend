@@ -8,6 +8,7 @@ export default function UploadBox({
   onRemoveImage,
   onAnalyze,
   isLoading,
+  analyzeLabel,
 }) {
   const { t } = useTranslation();
 
@@ -186,7 +187,7 @@ export default function UploadBox({
             {t('scan.analyzing')}
           </>
         ) : (
-          t('scan.analyze')
+          analyzeLabel || t('scan.analyze')
         )}
       </button>
 

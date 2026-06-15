@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Bookmark, RefreshCcw, Share2, Sparkle } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import VoiceGuideButton from '../common/VoiceGuideButton';
 
 export default function ScanResult({
   result,
@@ -63,6 +64,12 @@ export default function ScanResult({
           {result.description}
         </p>
 
+        <VoiceGuideButton 
+          artifactId={result.id} 
+          artifactName={result.name} 
+          artifactDescription={result.description} 
+        />
+
         {shouldShowReadMore && (
           <button
             type="button"
@@ -94,7 +101,7 @@ export default function ScanResult({
 
         <button type="button" className="primary" onClick={onSave}>
           <Bookmark size={15} />
-          {t('scan.saveToCollection')}
+          {t('scan.saveToFavorites', 'Save to Favorites')}
         </button>
 
         <button type="button" className="scan-ai-action" onClick={onAskAi}>

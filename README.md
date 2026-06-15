@@ -33,6 +33,7 @@ The interface is built around an immersive Egyptian visual identity with authent
 - Artifact details page with overview content and direct "Ask Khemet AI" handoff.
 - Protected Scan AI page for image upload/camera capture and backend artifact recognition.
 - Protected Chat AI page with session-based chat history, recent conversations, AI responses, and artifact prompt handoff.
+- Voice Tour Guide: the `VoiceGuideButton` component allows users to hear AI-generated, multilingual artifact narrations (in English and Arabic).
 - Favorites page for authenticated users, with search/filter support and artifact-detail navigation.
 - Profile/settings pages with language, profile, logout, and activity-related UI.
 - Multilingual UI support for English, Arabic, Spanish, French, German, and Chinese.
@@ -336,6 +337,50 @@ VITE_API_BASE_URL=https://your-api-domain.example/api
 - Chat sessions are stored locally and keep a stable order. New chats appear at the top; selecting older chats does not reorder them.
 - Chat session titles are automatically shortened to the first three words.
 - `/translate`, `/media-gallery`, and some profile-related pages remain lightweight placeholders or future expansion points.
+
+## VoiceGuideButton Component
+
+Located at `src/components/common/VoiceGuideButton.jsx`.
+
+Renders a gold-styled button that generates and plays an AI narration for an artifact.
+
+### Props
+
+| Prop | Type | Required | Description |
+| --- | --- | --- | --- |
+| `artifactId` | `string` | ✅ | The monument/artifact ID used to cache the narration in the backend. |
+| `artifactName` | `string` | ✅ | Human-readable artifact name passed to the LLM for narration. |
+| `artifactDescription` | `string` | ✅ | Artifact description passed to the LLM for narration context. |
+
+The component reads the current language (`"en"` or `"ar"`) automatically from `useLanguage()`. Arabic narrations are generated using Modern Standard Arabic (فصحى).
+
+### Behaviour
+
+1. On first click — shows a spinner and POSTs to `/api/voice/narrate` via the backend proxy.
+2. If `audio_url` is returned — fetches the audio securely and auto-plays it, showing a Pause button.
+3. If `cached: true` — plays immediately without a loading spinner on the next call.
+4. If audio generation fails — shows the first ~120 characters of the narration text as fallback.
+5. Audio state resets automatically when `artifactId` or `language` changes.
+
+### Configuration
+
+No special configuration is needed. The `VoiceGuideButton` uses the same `VITE_API_BASE_URL` as the rest of the application since the backend securely routes narration requests to the isolated `voice_tour_guide` microservice.
+
+### Usage Example
+
+```jsx
+import VoiceGuideButton from '../components/common/VoiceGuideButton';
+
+// Inside your component, where artifact data is already loaded:
+<VoiceGuideButton
+  artifactId={artifact.id}
+  artifactName={artifact.name}
+  artifactDescription={artifact.description}
+/>
+```
+
+The component is already rendered in `ArtifactDetails.jsx` and `ScanResult.jsx`.
+
 
 ## Troubleshooting
 

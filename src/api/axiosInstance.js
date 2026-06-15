@@ -2,7 +2,7 @@ import axios from 'axios';
 import { storage } from '../utils/storage';
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000/api',
+  baseURL: import.meta.env.VITE_API_BASE_URL || '/api',
   headers: { 'Content-Type': 'application/json' },
 });
 
@@ -24,11 +24,7 @@ api.interceptors.response.use(
       || url.startsWith('/auth/reset-password');
 
     if (status === 401 && !isAuthFlow) {
-      storage.clearAuth();
-
-      if (typeof window !== 'undefined' && window.location.pathname !== '/sign-in') {
-        window.location.assign('/sign-in');
-      }
+      // Handled by AuthInterceptor component for SPA routing
     }
 
     return Promise.reject(error);

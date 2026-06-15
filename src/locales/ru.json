@@ -239,5 +239,16 @@
   "chat.renameCancel": "???????? ??????????????",
   "chat.renameError": "?? ??????? ????????????? ???? ??????.",
   "chat.deleteRecent": "??????? ???????? ???",
+  "translate.errorTitle": "Translation Failed",
+  "translate.errorMessage": "The hieroglyph translation service could not process this image.",
+  "translate.noSymbols": "No Hieroglyphs Detected",
+  "translate.noSymbolsMessage": "No hieroglyph symbols were detected in this image. Try uploading a clearer image with visible hieroglyphs.",
+  "translate.detectedSymbols": "Detected Symbols",
+  "translate.translationTitle": "Translation",
+  "scan.tryAgain": "Try Again",
+  "scan.tabScan": "SCAN",
+  "scan.tabTranslate": "Translate",
+  "scan.analyzeButton": "Analyze",
+  "scan.translateButton": "Translate",
   "common.language": "????"
 }

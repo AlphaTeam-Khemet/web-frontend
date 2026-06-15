@@ -38,21 +38,42 @@ export default function Favorites() {
     const searchValue = searchTerm.trim().toLowerCase();
 
     return favorites.filter((item) => {
-      const category = item.category || '';
-      const matchesFilter =
-        activeFilter === 'All' || category === activeFilter;
-
       const searchableText = `
         ${item.displayName || t(item.titleKey || item.name || '')}
         ${item.period || t(item.periodKey || '')}
         ${item.location || t(item.locationKey || '')}
-        ${category}
+        ${item.category || ''}
+        ${item.description || t(item.descriptionKey) || ''}
       `.toLowerCase();
+
+      let matchesFilter = false;
+      if (activeFilter === 'All') {
+        matchesFilter = true;
+      } else if (activeFilter === 'Statues') {
+        matchesFilter = item.category === 'Statue' || searchableText.includes('statue');
+      } else if (activeFilter === 'Sarcophagi') {
+        matchesFilter = searchableText.includes('sarcophag') || searchableText.includes('coffin');
+      } else if (activeFilter === 'Papyrus') {
+        matchesFilter = searchableText.includes('papyrus');
+      } else {
+        matchesFilter = item.category === activeFilter;
+      }
 
       const matchesSearch =
         searchValue === '' || searchableText.includes(searchValue);
 
       return matchesFilter && matchesSearch;
+    }).sort((a, b) => {
+      const pa = parseInt(a.priority, 10) || 157;
+      const pb = parseInt(b.priority, 10) || 157;
+      
+      if (pa !== pb) {
+        return pa - pb;
+      }
+      
+      const nameA = a.displayName || '';
+      const nameB = b.displayName || '';
+      return nameA.localeCompare(nameB);
     });
   }, [activeFilter, favorites, searchTerm, t]);
 
@@ -74,24 +95,26 @@ export default function Favorites() {
           />
         </div>
 
-        <div className="collections-filters">
-          {filters.map((filter) => (
-            <button
-              key={filter.value}
-              type="button"
-              className={filter.value === activeFilter ? 'active' : ''}
-              onClick={() => setActiveFilter(filter.value)}
-            >
-              {t(filter.labelKey)}
-            </button>
-          ))}
+        <div className="collections-filters-wrapper">
+          <div className="collections-filters">
+            {filters.map((filter) => (
+              <button
+                key={filter.value}
+                type="button"
+                className={filter.value === activeFilter ? 'active' : ''}
+                onClick={() => setActiveFilter(filter.value)}
+              >
+                {t(filter.labelKey)}
+              </button>
+            ))}
+          </div>
         </div>
 
         {errorMessage && (
           <div className="collections-empty">{errorMessage}</div>
         )}
 
-        <div className="collections-grid favorites-grid">
+        <div className="collections-masonry favorites-masonry">
           {filteredFavorites.map((item, index) => (
             <CollectionCard
               key={item.id}

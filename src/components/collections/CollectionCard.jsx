@@ -17,7 +17,10 @@ export default function CollectionCard({
   const period = item.period || t(item.periodKey || '');
   const location = item.location || t(item.locationKey || '');
 
-  const handleToggleFavorite = async () => {
+  const handleToggleFavorite = async (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
     if (!isAuthenticated) {
       alert(t('favorites.signInRequired'));
       navigate('/sign-in');
@@ -31,16 +34,40 @@ export default function CollectionCard({
     }
   };
 
+  const rank = parseInt(item.priority, 10) || 157;
+  
+  let priorityStage = 5;
+  if (rank <= 4) priorityStage = 1;
+  else if (rank <= 12) priorityStage = 2;
+  else if (rank <= 30) priorityStage = 3;
+  else if (rank <= 100) priorityStage = 4;
+
   return (
     <article
-      className="collection-card"
-      style={{ '--card-delay': `${index * 90}ms` }}
+      className={`collection-card stage-${priorityStage}`}
+      style={{ '--card-delay': `${(index % 16) * 60}ms` }}
     >
       <Link
         to={getArtifactDetailsRoute(item.id)}
-        className="collection-card-image"
+        className="collection-card-inner"
       >
-        <img src={item.image} alt={title} />
+        {priorityStage <= 3 && (
+          <div className="priority-badge">
+            <span className="star-icon">
+              {priorityStage === 1 ? '👑' : priorityStage === 2 ? '⭐' : '✨'}
+            </span>
+            {priorityStage === 1 ? t('collections.legend', 'Legend') : priorityStage === 2 ? t('collections.icon', 'Icon') : t('collections.featured', 'Featured')}
+          </div>
+        )}
+        <img src={item.image} alt={title} loading="lazy" />
+        
+        <div className="collection-card-overlay">
+          <div className="collection-card-content">
+            <h3>{title}</h3>
+            <p>{period}</p>
+            {location && <span>{location}</span>}
+          </div>
+        </div>
       </Link>
 
       <button
@@ -51,12 +78,6 @@ export default function CollectionCard({
       >
         <Heart size={18} />
       </button>
-
-      <div className="collection-card-content">
-        <h3>{title}</h3>
-        <p>{period}</p>
-        <span>{location}</span>
-      </div>
     </article>
   );
 }

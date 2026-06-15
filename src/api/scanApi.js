@@ -16,5 +16,10 @@ export const scanApi = {
     params: { lang },
     headers: { 'Content-Type': 'multipart/form-data' },
   }),
+  translateHieroglyph: (file, lang = localStorage.getItem('language') || 'en') => api.post(API_ENDPOINTS.scan.translate, createImageForm(file), {
+    params: { lang },
+    headers: { 'Content-Type': 'multipart/form-data' },
+  }),
   getHistory: (lang = localStorage.getItem('language') || 'en') => api.get(API_ENDPOINTS.scan.history, { params: { lang } }),
 };
+

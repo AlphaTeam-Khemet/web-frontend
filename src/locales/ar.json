@@ -239,5 +239,16 @@
   "chat.renameCancel": "إلغاء التسمية",
   "chat.renameError": "تعذر تغيير اسم هذه المحادثة.",
   "chat.deleteRecent": "حذف المحادثة الأخيرة",
+  "translate.errorTitle": "فشلت الترجمة",
+  "translate.errorMessage": "تعذرت معالجة هذه الصورة بواسطة خدمة ترجمة الهيروغليفية.",
+  "translate.noSymbols": "لم يتم اكتشاف رموز هيروغليفية",
+  "translate.noSymbolsMessage": "لم يتم اكتشاف أي رموز هيروغليفية في هذه الصورة. جرّب رفع صورة أوضح تظهر فيها الرموز.",
+  "translate.detectedSymbols": "الرموز المكتشفة",
+  "translate.translationTitle": "الترجمة",
+  "scan.tryAgain": "حاول مرة أخرى",
+  "scan.tabScan": "مسح",
+  "scan.tabTranslate": "ترجمة",
+  "scan.analyzeButton": "تحليل",
+  "scan.translateButton": "ترجمة",
   "common.language": "اللغة"
 }
