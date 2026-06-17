@@ -1,0 +1,10 @@
+
+> khemet-web@1.0.0 dev
+> vite --host 127.0.0.1 --port 5174
+
+
+  [32m[1mVITE[22m v5.4.14[39m  [2mready in [0m[1m312[22m[2m[0m ms[22m
+
+  [32m➜[39m  [1mLocal[22m:   [36mhttp://127.0.0.1:[1m5174[22m/[39m
+[2m7:14:45 PM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/styles/index.css, /src/context/FavoritesContext.jsx, /src/pages/ScanAI.jsx, /src/pages/ArtifactDetails.jsx, /src/pages/Collections.jsx, /src/context/AuthContext.jsx, /src/pages/auth/ForgotPassword.jsx, /src/pages/auth/EmailVerificationChoice.jsx, /src/pages/auth/CreateNewPassword.jsx, /src/pages/auth/VerificationCode.jsx, /src/pages/auth/SignIn.jsx, /src/components/auth/RegisterForm.jsx, /src/pages/Settings.jsx, /src/pages/ChatAI.jsx[22m
+[2m7:14:51 PM[22m [36m[1m[vite][22m[39m [32mpage reload [39m[2msrc/api/translationApi.js[22m

@@ -19,6 +19,9 @@ api.interceptors.response.use(
     const url = error.config?.url || '';
     const isAuthFlow = url.startsWith('/auth/login')
       || url.startsWith('/auth/register')
+      || url.startsWith('/auth/send-email-verification')
+      || url.startsWith('/auth/verify-email')
+      || url.startsWith('/auth/resend-email-verification')
       || url.startsWith('/auth/forgot-password')
       || url.startsWith('/auth/verify-reset-otp')
       || url.startsWith('/auth/reset-password');

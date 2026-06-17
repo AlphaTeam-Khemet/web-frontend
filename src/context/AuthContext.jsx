@@ -30,6 +30,12 @@ export function AuthProvider({ children }) {
     setIsGuest(true);
   };
 
+  const updateUser = (nextUser) => {
+    const normalized = normalizeUser({ ...user, ...nextUser });
+    storage.setUser(normalized);
+    setUserState(normalized);
+  };
+
   const logout = async () => {
     const refreshToken = storage.getRefreshToken();
     try {
@@ -44,7 +50,7 @@ export function AuthProvider({ children }) {
     setIsGuest(false);
   };
 
-  const value = useMemo(() => ({ user, token, isGuest, isAuthenticated: Boolean(token), login, continueAsGuest, logout }), [user, token, isGuest]);
+  const value = useMemo(() => ({ user, token, isGuest, isAuthenticated: Boolean(token), login, continueAsGuest, logout, updateUser }), [user, token, isGuest]);
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 export function useAuthContext() { const context = useContext(AuthContext); if (!context) throw new Error('useAuthContext must be used inside AuthProvider'); return context; }

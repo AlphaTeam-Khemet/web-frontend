@@ -4,6 +4,9 @@ export const API_ENDPOINTS = {
     register: '/auth/register',
     refresh: '/auth/refresh',
     logout: '/auth/logout',
+    sendEmailVerification: '/auth/send-email-verification',
+    verifyEmail: '/auth/verify-email',
+    resendEmailVerification: '/auth/resend-email-verification',
     forgotPassword: '/auth/forgot-password',
     verifyResetOtp: '/auth/verify-reset-otp',
     resetPassword: '/auth/reset-password',
@@ -24,7 +27,6 @@ export const API_ENDPOINTS = {
   },
   translation: {
     upload: '/scan/translate',
-    result: (id) => `/scan/history/${id}`,
   },
   aiGuide: {
     health: '/ai-guide/health',

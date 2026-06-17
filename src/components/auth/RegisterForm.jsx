@@ -7,6 +7,7 @@ import { ROUTES } from '../../constants/routes';
 import { authApi } from '../../api/authApi';
 import { getApiErrorMessage } from '../../utils/apiData';
 import { useLanguage } from '../../context/LanguageContext';
+import { useAuthContext } from '../../context/AuthContext';
 import { useTranslation } from 'react-i18next';
 
 const backendLanguageIds = {
@@ -22,6 +23,7 @@ const backendLanguageIds = {
 export default function RegisterForm() {
   const navigate = useNavigate();
   const { language } = useLanguage();
+  const { login } = useAuthContext();
   const { t } = useTranslation();
 
   const [formData, setFormData] = useState({
@@ -92,10 +94,12 @@ export default function RegisterForm() {
         password: formData.password,
         preferred_language: backendLanguageIds[language] || backendLanguageIds.en,
       });
+      login(data);
       navigate(ROUTES.EMAIL_VERIFICATION_CHOICE, {
         state: {
           email: formData.email,
-          verificationToken: data?.verification_token || data?.token,
+          maskedEmail: data?.masked_email,
+          options: data?.options,
         },
       });
     } catch (error) {

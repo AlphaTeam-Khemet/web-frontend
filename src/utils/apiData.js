@@ -17,6 +17,8 @@ export function normalizeUser(user = {}) {
     full_name: user.full_name || user.name || 'KHEMET User',
     email: user.email || '',
     preferredLanguage: user.preferred_language || user.preferredLanguage || 'en',
+    emailVerified: Boolean(user.email_verified ?? user.emailVerified),
+    email_verified: Boolean(user.email_verified ?? user.emailVerified),
     avatar: user.avatar || '',
   };
 }

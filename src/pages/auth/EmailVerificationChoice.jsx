@@ -1,26 +1,59 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { ArrowLeft, MailCheck, ShieldCheck } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import verificationBg from '../../assets/images/email-verification-bg.png';
 import { ROUTES } from '../../constants/routes';
+import { authApi } from '../../api/authApi';
+import { getApiErrorMessage } from '../../utils/apiData';
+import { useAuthContext } from '../../context/AuthContext';
 import '../../styles/email-verification-choice.css';
 
 export default function EmailVerificationChoice() {
   const navigate = useNavigate();
   const location = useLocation();
   const { t } = useTranslation();
+  const { isAuthenticated, updateUser } = useAuthContext();
 
   const email = location.state?.email || 'example@gmail.com';
-  const options = location.state?.options || [24, 68, 91];
+  const [maskedEmail, setMaskedEmail] = useState(location.state?.maskedEmail || '');
+  const [options, setOptions] = useState((location.state?.options || []).map(String));
 
   const [selectedOption, setSelectedOption] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [isResending, setIsResending] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
-  const correctOption = useMemo(() => options[1], [options]);
+  const hiddenEmail = maskedEmail || email.replace(/(.{2}).+(@.+)/, '$1****$2');
 
-  const hiddenEmail = email.replace(/(.{2}).+(@.+)/, '$1****$2');
+  useEffect(() => {
+    if (!isAuthenticated) {
+      navigate(ROUTES.SIGN_IN, { replace: true });
+      return;
+    }
+
+    if (options.length) return;
+
+    let ignore = false;
+    const loadVerificationOptions = async () => {
+      try {
+        const { data } = await authApi.sendEmailVerification();
+        if (ignore) return;
+        setMaskedEmail(data.masked_email || '');
+        setOptions((data.options || []).map(String));
+      } catch (error) {
+        if (!ignore) {
+          setErrorMessage(getApiErrorMessage(error, t('auth.errors.verificationFailed')));
+        }
+      }
+    };
+
+    loadVerificationOptions();
+
+    return () => {
+      ignore = true;
+    };
+  }, [isAuthenticated, navigate, options.length, t]);
 
   const handleVerify = async () => {
     if (!selectedOption) {
@@ -32,19 +65,29 @@ export default function EmailVerificationChoice() {
     setIsLoading(true);
 
     try {
-      await new Promise((resolve) => setTimeout(resolve, 900));
-
-      if (selectedOption !== correctOption) {
-        setErrorMessage(t('auth.errors.incorrectVerification'));
-        setIsLoading(false);
-        return;
-      }
-
-      navigate(ROUTES.SIGN_IN);
+      const { data } = await authApi.verifyEmail({ otp: String(selectedOption) });
+      if (data.user) updateUser(data.user);
+      navigate(ROUTES.HOME);
     } catch (error) {
-      setErrorMessage(t('auth.errors.verificationFailed'));
+      setErrorMessage(getApiErrorMessage(error, t('auth.errors.verificationFailed')));
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleResend = async () => {
+    setErrorMessage('');
+    setSelectedOption(null);
+    setIsResending(true);
+
+    try {
+      const { data } = await authApi.resendEmailVerification();
+      setMaskedEmail(data.masked_email || '');
+      setOptions((data.options || []).map(String));
+    } catch (error) {
+      setErrorMessage(getApiErrorMessage(error, t('auth.errors.verificationFailed')));
+    } finally {
+      setIsResending(false);
     }
   };
 
@@ -102,13 +145,18 @@ export default function EmailVerificationChoice() {
         <button
           className="evc-submit"
           onClick={handleVerify}
-          disabled={isLoading}
+          disabled={isLoading || !options.length}
         >
           {isLoading ? t('auth.verifying') : t('auth.verify')}
         </button>
 
-        <button className="evc-resend" type="button">
-          {t('auth.resendVerificationNumber')}
+        <button
+          className="evc-resend"
+          type="button"
+          onClick={handleResend}
+          disabled={isLoading || isResending}
+        >
+          {isResending ? t('auth.verifying') : t('auth.resendVerificationNumber')}
         </button>
       </section>
     </main>

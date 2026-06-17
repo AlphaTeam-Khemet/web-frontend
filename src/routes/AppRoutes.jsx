@@ -31,6 +31,10 @@ export default function AppRoutes() {
       <Route path="/" element={<Splash />} />
       <Route path={ROUTES.WELCOME} element={<Welcome />} />
       <Route path={ROUTES.TOUR} element={<Tour />} />
+      <Route
+        path={ROUTES.EMAIL_VERIFICATION_CHOICE}
+        element={<EmailVerificationChoice />}
+      />
 
       <Route element={<GuestRoute />}>
         <Route path={ROUTES.SIGN_IN} element={<SignIn />} />
@@ -39,10 +43,6 @@ export default function AppRoutes() {
         <Route path={ROUTES.VERIFICATION_CODE} element={<VerificationCode />} />
         <Route path={ROUTES.RESET_PASSWORD} element={<ResetPassword />} />
         <Route path={ROUTES.CREATE_NEW_PASSWORD} element={<CreateNewPassword />} />
-        <Route
-          path={ROUTES.EMAIL_VERIFICATION_CHOICE}
-          element={<EmailVerificationChoice />}
-        />
       </Route>
 
       <Route element={<MainLayout />}>
