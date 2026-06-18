@@ -25,8 +25,18 @@ export const API_ENDPOINTS = {
     translate: '/scan/translate',
     history: '/scan/history',
   },
+  hieroglyph: {
+    health: '/hieroglyph/health',
+    translate: '/hieroglyph/translate',
+    detectOnly: '/hieroglyph/detect-only',
+  },
   translation: {
-    upload: '/scan/translate',
+    upload: '/hieroglyph/translate',
+  },
+  voice: {
+    health: '/voice/health',
+    narrate: '/voice/narrate',
+    audio: (filename) => `/voice/audio/${filename}`,
   },
   aiGuide: {
     health: '/ai-guide/health',

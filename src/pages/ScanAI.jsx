@@ -16,6 +16,7 @@ import UploadBox from '../components/scan/UploadBox';
 import ScanResult from '../components/scan/ScanResult';
 import TranslateResult from '../components/scan/TranslateResult';
 import { scanApi } from '../api/scanApi';
+import { hieroglyphApi, normalizeHieroglyphResult } from '../api/hieroglyphApi';
 import { artifactsApi } from '../api/artifactsApi';
 import { galleryApi } from '../api/galleryApi';
 import { useLanguage } from '../context/LanguageContext';
@@ -151,8 +152,8 @@ export default function ScanAI() {
     setTranslateResult(null);
     setTranslateError('');
     try {
-      const { data } = await scanApi.translateHieroglyph(selectedFile, language);
-      setTranslateResult(data.data);
+      const { data } = await hieroglyphApi.translate(selectedFile);
+      setTranslateResult(normalizeHieroglyphResult(data));
     } catch (error) {
       setTranslateError(
         getApiErrorMessage(error, 'Hieroglyph translation failed. Please try again.')
