@@ -243,9 +243,8 @@ Local browser storage is used for client state and persistence.
 | `khemet-user-profile` | localStorage | Local profile/avatar state |
 | `khemet-favorites` | localStorage | Favorite artifacts cache |
 | `language` | localStorage | Selected language |
-| `khemet-recent-chats` | localStorage | Chat session list and messages |
-| `khemet-active-chat-id` | localStorage | Active chat session |
-| `khemet-chat-messages` | sessionStorage | Compatibility/current chat cache |
+
+> **Note:** Chat sessions were previously stored in `localStorage`, but are now persistently stored in the PostgreSQL database via the Node.js backend.
 
 Providers are composed in `src/main.jsx`:
 
@@ -334,8 +333,7 @@ VITE_API_BASE_URL=https://your-api-domain.example/api
 - Artifact details can hand off an artifact name to Chat AI through the `artifact` query parameter.
 - Scan results can also hand off the detected artifact name to Chat AI.
 - Favorites require authentication. Guest users are redirected to sign in before saving artifacts.
-- Chat sessions are stored locally and keep a stable order. New chats appear at the top; selecting older chats does not reorder them.
-- Chat session titles are automatically shortened to the first three words.
+- Chat sessions are stored persistently in the PostgreSQL database. When starting a new chat, the backend automatically generates a `conversation_id` and a dynamic title.
 - `/translate`, `/media-gallery`, and some profile-related pages remain lightweight placeholders or future expansion points.
 
 ## VoiceGuideButton Component
