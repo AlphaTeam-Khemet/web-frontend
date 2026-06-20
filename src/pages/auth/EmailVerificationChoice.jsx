@@ -15,9 +15,16 @@ export default function EmailVerificationChoice() {
   const { t } = useTranslation();
   const { isAuthenticated, updateUser } = useAuthContext();
 
-  const email = location.state?.email || 'example@gmail.com';
-  const [maskedEmail, setMaskedEmail] = useState(location.state?.maskedEmail || '');
-  const [options, setOptions] = useState((location.state?.options || []).map(String));
+  const cachedData = JSON.parse(sessionStorage.getItem('verification_data') || 'null') || {};
+  const stateData = location.state || cachedData;
+
+  const email = stateData.email || 'example@gmail.com';
+  const [maskedEmail, setMaskedEmail] = useState(stateData.maskedEmail || '');
+  const [options, setOptions] = useState((stateData.options || []).map(String));
+
+  useEffect(() => {
+    sessionStorage.removeItem('verification_data');
+  }, []);
 
   const [selectedOption, setSelectedOption] = useState(null);
   const [isLoading, setIsLoading] = useState(false);

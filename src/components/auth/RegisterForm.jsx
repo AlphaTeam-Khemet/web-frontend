@@ -94,14 +94,13 @@ export default function RegisterForm() {
         password: formData.password,
         preferred_language: backendLanguageIds[language] || backendLanguageIds.en,
       });
+      sessionStorage.setItem('verification_data', JSON.stringify({
+        email: formData.email,
+        maskedEmail: data?.masked_email,
+        options: data?.options,
+      }));
       login(data);
-      navigate(ROUTES.EMAIL_VERIFICATION_CHOICE, {
-        state: {
-          email: formData.email,
-          maskedEmail: data?.masked_email,
-          options: data?.options,
-        },
-      });
+      // GuestRoute will intercept the state change and automatically redirect to EMAIL_VERIFICATION_CHOICE
     } catch (error) {
       setErrorMessage(getApiErrorMessage(error, t('auth.errors.emailRegistered')));
     } finally {

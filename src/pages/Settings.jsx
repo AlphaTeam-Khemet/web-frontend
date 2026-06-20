@@ -14,6 +14,7 @@ import { useLanguage } from '../context/LanguageContext';
 import useAuth from '../hooks/useAuth';
 import { userApi } from '../api/userApi';
 import { scanApi } from '../api/scanApi';
+import { aiGuideApi } from '../api/aiGuideApi';
 import { getApiErrorMessage, normalizeUser } from '../utils/apiData';
 
 import '../styles/settings.css';
@@ -37,6 +38,7 @@ export default function Settings() {
   const { user: authUser, isAuthenticated, logout } = useAuth();
   const { language } = useLanguage();
   const [scansCount, setScansCount] = useState(0);
+  const [chatsCount, setChatsCount] = useState(0);
   const [statusMessage, setStatusMessage] = useState('');
 
   useEffect(() => {
@@ -46,15 +48,17 @@ export default function Settings() {
       if (!isAuthenticated) return;
 
       try {
-        const [{ data: profile }, { data: scans }] = await Promise.all([
+        const [{ data: profile }, { data: scans }, { data: conversations }] = await Promise.all([
           userApi.getProfile(),
           scanApi.getHistory(),
+          aiGuideApi.getConversations(),
         ]);
 
         if (!active) return;
 
         updateProfile({ name: normalizeUser(profile).name });
         setScansCount(Array.isArray(scans) ? scans.length : 0);
+        setChatsCount(Array.isArray(conversations) ? conversations.length : 0);
       } catch {
         if (active) {
           setStatusMessage(
@@ -134,7 +138,7 @@ export default function Settings() {
 
           <ActivityStats
             favoritesCount={favoritesCount}
-            chatsCount={0}
+            chatsCount={chatsCount}
             scansCount={scansCount}
           />
         </div>

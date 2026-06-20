@@ -53,16 +53,18 @@ export default function VoiceGuideButton({ artifactId, artifactName, artifactDes
     slowTimerRef.current = setTimeout(() => setSlowRequest(true), 5000);
 
     try {
-      const response = await voiceApi.narrate({
-        monument_name: artifactName,
-        description: artifactDescription,
+      const response = await voiceApi.narrateArtifact(artifactId, {
         language,
+        artifact_name: artifactName,
+        artifact_description: artifactDescription,
       });
 
-      setScript(response.data.script || '');
+      const { narration_text, audio_url } = response.data?.data || {};
 
-      if (response.data.audio_url) {
-        const filename = getAudioFilename(response.data.audio_url);
+      setScript(narration_text || '');
+
+      if (audio_url) {
+        const filename = getAudioFilename(audio_url);
         const audioResponse = await voiceApi.getAudio(filename);
         const objectUrl = URL.createObjectURL(audioResponse.data);
         setAudioUrl(objectUrl);

@@ -125,12 +125,12 @@ export default function TranslateResult({ result, isLoading, onRetry }) {
               }}>
                 <h2 style={{ 
                   fontSize: '36px', 
-                  color: '#fce8b3', 
+                  color: '#000000', 
                   margin: '0', 
                   fontFamily: '"Cormorant Garamond", serif',
                   textTransform: 'capitalize',
                   letterSpacing: '0.02em',
-                  textShadow: '0 2px 4px rgba(0,0,0,0.5)'
+                  textShadow: 'none'
                 }}>
                   {result.translation.text}
                 </h2>

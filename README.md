@@ -354,11 +354,12 @@ The component reads the current language (`"en"` or `"ar"`) automatically from `
 
 ### Behaviour
 
-1. On first click — shows a spinner and POSTs to `/api/voice/narrate` via the backend proxy.
-2. If `audio_url` is returned — fetches the audio securely and auto-plays it, showing a Pause button.
-3. If `cached: true` — plays immediately without a loading spinner on the next call.
-4. If audio generation fails — shows the first ~120 characters of the narration text as fallback.
-5. Audio state resets automatically when `artifactId` or `language` changes.
+1. On first click — shows a spinner and POSTs to `/api/voice/artifacts/:artifactId/narrate` via the backend proxy.
+2. The backend checks PostgreSQL for a cached narration first (cache-first flow).
+3. If `audio_url` is returned — fetches the audio securely through `/api/voice/audio/:filename` and auto-plays it, showing a Pause button.
+4. If `cached: true` — the narration was already generated and plays immediately on subsequent calls.
+5. If audio generation fails — shows the first ~120 characters of the narration text as fallback.
+6. Audio state resets automatically when `artifactId` or `language` changes.
 
 ### Configuration
 

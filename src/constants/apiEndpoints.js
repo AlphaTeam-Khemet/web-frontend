@@ -36,6 +36,7 @@ export const API_ENDPOINTS = {
   voice: {
     health: '/voice/health',
     narrate: '/voice/narrate',
+    narrateArtifact: (artifactId) => `/voice/artifacts/${artifactId}/narrate`,
     audio: (filename) => `/voice/audio/${filename}`,
   },
   aiGuide: {
