@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { ArrowLeft, MailCheck, ShieldCheck } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import verificationBg from '../../assets/images/email-verification-bg.png';
@@ -13,16 +13,18 @@ export default function EmailVerificationChoice() {
   const navigate = useNavigate();
   const location = useLocation();
   const { t } = useTranslation();
-  const { isAuthenticated, updateUser } = useAuthContext();
+  const { isAuthenticated, updateUser, logout } = useAuthContext();
 
+  // Read sessionStorage BEFORE any effect removes it.
   const cachedData = JSON.parse(sessionStorage.getItem('verification_data') || 'null') || {};
   const stateData = location.state || cachedData;
 
-  const email = stateData.email || 'example@gmail.com';
+  const email = stateData.email || '';
   const [maskedEmail, setMaskedEmail] = useState(stateData.maskedEmail || '');
   const [options, setOptions] = useState((stateData.options || []).map(String));
 
   useEffect(() => {
+    // Remove after reading so a page refresh doesn't re-use stale data.
     sessionStorage.removeItem('verification_data');
   }, []);
 
@@ -98,6 +100,14 @@ export default function EmailVerificationChoice() {
     }
   };
 
+  // Logs out the current unverified session so the user can freely go back to
+  // Sign In or Register without being trapped in the verification loop.
+  const handleCancel = async () => {
+    sessionStorage.removeItem('verification_data');
+    await logout();
+    navigate(ROUTES.SIGN_IN, { replace: true });
+  };
+
   return (
     <main className="evc-page">
       <img src={verificationBg} alt="" className="evc-bg" />
@@ -105,12 +115,12 @@ export default function EmailVerificationChoice() {
       <div className="evc-overlay" />
       <div className="evc-pattern" />
 
-      <Link to={ROUTES.SIGN_UP} className="evc-top-link">
+      <button type="button" onClick={handleCancel} className="evc-top-link">
         <span>
           <ArrowLeft size={18} />
         </span>
         {t('auth.register')}
-      </Link>
+      </button>
 
       <p className="evc-brand">KHEMET</p>
 

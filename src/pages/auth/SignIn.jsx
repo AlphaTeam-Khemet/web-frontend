@@ -6,7 +6,7 @@ import authBg from '../../assets/images/auth-bg.png';
 import useAuth from '../../hooks/useAuth';
 import { ROUTES } from '../../constants/routes';
 import { authApi } from '../../api/authApi';
-import { getApiErrorMessage } from '../../utils/apiData';
+import { getApiErrorMessage, normalizeUser } from '../../utils/apiData';
 import '../../styles/auth.css';
 
 export default function SignIn() {
@@ -42,7 +42,20 @@ export default function SignIn() {
     try {
       const { data } = await authApi.login(formData);
       login(data);
-      navigate(ROUTES.HOME);
+
+      // If the user hasn't verified their email yet, navigate immediately —
+      // don't wait for the email to be sent. The verification page calls
+      // sendEmailVerification on its own mount when options are missing.
+      const loggedInUser = normalizeUser(data.user);
+      if (loggedInUser && loggedInUser.email_verified === false) {
+        sessionStorage.setItem(
+          'verification_data',
+          JSON.stringify({ email: formData.email, maskedEmail: '', options: [] })
+        );
+        navigate(ROUTES.EMAIL_VERIFICATION_CHOICE);
+      } else {
+        navigate(ROUTES.HOME);
+      }
     } catch (error) {
       setErrorMessage(getApiErrorMessage(error, t('auth.errors.invalidCredentials')));
     } finally {

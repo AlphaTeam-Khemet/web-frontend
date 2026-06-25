@@ -23,14 +23,8 @@ export default function ForgotPassword() {
     setErrorMessage('');
 
     try {
-      const { data } = await authApi.forgotPassword({ email });
-      setMessage(data.message || t('auth.resetCodeSent'));
-
-      setTimeout(() => {
-        navigate(ROUTES.VERIFICATION_CODE, {
-          state: { email },
-        });
-      }, 900);
+      await authApi.forgotPassword({ email });
+      navigate(ROUTES.VERIFICATION_CODE, { state: { email } });
     } catch (error) {
       setErrorMessage(getApiErrorMessage(error, t('auth.errors.generic')));
     } finally {

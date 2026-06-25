@@ -13,6 +13,15 @@ export default function ProtectedRoute() {
   }
 
   if (user && user.email_verified === false) {
+    // Store the user's real email so EmailVerificationChoice can display the
+    // correct masked address instead of the placeholder.
+    const existing = sessionStorage.getItem('verification_data');
+    if (!existing && user.email) {
+      sessionStorage.setItem(
+        'verification_data',
+        JSON.stringify({ email: user.email, maskedEmail: '', options: [] })
+      );
+    }
     return <Navigate to={ROUTES.EMAIL_VERIFICATION_CHOICE} replace />;
   }
 

@@ -100,7 +100,8 @@ export default function RegisterForm() {
         options: data?.options,
       }));
       login(data);
-      // GuestRoute will intercept the state change and automatically redirect to EMAIL_VERIFICATION_CHOICE
+      // Navigate directly — don't wait for GuestRoute to detect the state change.
+      navigate(ROUTES.EMAIL_VERIFICATION_CHOICE);
     } catch (error) {
       setErrorMessage(getApiErrorMessage(error, t('auth.errors.emailRegistered')));
     } finally {
